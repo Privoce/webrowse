@@ -1,13 +1,13 @@
-# Vera 是什么
+# Webrowse 是什么
 
 一款谷歌浏览器扩展，它可以帮你在任何网页上向别人实时发起音视频连接，一起浏览当前页。
 ## 特性
 
+- 共享工作区
 - 实时与TA人音视频（基于WebRTC）
-- 共享工作区（开发中）
 - 自己鼠标实时同步到对方（可关闭）
 - 聊天
-- 其它非功能特性
+- 其它特性
   - 可拖拽
   - 可任意改变大小
   - 黑夜模式
@@ -15,7 +15,7 @@
 
 ## 下载地址
 
-[Chrome扩展商店](https://chrome.google.com/webstore/detail/vera-cobrowse-doc-figma-p/ccegbnlnelhgaefimiaklaindffpfcmh)
+[Chrome扩展商店](https://chrome.google.com/webstore/detail/webrowse-sync-tabs-with-y/nnbkebemeehfhiimeghnkdocfbeogenn)
 
 > 国内用户需翻墙下载
 
@@ -23,7 +23,7 @@
 
 ### 克隆项目
 
-`git clone https://github.com/Privoce/Vera.git && cd Vera`
+`git clone https://github.com/Privoce/webrowse.git && cd webrowse`
 
 ### 开发
 
@@ -44,7 +44,7 @@
 - ~~tab status & follow mode~~
 - ~~邀请按钮的功能~~
 - 发送email的功能
-- ~~Portal Vera UX重构~~
+- ~~Portal Webrowse UX重构~~
 
 ### Bug
 - ~~对方视频偶现黑屏~~

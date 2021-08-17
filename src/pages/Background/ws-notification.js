@@ -7,7 +7,7 @@ const socket = io("wss://api.yangerxiao.com", {
 });
 
 // should be event driven
-// from /src/component/Vera/hooks/utils.js
+// from /src/component/Webrowse/hooks/utils.js
 function getUsername() {
   return new Promise((resolve) => {
     let arr = ['user', 'fakename'];
@@ -64,7 +64,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
     socket.emit('notification', {
       to: request.finalName,
       title: url.hostname,
-      body: `${value} invites you to vera`,
+      body: `${value} invites you to webrowse`,
       url: request.url,
       from: value
     });

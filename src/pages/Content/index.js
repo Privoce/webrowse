@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Vera from './Vera';
+import Webrowse from './Webrowse';
 
-const PanelID = 'PORTAL_VERA_PANEL';
+const PanelID = 'PORTAL_WEBROWSE_PANEL';
 console.log('index.ext exe');
 let panel = document.createElement('aside');
 panel.id = PanelID;
 document.body.appendChild(panel);
-ReactDOM.render(<Vera />, document.getElementById(PanelID));
+ReactDOM.render(<Webrowse />, document.getElementById(PanelID));

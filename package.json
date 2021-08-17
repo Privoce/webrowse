@@ -1,13 +1,13 @@
 {
-  "name": "vera",
-  "version": "3.2.28",
+  "name": "webrowse",
+  "version": "0.3.8",
   "main": "src/index.js",
-  "author": "WenheLI",
+  "author": "Tristan",
   "license": "MIT",
   "scripts": {
     "build": "node utils/build.js",
     "build:production": "export PRODUCTION=true && npm run build",
-    "postbuild": "rm -rf ./build/227.js && tar -cvf vera.tar ./build/*",
+    "postbuild": "rm -rf ./build/227.js && tar -cvf webrowse.tar ./build/*",
     "start": "node utils/webserver.js",
     "postinstall": "husky install",
     "prepublishOnly": "pinst --disable",

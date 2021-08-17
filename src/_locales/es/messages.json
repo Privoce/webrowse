@@ -1,6 +1,6 @@
 {
   "extName": {
-    "message": "Vera - Co-navegar Doc, Figma, PDF.",
+    "message": "Webrowse - Co-navegar Doc, Figma, PDF.",
     "description": "Portal name"
   },
   "extDescription": {
@@ -8,16 +8,16 @@
     "description": "Portal description"
   },
   "getPermissionTitle": {
-    "message": "Allow Vera to use your camera and microphone"
+    "message": "Allow Webrowse to use your camera and microphone"
   },
   "getPermissionContent": {
-    "message": "Vera needs access to your camera and microphone so that other participants can see and hear you. Vera will ask you to confirm this decision on each browser and computer you use."
+    "message": "Webrowse needs access to your camera and microphone so that other participants can see and hear you. Webrowse will ask you to confirm this decision on each browser and computer you use."
   },
   "blockPermissionTitle": {
     "message": "Camera and microphone are blocked"
   },
   "blockPermissionContent": {
-    "message": "Vera requires access to your camera and microphone. Click the camera blocked icon  <img src='https://www.gstatic.com/meet/ic_blocked_camera_dark_f401bc8ec538ede48315b75286c1511b.svg' /> in your browser&apos;s address bar."
+    "message": "Webrowse requires access to your camera and microphone. Click the camera blocked icon  <img src='https://www.gstatic.com/meet/ic_blocked_camera_dark_f401bc8ec538ede48315b75286c1511b.svg' /> in your browser&apos;s address bar."
   },
   "login": {
     "message": "Login"
