@@ -1,0 +1,100 @@
+{
+  "extName": {
+    "message": "来啦 一起看吧",
+    "description": "Portal name"
+  },
+  "extDescription": {
+    "message": "和队友一起讨论文档，写作业，看视频！",
+    "description": "Portal description"
+  },
+  "getPermissionTitle": {
+    "message": "允许Vera使用您的摄像头与麦克风"
+  },
+  "getPermissionContent": {
+    "message": "Vera需要获取您的摄像头与麦克风的授权，以便流畅体验接下来的产品使用场景"
+  },
+  "blockPermissionTitle": {
+    "message": "摄像头与麦克风被禁掉啦"
+  },
+  "blockPermissionContent": {
+    "message": "Vera需要获得使用摄像头与麦克风的授权。点击地址栏  <img src='https://www.gstatic.com/meet/ic_blocked_camera_dark_f401bc8ec538ede48315b75286c1511b.svg' /> 的图标，重新获得授权。"
+  },
+  "mode": {
+    "message": "模式"
+  },
+  "login": {
+    "message": "登录"
+  },
+  "logout": {
+    "message": "退出"
+  },
+  "reg": {
+    "message": "注册"
+  },
+  "joinAsGuest": {
+    "message": "游客身份加入"
+  },
+  "tipLogin": {
+    "message": "请登录/注册"
+  },
+  "tipLoading": {
+    "message": "加载中"
+  },
+  "tipDisableVideo": {
+    "message": "禁用视频"
+  },
+  "tipDisableAudio": {
+    "message": "禁用音频"
+  },
+  "tipRemoveBg": {
+    "message": "去背景"
+  },
+  "tipPin": {
+    "message": "画中画"
+  },
+  "tipSendFeedback": {
+    "message": "发送反馈"
+  },
+  "tipFeedback": {
+    "message": "反馈"
+  },
+  "tipProcessing": {
+    "message": "处理中"
+  },
+  "tipNext": {
+    "message": "下一个"
+  },
+  "tipPrev": {
+    "message": "上一个"
+  },
+  "copy": {
+    "message": "复制"
+  },
+  "copied": {
+    "message": "已复制"
+  },
+  "invite": {
+    "message": "邀请"
+  },
+  "inviting": {
+    "message": "邀请中"
+  },
+  "fail": {
+    "message": "失败"
+  },
+  "success": {
+    "message": "成功"
+  },
+  "invited": {
+    "message": "已邀请"
+  },
+  "join": {
+    "message": "加入"
+  },
+  "prepare": {
+    "message": "准备中"
+  },
+  "quitConfirm": {
+    "message": "确定退出？"
+  }
+}

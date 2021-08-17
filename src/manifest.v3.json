@@ -1,0 +1,98 @@
+{
+  "name": "__MSG_extName__",
+  "short_name": "Portal",
+  "description": "__MSG_extDescription__",
+  "version": "3.4.0",
+  "manifest_version": 3,
+  "homepage_url": "https://nicegoodthings.com/",
+  "permissions": [
+    "tabs",
+    "identity",
+    "storage"
+  ],
+  "action": {
+    "default_icon": {
+      "16": "/assets/favicon-16x16.png",
+      "32": "/assets/favicon-32x32.png",
+      "48": "/assets/android-chrome-192x192.png",
+      "128": "/assets/android-chrome-192x192.png"
+    },
+    "default_title": "Vera - Co-browsering"
+  },
+  "icons": {
+    "16": "/assets/favicon-16x16.png",
+    "32": "/assets/favicon-32x32.png",
+    "48": "/assets/android-chrome-192x192.png",
+    "128": "/assets/android-chrome-192x192.png"
+  },
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAw8+yi9muoWgjcWZOHYN950YFzSZLkBuNy28G258RSxbhNU/kcAItaihpRHurE507yZVAydtdDKXVM3VEnBjawhcOHxvFwTKkNsZXwAUSnC8yscZDwgaapqRzZY69+UYPq0lJl4YvYMGvN+H4ehHt/9pYFXYilL6fLKOIL53ZVXHuOeyPk8O/2w2H2aJetDEok3wJUoWhjzPRzEPLPskyR8Cjei9qEr4vmF7fXn/2EyZhUgARgNIS5OjRV9wCbKsaTTcC5ci65lUzvn6r2KRn4nbU0mAiEoQdJyFocoxYBsZycM/FaKyClzqjqU81dbgaH63IQrO0A7BU2D0xpR1m7wIDAQAB",
+  "oauth2": {
+    "client_id": "1034738316090-7r656fifkotsla4cb8huu6eqdqshfa2q.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar"
+    ]
+  },
+  "background": {
+    "service_worker": "background.bundle.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "exclude_matches": [
+        "https://nicegoodthings.com/*",
+        "http://localhost/*"
+      ],
+      "js": [
+        "assets/libs/rangy-core.js",
+        "assets/libs/rangy-serializer.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "exclude_matches": [
+        "https://nicegoodthings.com/",
+        "https://nicegoodthings.com/transfer/*",
+        "http://localhost/*"
+      ],
+      "js": [
+        "/contentScript.bundle.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://www.figma.com/*",
+        "https://*.notion.so/*"
+      ],
+      "js": [
+        "assets/libs/allow-copy.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "/catchInviteId.bundle.js"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "*"
+      ],
+      "matches": [],
+      "extension_ids": []
+    }
+  ],
+  "options_page": "./Options/index.html",
+  "default_locale": "en"
+}

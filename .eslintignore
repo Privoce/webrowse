@@ -1,0 +1,8 @@
+/scripts
+/node_modules
+/build
+/.vscode
+/public
+/crx
+
+/src/assets/libs/

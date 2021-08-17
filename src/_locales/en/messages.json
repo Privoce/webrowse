@@ -1,0 +1,97 @@
+{
+  "extName": {
+    "message": "Webrowse - sync tabs with your teammates!",
+    "description": "Portal name"
+  },
+  "extDescription": {
+    "message": "Cobrowse any website with your teammates!",
+    "description": "Portal description"
+  },
+  "getPermissionTitle": {
+    "message": "Allow Webrowse to use your camera and microphone"
+  },
+  "getPermissionContent": {
+    "message": "Webrowse needs access to your camera and microphone so that other participants can see and hear you. Webrowse will ask you to confirm this decision on each browser and computer you use."
+  },
+  "blockPermissionTitle": {
+    "message": "Camera and microphone are blocked"
+  },
+  "blockPermissionContent": {
+    "message": "Webrowse requires access to your camera and microphone. Click the camera blocked icon  <img src='https://www.gstatic.com/meet/ic_blocked_camera_dark_f401bc8ec538ede48315b75286c1511b.svg' /> in your browser&apos;s address bar."
+  },
+  "mode": {
+    "message": "Mode"
+  },
+  "login": {
+    "message": "Login"
+  },
+  "logout": {
+    "message": "Logout"
+  },
+  "reg": {
+    "message": "Sign Up"
+  },
+  "joinAsGuest": {
+    "message": "Join as Guest"
+  },
+  "tipLogin": {
+    "message": "To store history, please:"
+  },
+  "tipLoading": {
+    "message": "Loading"
+  },
+  "tipDisableVideo": {
+    "message": "disable camera"
+  },
+  "tipDisableAudio": {
+    "message": "disable audio"
+  },
+  "tipRemoveBg": {
+    "message": "remove background"
+  },
+  "tipPin": {
+    "message": "pin"
+  },
+  "tipSendFeedback": {
+    "message": "Send us your feedback"
+  },
+  "tipFeedback": {
+    "message": "feedback"
+  },
+  "tipProcessing": {
+    "message": "processing"
+  },
+  "tipNext": {
+    "message": "Next View"
+  },
+  "tipPrev": {
+    "message": "Prev View"
+  },
+  "copy": {
+    "message": "Copy link"
+  },
+  "copied": {
+    "message": "Copied"
+  },
+  "invite": {
+    "message": "Invite"
+  },
+  "inviting": {
+    "message": "Inviting"
+  },
+  "fail": {
+    "message": "Fail"
+  },
+  "success": {
+    "message": "Success"
+  },
+  "invited": {
+    "message": "Invited"
+  },
+  "join": {
+    "message": "Join"
+  },
+  "quitConfirm": {
+    "message": "are you sure to quit?"
+  }
+}

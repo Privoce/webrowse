@@ -1,0 +1,79 @@
+{
+  "extName": {
+    "message": "Vera - Co-navegar Doc, Figma, PDF.",
+    "description": "Portal name"
+  },
+  "extDescription": {
+    "message": "¡Navega por cualquier sitio web con tus compañeras de equipo!",
+    "description": "Portal description"
+  },
+  "getPermissionTitle": {
+    "message": "Allow Vera to use your camera and microphone"
+  },
+  "getPermissionContent": {
+    "message": "Vera needs access to your camera and microphone so that other participants can see and hear you. Vera will ask you to confirm this decision on each browser and computer you use."
+  },
+  "blockPermissionTitle": {
+    "message": "Camera and microphone are blocked"
+  },
+  "blockPermissionContent": {
+    "message": "Vera requires access to your camera and microphone. Click the camera blocked icon  <img src='https://www.gstatic.com/meet/ic_blocked_camera_dark_f401bc8ec538ede48315b75286c1511b.svg' /> in your browser&apos;s address bar."
+  },
+  "login": {
+    "message": "Login"
+  },
+  "logout": {
+    "message": "Logout"
+  },
+  "tipLoading": {
+    "message": "Loading"
+  },
+  "tipDisableVideo": {
+    "message": "desabilitar câmera"
+  },
+  "tipDisableAudio": {
+    "message": "desabilitar áudio"
+  },
+  "tipRemoveBg": {
+    "message": "Remover imagem de fundo"
+  },
+  "tipPin": {
+    "message": "alfinete"
+  },
+  "tipSendFeedback": {
+    "message": "发送反馈"
+  },
+  "tipFeedback": {
+    "message": "comentários"
+  },
+  "tipProcessing": {
+    "message": "Em processamento"
+  },
+  "tipNext": {
+    "message": "Next View"
+  },
+  "tipPrev": {
+    "message": "Prev View"
+  },
+  "copy": {
+    "message": "Copiar link"
+  },
+  "copied": {
+    "message": "Copiado"
+  },
+  "invite": {
+    "message": "Convite"
+  },
+  "invited": {
+    "message": "Convidado"
+  },
+  "join": {
+    "message": "Entrar"
+  },
+  "prepare": {
+    "message": "prepare"
+  },
+  "quitConfirm": {
+    "message": "Tem certeza que deseja sair?"
+  }
+}
