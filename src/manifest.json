@@ -2,7 +2,7 @@
   "name": "__MSG_extName__",
   "description": "__MSG_extDescription__",
   "short_name": "Webrowse",
-  "version": "0.3.8",
+  "version": "2021.08.18",
   "manifest_version": 2,
   "homepage_url": "https://nicegoodthings.com/",
   "permissions": [
@@ -25,7 +25,7 @@
     "48": "/assets/android-chrome-48x48.png",
     "128": "/assets/android-chrome-128x128.png"
   },
-  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAw8+yi9muoWgjcWZOHYN950YFzSZLkBuNy28G258RSxbhNU/kcAItaihpRHurE507yZVAydtdDKXVM3VEnBjawhcOHxvFwTKkNsZXwAUSnC8yscZDwgaapqRzZY69+UYPq0lJl4YvYMGvN+H4ehHt/9pYFXYilL6fLKOIL53ZVXHuOeyPk8O/2w2H2aJetDEok3wJUoWhjzPRzEPLPskyR8Cjei9qEr4vmF7fXn/2EyZhUgARgNIS5OjRV9wCbKsaTTcC5ci65lUzvn6r2KRn4nbU0mAiEoQdJyFocoxYBsZycM/FaKyClzqjqU81dbgaH63IQrO0A7BU2D0xpR1m7wIDAQAB",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0Hccyrh8JvE4RDyid6HE4YFP+EYJ6NOepYVf/+ZJ8r8yQetyjZ7lhiE21Yop79mskSea7O+zwvGkQWHES2B6njPwUqSK0cLf2oOcAt+sdm/GEjBfzePT8canm6E1+3bnNTLWF7xJGXU9Rg7pHJZJwUu65ERWXYn30Ea3o9bh3trnzQDj/WsSVwsnUOs16uxVUK/HFGVfCc/4pFWCfFdLcHPTpBK7Omj/slfdbmuwumWfYpozNTkdw9Xx1RqJALrULZiKM0ZAlnQYKmbrR0ap8F83lH5Yv71llDfXmYgYnl7vPG7Y6llyyG+j8tm2/MbzTdjFOzEyna7SG0057W7G8QIDAQAB",
   "background": {
     "scripts": [
       "./background.bundle.js"
