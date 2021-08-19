@@ -6,7 +6,7 @@ import { getActiveTab, debounce } from './utils'
 const SOCKET_SERVER_URL = 'wss://stage.vera.nicegoodthings.com';
 // const SOCKET_SERVER_URL = 'wss://vera.nicegoodthings.com';
 // const SOCKET_SERVER_URL = 'http://localhost:4000';
-const DEFAULT_LANDING_PAGE = 'https://nicegoodthings.com/landing/webrowse';
+const DEFAULT_LANDING_PAGE = 'https://nicegoodthings.com/landing/vera';
 const DATA_HUB = {};
 
 // 右上角小图标点击事件
