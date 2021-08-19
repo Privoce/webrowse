@@ -1,25 +1,21 @@
 import { useEffect } from 'react';
+import { sendMessageToBackground, MessageLocation, onMessageFromContentScript } from '@wbet/message-api';
+import { EVENTS } from '../../../common'
 import Button from './Button';
 const loginTxt = chrome.i18n.getMessage('login');
 const regTxt = chrome.i18n.getMessage('reg');
 export default function Login({ type = 'login' }) {
   const handleLogin = () => {
-    chrome.runtime.sendMessage({ action: 'LOGIN' }, function () {
-      /* callback */
-      console.log('send login message');
-    });
+    sendMessageToBackground({}, MessageLocation.Content, EVENTS.LOGIN)
   };
   useEffect(() => {
     // 监听
-    chrome.runtime.onMessage.addListener((request) => {
-      console.log({ request });
-      if (request.user) {
-        let { username } = request.user;
-        console.log({ username });
-        // WEBROWSE_EMITTER.emit('login', { isHost, localId, inviteId, username });
+    onMessageFromContentScript(MessageLocation.Content, {
+      [EVENTS.LOGIN]: () => {
+
+        // VERA_EMITTER.emit('login', { isHost, localId, inviteId, username });
       }
-      return true;
-    });
+    })
   }, []);
   return <Button onClick={handleLogin}>{type == 'login' ? loginTxt : regTxt}</Button>;
 }
