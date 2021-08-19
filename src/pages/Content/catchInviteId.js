@@ -1,7 +1,7 @@
 // room id
 import { sendMessageToBackground, MessageLocation } from '@wbet/message-api'
 
-document.addEventListener('VERA_ROOM_EVENT', function (e) {
+document.addEventListener('WEBROWSE_ROOM_EVENT', function (e) {
   let {
     detail: { rid, wid, user }
   } = e;
@@ -16,7 +16,7 @@ document.addEventListener('VERA_ROOM_EVENT', function (e) {
     sendMessageToBackground({ wid, rid, src: 'INVITE_LINK' }, MessageLocation.Content, 'NEW_WINDOW')
   }
 });
-document.addEventListener('VERA_ROOM_NEW_WINDOW_EVENT', function (e) {
+document.addEventListener('WEBROWSE_ROOM_NEW_WINDOW_EVENT', function (e) {
   let {
     detail: { urls = [], rid = null, wid = null }
   } = e;

@@ -154,7 +154,7 @@ const notifyActiveTab = ({ windowId = 0, action = EVENTS.UPDATE_TABS, payload = 
         let { landing } = payload;
         landing = landing ? landing : tab.url;
         let rid = DATA_HUB[tab.windowId].roomId;
-        let inviteLink = rid ? `https://nicegoodthings.com/transfer/r/${rid}/${encodeURIComponent(landing)}?extid=${chrome.runtime.id
+        let inviteLink = rid ? `https://nicegoodthings.com/transfer/wb/${rid}/${encodeURIComponent(landing)}?extid=${chrome.runtime.id
           }` : ''
         console.log("get link event", rid, landing);
         sendMessageToContentScript(tab?.id, inviteLink, MessageLocation.Background, EVENTS.GET_INVITE_LINK)
