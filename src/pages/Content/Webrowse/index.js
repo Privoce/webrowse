@@ -11,6 +11,7 @@ import useUsername from './hooks/useUsername'
 // import { getUser } from './hooks/utils';
 import { EVENTS } from '../../../common'
 import Floater from './Floater';
+import CobrowseStatus from './CobrowseStatus';
 const StyledWrapper = styled.section`
   position: fixed;
   top: 0;
@@ -23,6 +24,9 @@ const StyledWrapper = styled.section`
   align-items: center;
   justify-content: flex-end;
   line-height: 1;
+  &.cobrowsing{
+    box-shadow: inset 6px 6px 0 0 #77a5f1, inset 0 0 6px 6px #77a5f1;
+  }
 `;
 const GlobalStyle = createGlobalStyle`
   ol, ul {
@@ -154,8 +158,9 @@ export default function Webrowse() {
   if (loading) return null;
   console.log({ floaterVisible });
   return (
-    <StyledWrapper id="WEBROWSE_FULLSCREEN_CONTAINER">
+    <StyledWrapper id="WEBROWSE_FULLSCREEN_CONTAINER" className={floaterVisible ? 'cobrowsing' : ''}>
       <GlobalStyle />
+      {floaterVisible && <CobrowseStatus />}
       {floaterVisible && <Floater />}
       {/* 未登录/注册panel */}
       {regPanelVisible && <RegPanel closePanel={toggleRegPanelVisible} />}
