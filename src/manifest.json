@@ -2,9 +2,9 @@
   "name": "__MSG_extName__",
   "description": "__MSG_extDescription__",
   "short_name": "Webrowse",
-  "version": "2021.08.24",
+  "version": "2021.08.25",
   "manifest_version": 2,
-  "homepage_url": "https://nicegoodthings.com/",
+  "homepage_url": "https://webrow.se/",
   "permissions": [
     "tabs",
     "storage"
