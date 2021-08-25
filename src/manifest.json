@@ -2,7 +2,7 @@
   "name": "__MSG_extName__",
   "description": "__MSG_extDescription__",
   "short_name": "Webrowse",
-  "version": "2021.08.18",
+  "version": "2021.08.24",
   "manifest_version": 2,
   "homepage_url": "https://nicegoodthings.com/",
   "permissions": [
@@ -17,7 +17,8 @@
       "48": "/assets/android-chrome-48x48.png",
       "128": "/assets/android-chrome-128x128.png"
     },
-    "default_title": "Webrowse - Co-browsering"
+    "default_title": "Webrowse - Co-browsering",
+    "default_popup": "Popup/index.html"
   },
   "icons": {
     "16": "/assets/favicon-16x16.png",

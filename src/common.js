@@ -46,7 +46,9 @@ const EVENTS = {
   // 切换floater tab
   CHANGE_FLOATER_TAB: 'CHANGE_FLOATER_TAB',
   // 获取邀请连接
-  GET_INVITE_LINK: 'GET_INVITE_LINK'
+  GET_INVITE_LINK: 'GET_INVITE_LINK',
+  // pop up 数据集合
+  POP_UP_DATA: 'POP_UP_DATA',
 }
 
 export { EVENTS }

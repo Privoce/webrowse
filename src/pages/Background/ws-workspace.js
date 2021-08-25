@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
 import Workspace, { TabEvent } from './lib/main';
-import { sendMessageToContentScript, onMessageFromContentScript, MessageLocation } from '@wbet/message-api'
+import { sendMessageToContentScript, onMessageFromPopup, sendMessageToPopup, onMessageFromContentScript, MessageLocation } from '@wbet/message-api'
 import { EVENTS } from '../../common';
 import { getActiveTab, debounce } from './utils'
 const SOCKET_SERVER_URL = 'wss://stage.vera.nicegoodthings.com';
@@ -9,18 +9,34 @@ const SOCKET_SERVER_URL = 'wss://stage.vera.nicegoodthings.com';
 const DEFAULT_LANDING_PAGE = 'https://nicegoodthings.com/landing/vera';
 const DATA_HUB = {};
 
-// 右上角小图标点击事件
-chrome.browserAction.onClicked.addListener(() => {
-  chrome.storage.sync.get(['user'], (res) => {
-    console.log('local user', res.user);
-    const { user = null } = res;
-    let roomId = `${Math.random().toString(36).substring(7)}_temp`;
-    if (user && user.id) {
-      roomId = user.id;
+
+// init user info
+chrome.storage.sync.get(['user'], (res) => {
+  console.log('local user data', res.user);
+  const { user = null } = res;
+  if (user) {
+    // 只保留需要的字段
+    let keeps = ["id", "username", "photo", "token"];
+    let tmp = {};
+    Object.keys(user).forEach(k => {
+      if (keeps.includes(k) && typeof user[k] !== "undefined") {
+        tmp[k] = user[k];
+      }
+    });
+    DATA_HUB.user = tmp;
+  }
+  chrome.storage.onChanged.addListener((changes, area) => {
+    console.log({ changes, area });
+    if (area == 'sync') {
+      const { user } = changes;
+      if (user) {
+        let { newValue = null } = user || {};
+        DATA_HUB.user = newValue;
+      }
     }
-    initWorkspace({ roomId, urls: [DEFAULT_LANDING_PAGE] })
   });
 });
+
 // 向特定tab发消息
 const sendMessageToTab = (tid = null, params, actionType = '') => {
   if (tid) {
@@ -120,6 +136,7 @@ const initWorkspace = ({ roomId = "", winId = "", urls = [], tabId = undefined }
       notifyActiveTab({ windowId, action: EVENTS.UPDATE_FLOATER });
       notifyActiveTab({ windowId, action: EVENTS.GET_INVITE_LINK, payload: { landing: currLink } });
     });
+    notifyActiveTab({ windowId, action: EVENTS.CHECK_CONNECTION });
   })
 }
 // update tabs
@@ -163,6 +180,41 @@ const notifyActiveTab = ({ windowId = 0, action = EVENTS.UPDATE_TABS, payload = 
     }
   })
 }
+// 监听来自popup的触发事件
+onMessageFromPopup(MessageLocation.Background, {
+  [EVENTS.POP_UP_DATA]: () => {
+    console.log("popup event");
+    const { user, ...windows } = DATA_HUB;
+    let filteredWindows = [];
+    if (windows) {
+      let keeps = ['roomId', "roomName", 'tabs', 'userId', 'users'];
+      Object.entries(windows).forEach(([, obj]) => {
+        let tmp = {};
+        Object.keys(obj).forEach(k => {
+          if (keeps.includes(k) && typeof obj[k] !== "undefined") {
+            tmp[k] = obj[k];
+          }
+        });
+        filteredWindows.push(tmp)
+      })
+    }
+    sendMessageToPopup({ user, windows: filteredWindows }, MessageLocation.Background, EVENTS.POP_UP_DATA)
+  },
+  [EVENTS.NEW_WINDOW]: ({ currentTab }) => {
+    let roomId = `${Math.random().toString(36).substring(7)}_temp`;
+    const { user } = DATA_HUB;
+    if (user && user.id) {
+      roomId = user.id;
+    }
+    if (currentTab) {
+      getActiveTab().then(tab => {
+        initWorkspace({ roomId, tabId: tab.id })
+      })
+    } else {
+      initWorkspace({ roomId, urls: [DEFAULT_LANDING_PAGE] })
+    }
+  }
+})
 // 监听来自content script 的触发事件
 onMessageFromContentScript(MessageLocation.Background, {
   // new window
@@ -193,7 +245,7 @@ onMessageFromContentScript(MessageLocation.Background, {
     const { id: tabId, url, windowId } = sender.tab;
     // 如果已初始化，则不必再次初始化
     if (DATA_HUB[windowId].socket) return;
-    console.log('init websocket');
+    console.log('init websocket', user);
     const newSocket = io(SOCKET_SERVER_URL, {
       jsonp: false,
       transports: ['websocket'],
@@ -219,12 +271,13 @@ onMessageFromContentScript(MessageLocation.Background, {
     socket.on(EVENTS.CURRENT_USERS, ({ room = {}, workspaceData = null, users, update = false }) => {
       // 更新到全局变量
       DATA_HUB[windowId].users = users;
-      const computedRoomName = room?.name || DATA_HUB[windowId]?.roomName || (room?.temp ? 'Temporary Room' : '');
+      const computedRoomName = room?.name || DATA_HUB[windowId]?.roomName || (room?.temp ? 'Temporary Room' : '') || room?.id == DATA_HUB.user?.id ? 'Personal Room' : '';
       sendMessageToTab(currTabId, { roomName: computedRoomName, users, update }, EVENTS.CURRENT_USERS);
       // 首次
       if (!update) {
         // 如果有workspace数据 则全量更新一次
         if (workspaceData) {
+          console.log("update current workspace", workspaceData);
           DATA_HUB[windowId].workspace?.write(workspaceData);
         }
         // 立即开始监听房间新加入人员事件
@@ -239,7 +292,7 @@ onMessageFromContentScript(MessageLocation.Background, {
           sendMessageToTab(currTabId, { user }, EVENTS.USER_JOIN_MEETING)
         });
         // 更新floater
-        DATA_HUB[windowId].roomName = room.name || (room.temp ? 'Temporary Room' : '');
+        DATA_HUB[windowId].roomName = computedRoomName;
         notifyActiveTab({ windowId, action: EVENTS.UPDATE_FLOATER })
       }
     });
