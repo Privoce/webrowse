@@ -95,7 +95,7 @@ export default function Tabs({ tabs, users, closeBlock }) {
           const host = activeUsers.find(u => u.host);
           return <li key={id} data-tab-id={id} onClick={handleTabClick} data-host={host?.username} className={`tab ${host ? 'host' : ''}`} title={title}>
             <div className="ico">
-              <img src={favIconUrl} alt="favicon" />
+              <img src={favIconUrl || `chrome-extension://${chrome.runtime.id}/assets/icon/tab.svg`} alt="favicon" />
             </div>
             <span className="title">{title}</span>
             <div className="members">
