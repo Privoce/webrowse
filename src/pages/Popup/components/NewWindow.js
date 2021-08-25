@@ -26,6 +26,7 @@ const StyledWrapper = styled.div`
     border-radius: 5px;
     padding:12px 14px;
     .dup{
+      cursor: pointer;
       white-space: nowrap;
       display: flex;
       align-items: center;
@@ -47,6 +48,10 @@ const StyledWrapper = styled.div`
       background: #056CF2;
       border-radius: 20px;
       padding:8px 14px 8px 42px;
+      background-size: 22px;
+      background-image: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/add.svg`});
+      background-repeat: no-repeat;
+      background-position: 14px 8px;
     }
   }
 `;
@@ -62,8 +67,8 @@ export default function NewWindow() {
     <StyledWrapper>
       <h2 className="title">New Window</h2>
       <div className="block">
-        <div className="dup">
-          <input className="check" onChange={toggleDupCheckChange} checked={dupChecked} type="checkbox" name="dup" id="dup" />
+        <div className="dup" onClick={toggleDupCheckChange}>
+          <input className="check" readOnly checked={dupChecked} type="checkbox" name="dup" id="dup" />
           <span>
             Duplicate tabs in current window
           </span>

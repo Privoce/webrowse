@@ -8,7 +8,7 @@ const StyledWrapper = styled.div`
   justify-content: space-between;
   flex-direction: column;
   align-items: flex-start;
-  padding:16px 24px;
+  padding:0 24px 16px 24px ;
   >.title{
     font-weight: bold;
     font-size: 14px;
@@ -21,25 +21,34 @@ const StyledWrapper = styled.div`
     display: flex;
     flex-direction: column;
     gap: 8px;
-    padding:10px 12px;
+    padding:0;
     background:#fff;
     border-radius: 15px;
+    overflow: hidden;
     .title{
       display: flex;
       align-items: center;
       gap: 8px;
       cursor: pointer;
+      color: #000;
+      padding:10px 12px;
+      margin: 0;
       .arrow{
         width:20px;
         height:20px;
         border-radius: 50%;
-        background:#EAEAEA;
+        background-color:#EAEAEA;
+        background-size: 16px;
+        background-image: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/arrow.down.svg`});
+        background-repeat: no-repeat;
+        background-position: center;
+        transition: transform .5s ease-in;
       }
       .con{
         font-weight: 600;
         font-size: 14px;
         line-height: 22px;
-        color: #000;
+        color: inherit;
         white-space: nowrap;
       }
 
@@ -55,14 +64,15 @@ const StyledWrapper = styled.div`
     }
     .tabs{
       margin: 0;
-      padding: 0;
+      padding: 0 12px;
       list-style: none;
-      display: flex;
+      display: none;
       flex-direction: column;
       gap: 8px;
       border-left: 2px solid #EAEAEA;
       padding-left: 12px;
       margin-left: 28px;
+      margin-bottom: 10px;
       .tab{
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -81,6 +91,14 @@ const StyledWrapper = styled.div`
         color: #000000;
       }
     }
+    &.expand{
+      .tabs{
+        display: flex;
+      }
+      .title .arrow{
+        transform: rotate(180deg);
+      }
+    }
     &:hover{
       background:#EBF3FE;
       .title{
@@ -94,25 +112,32 @@ const StyledWrapper = styled.div`
     }
   }
 `;
-export default function WindowList({ windows = [] }) {
+export default function WindowList({ windows = [{
+  roomId: 'dddd', roomName: "test", tabs: [{
+    id: 222, title: 'ceshi', windowId: 33333
+  }]
+}] }) {
   console.log("window list", windows);
   const handleJumpTab = ({ currentTarget }) => {
     const { tabId, windowId } = currentTarget.dataset;
     sendMessageToBackground({ tabId, windowId }, MessageLocation.Popup, EVENTS.JUMP_TAB)
+  }
+  const toggleExpand = ({ currentTarget }) => {
+    currentTarget.parentElement.classList.toggle('expand')
   }
   if (!windows || windows.length == 0) return null;
   return (
     <StyledWrapper>
       <h2 className="title">Active Windows</h2>
       {windows.map(({ roomId, roomName, tabs }) => {
-
         return <div key={roomId} className="window">
-          <h3 className="title">
-            <div className={`arrow`}></div>
+          <h3 className="title" onClick={toggleExpand}>
+            <i className='arrow'></i>
             <span className="con">
               {roomName}
             </span>
-            <span className="num">{tabs.length} tabs</span></h3>
+            <span className="num">{tabs.length} tabs</span>
+          </h3>
           <ul className="tabs">
             {tabs.map(({ id, title, favIconUrl, windowId }) => {
               return <li onClick={handleJumpTab} data-window-id={windowId} data-tab-id={id} key={id} title={title} className="tab">
