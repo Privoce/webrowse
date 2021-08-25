@@ -182,6 +182,10 @@ const notifyActiveTab = ({ windowId = 0, action = EVENTS.UPDATE_TABS, payload = 
 }
 // 监听来自popup的触发事件
 onMessageFromPopup(MessageLocation.Background, {
+  [EVENTS.LOGOUT]: () => {
+    delete DATA_HUB?.user;
+    chrome.storage.sync.remove(['user']);
+  },
   [EVENTS.POP_UP_DATA]: () => {
     console.log("popup event");
     const { user, ...windows } = DATA_HUB;

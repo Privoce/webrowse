@@ -27,7 +27,8 @@ export default function Container() {
     sendMessageToBackground({}, MessageLocation.Popup, EVENTS.POP_UP_DATA)
   }, []);
   const logout = () => {
-    setUser(null)
+    setUser(null);
+    sendMessageToBackground({}, MessageLocation.Popup, EVENTS.LOGOUT);
   }
   if (!user) return <Login />;
   return (

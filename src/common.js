@@ -35,6 +35,8 @@ const EVENTS = {
   OPEN_HOME: 'OPEN_HOME',
   // 登录
   LOGIN: 'LOGIN',
+  // 退出
+  LOGOUT: 'LOGOUT',
   // 成为host
   BE_HOST: 'BE_HOST',
   //加载vera panel
