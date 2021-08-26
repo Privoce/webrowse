@@ -6,6 +6,8 @@
   "manifest_version": 2,
   "homepage_url": "https://webrow.se/",
   "permissions": [
+    "http://localhost/*",
+    "*://*nicegoodthings.com/*",
     "tabs",
     "storage"
   ],
