@@ -25,6 +25,8 @@ const StyledStatus = styled.div`
     .tip{
       padding:5px 0;
       white-space: nowrap;
+      font-size: 12px;
+      font-family: sans-serif;
     }
   .status{
     flex: 1;

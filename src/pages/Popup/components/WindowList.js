@@ -25,6 +25,7 @@ const StyledWrapper = styled.div`
     background:#fff;
     border-radius: 15px;
     overflow: hidden;
+    margin-bottom: 10px;
     .title{
       display: flex;
       align-items: center;
@@ -74,21 +75,23 @@ const StyledWrapper = styled.div`
       margin-left: 28px;
       margin-bottom: 10px;
       .tab{
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        max-width: 300px;
-        overflow: hidden;
+        display: flex;
+        align-items: center;
         cursor: pointer;
+        gap: 8px;
         img{
           width:24px;
           height:24px;
         }
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 14px;
-        line-height: 18px;
-        color: #000000;
+        .con{
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          max-width: 300px;
+          overflow: hidden;
+          font-size: 14px;
+          line-height: 18px;
+          color: #000;
+        }
       }
     }
     &.expand{
@@ -142,7 +145,7 @@ export default function WindowList({ windows = [{
             {tabs.map(({ id, title, favIconUrl, windowId }) => {
               return <li onClick={handleJumpTab} data-window-id={windowId} data-tab-id={id} key={id} title={title} className="tab">
                 <img src={favIconUrl || "https://files.authing.co/authing-console/default-user-avatar.png"} alt="favicon" />
-                {title}
+                <span className="con">{title}</span>
               </li>
             })}
           </ul>
