@@ -8,9 +8,7 @@ chrome.runtime.onInstalled.addListener(function (details) {
   const { reason } = details;
   console.log("install reason", reason);
   switch (reason) {
-    case 'install':
-    case 'update':
-    case 'chrome_update': {
+    case 'install': {
       chrome.tabs.query({ url: "*://*/transfer/wb/*" }, function (tabs) {
         console.log('query invite tabs', tabs);
         if (!tabs || tabs.length === 0) {
@@ -41,5 +39,7 @@ chrome.runtime.onInstalled.addListener(function (details) {
       break;
   }
 });
+// case 'update':
+// case 'chrome_update':
 console.log('bg script ready~');
 
