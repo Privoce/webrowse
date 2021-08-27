@@ -177,7 +177,7 @@ export default function FollowMode({ host = null, currUser = {}, closeBlock }) {
         <div className="current">
           <span className="pf prefix">Host</span>
           <div className="member">
-            <img src={photo} alt="host head image" className="head" />
+            <img src={photo || 'https://files.authing.co/authing-console/default-user-avatar.png'} alt="host head image" className="head" />
             <div className="name">{username}</div>
           </div>
         </div>

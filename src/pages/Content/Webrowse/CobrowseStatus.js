@@ -22,36 +22,36 @@ const StyledStatus = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    font-family: sans-serif;
     .tip{
       padding:5px 0;
       white-space: nowrap;
       font-size: 12px;
-      font-family: sans-serif;
     }
-  .status{
-    flex: 1;
-    padding:5px 10px 5px 30px;
-    white-space: nowrap;
-    .host{
-      font-weight: 800;
+    .status{
+      flex: 1;
+      padding:5px 10px 5px 30px;
+      white-space: nowrap;
+      .host{
+        font-weight: 800;
+      }
     }
-  }
-  .follow{
-    border:none;
-    outline: none;
-    color:inherit;
-    flex:1;
-    background-color:#68D6DD;
-    padding-left: 20px;
-    background-image: url('https://static.nicegoodthings.com/works/vera/follow.icon.png') ;
-    background-repeat: no-repeat;
-    background-size: 11px auto;
-    background-position: 8px;
-    padding:5px 25px 5px 24px;
-    &.following{
-      background-color:#B63546;
+    .follow{
+      border:none;
+      outline: none;
+      color:inherit;
+      flex:1;
+      background-color:#68D6DD;
+      padding-left: 20px;
+      background-image: url('https://static.nicegoodthings.com/works/vera/follow.icon.png') ;
+      background-repeat: no-repeat;
+      background-size: 11px auto;
+      background-position: 8px;
+      padding:5px 25px 5px 24px;
+      &.following{
+        background-color:#B63546;
+      }
     }
-  }
 `;
 
 export default function CobrowseStatus() {
