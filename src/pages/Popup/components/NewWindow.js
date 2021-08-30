@@ -10,12 +10,6 @@ const StyledWrapper = styled.div`
   align-items: flex-start;
   justify-content: space-between;
   padding:16px 24px;
-  >.title{
-    font-weight: bold;
-    font-size: 14px;
-    line-height: 22px;
-    color: #121212;
-  }
   .block{
     width: 100%;
     width:-webkit-fill-available;
@@ -65,7 +59,6 @@ export default function NewWindow() {
   }
   return (
     <StyledWrapper>
-      <h2 className="title">New Window</h2>
       <div className="block">
         <div className="dup" onClick={toggleDupCheckChange}>
           <input className="check" readOnly checked={dupChecked} type="checkbox" name="dup" id="dup" />
