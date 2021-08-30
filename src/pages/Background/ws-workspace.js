@@ -8,8 +8,6 @@ const SOCKET_SERVER_URL = 'wss://stage.vera.nicegoodthings.com';
 // const SOCKET_SERVER_URL = 'http://localhost:4000';
 const DEFAULT_LANDING_PAGE = 'https://nicegoodthings.com/landing/vera';
 const DATA_HUB = {};
-
-
 // init user info
 chrome.storage.sync.get(['user'], (res) => {
   console.log('local user data', res.user);
@@ -64,6 +62,7 @@ const initWorkspace = ({ roomId = "", winId = "", urls = [], tabId = undefined }
       // 捕捉并处理对应的tab事件
       let currSocket = null;
       let currLink = '';
+      let needSyncTabsList = false;
       console.log('workspace trigger tab event', { event, rawParams });
       switch (event) {
         case TabEvent.onActivated:
@@ -90,6 +89,7 @@ const initWorkspace = ({ roomId = "", winId = "", urls = [], tabId = undefined }
         }
           break;
         case TabEvent.onUpdated: {
+          needSyncTabsList = true;
           const { changeInfo, tab } = rawParams;
           const { windowId, active, url } = tab;
           // const { windowId, active,url,title} = tab;
@@ -110,6 +110,7 @@ const initWorkspace = ({ roomId = "", winId = "", urls = [], tabId = undefined }
         }
           break;
         case TabEvent.onRemoved: {
+          needSyncTabsList = true;
           const { removeInfo: { windowId, isWindowClosing } } = rawParams;
           // 关闭window引起的
           if (isWindowClosing) {
@@ -120,12 +121,29 @@ const initWorkspace = ({ roomId = "", winId = "", urls = [], tabId = undefined }
         }
           break;
         case TabEvent.onMoved: {
+          needSyncTabsList = true;
           // to do: workspace api lib bug
           const { moveInfo: { windowId } } = rawParams;
           console.log('tab moved', windowId);
           currSocket = DATA_HUB[windowId].socket;
         }
           break;
+      }
+      if (needSyncTabsList) {
+        // 发送原始tab list 信息
+        let rawTabs = await currWorkspace.readRaw();
+        console.log({ rawTabs });
+        const filteredTabs = rawTabs.tabs.map(t => {
+          const { url, favIconUrl, title, active } = t;
+          return {
+            url, favIconUrl, title, active
+          }
+        });
+        currSocket?.send({
+          cmd: "RAW_TABS", payload: {
+            tabs: filteredTabs
+          }
+        });
       }
       if (currSocket) {
         console.log("socket not null");
