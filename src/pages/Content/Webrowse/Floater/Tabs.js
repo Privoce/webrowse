@@ -15,6 +15,7 @@ const StyledWrapper = styled(StyledBlock)`
       max-height: 80vh;
       overflow: auto;
       width: 100%;
+      padding-left: 0;
       .tab{
         display: flex;
         align-items: center;
