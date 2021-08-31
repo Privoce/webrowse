@@ -229,8 +229,10 @@ onMessageFromPopup(MessageLocation.Background, {
       roomId = user.id;
     }
     if (currentTab) {
-      getActiveTab().then(tab => {
-        initWorkspace({ roomId, tabId: tab.id })
+      chrome.windows.getCurrent({ populate: true }, ({ tabs }) => {
+        let urls = tabs.map(({ url }) => url);
+        console.log({ urls });
+        initWorkspace({ roomId, urls })
       })
     } else {
       initWorkspace({ roomId, urls: [DEFAULT_LANDING_PAGE] })
