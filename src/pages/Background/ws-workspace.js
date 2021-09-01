@@ -295,7 +295,8 @@ onMessageFromContentScript(MessageLocation.Background, {
     socket.on(EVENTS.CURRENT_USERS, ({ room = {}, workspaceData = null, users, update = false }) => {
       // 更新到全局变量
       DATA_HUB[windowId].users = users;
-      const computedRoomName = room?.name || DATA_HUB[windowId]?.roomName || (room?.temp ? 'Temporary Room' : '') || room?.id == DATA_HUB.user?.id ? 'Personal Room' : '';
+      console.log("current users", room, update);
+      const computedRoomName = room?.name || DATA_HUB[windowId]?.roomName || (room?.temp ? 'Temporary Room' : '') || (room?.id == DATA_HUB.user?.id ? 'Personal Room' : '');
       sendMessageToTab(currTabId, { roomName: computedRoomName, users, update }, EVENTS.CURRENT_USERS);
       // 首次
       if (!update) {
