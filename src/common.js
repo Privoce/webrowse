@@ -31,8 +31,6 @@ const EVENTS = {
   UPDATE_TABS: 'UPDATE_TABS',
   // 跳转tab
   JUMP_TAB: 'JUMP_TAB',
-  // 打开主页
-  OPEN_HOME: 'OPEN_HOME',
   // 登录
   LOGIN: 'LOGIN',
   // 退出

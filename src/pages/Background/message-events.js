@@ -7,15 +7,6 @@ onMessageFromContentScript(MessageLocation.Background, {
     console.log('jump tab', request);
     chrome.tabs.update(Number(request.tabId), { active: true })
   },
-  [EVENTS.OPEN_HOME]: () => {
-    chrome.tabs.create(
-      {
-        active: true,
-        url: 'https://nicegoodthings.com/'
-      },
-      null
-    );
-  },
   [EVENTS.LOGIN]: (request, sender) => {
     chrome.tabs.create(
       {
