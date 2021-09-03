@@ -4,7 +4,7 @@ import HangUp from './HangUp'
 import Arrange from './Arrange'
 import IconCursor from '../../icons/Cursor';
 // import IconChat from '../../icons/Chat';
-import IconInvite from '../../icons/Invite';
+// import IconInvite from '../../icons/Invite';
 import IconSync from '../../icons/Sync';
 import usePagePlayer from '../../hooks/usePagePlayer';
 import emitter, { VeraEvents, VeraStatus } from '../../hooks/useEmitter';
@@ -15,10 +15,8 @@ export default function Topbar({
   peerId,
   sendDataToPeers,
   layout,
-  inviteVisible = false,
   handleLayout,
   // chatVisible = false,
-  toggleInvitePanelVisible,
   // toggleChatBoxVisible
 }) {
   const { dark, updateDarkTheme } = useDarkTheme();
@@ -128,10 +126,10 @@ export default function Topbar({
 
         {/* <div className={`rect chat`} onClick={toggleChatBoxVisible}>
           <IconChat visible={chatVisible} />
-        </div> */}
+        </div>
         <div className={`rect invite`} onClick={toggleInvitePanelVisible}>
           <IconInvite visible={inviteVisible} />
-        </div>
+        </div>*/}
         <div className={`rect setting`} >
           <Setting
             logoutVisible={status !== VeraStatus.STREAMING}

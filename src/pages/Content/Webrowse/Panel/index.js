@@ -23,7 +23,6 @@ export default function Panel({
   tempRoom,
   roomName,
   initializing,
-  toggleInvitePanelVisible,
   // chatVisible = false,
   closePanel,
   // toggleChatVisible
@@ -150,8 +149,7 @@ export default function Panel({
           peerId={peer?.id}
           layout={layout}
           handleLayout={handleLayout}
-          // chatVisible={chatVisible}
-          toggleInvitePanelVisible={toggleInvitePanelVisible}
+        // chatVisible={chatVisible}
         // toggleChatBoxVisible={toggleChatVisible}
         />
         <Info />

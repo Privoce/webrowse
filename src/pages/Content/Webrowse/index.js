@@ -3,7 +3,6 @@ import styled, { createGlobalStyle } from 'styled-components';
 import { sendMessageToBackground, onMessageFromBackground, MessageLocation } from '@wbet/message-api'
 
 import Panel from './Panel';
-import InvitePanel from './InvitePanel'
 import RegPanel from './RegPanel'
 // import ChatBox from './Chat';
 import useSocketRoom from './hooks/useSocketRoom';
@@ -19,6 +18,7 @@ const StyledWrapper = styled.section`
   width: 100vw;
   height: 100vh;
   z-index: 9999999;
+  background: none !important;
   pointer-events: none;
   display: flex;
   align-items: center;
@@ -29,9 +29,15 @@ const StyledWrapper = styled.section`
   }
 `;
 const GlobalStyle = createGlobalStyle`
+button{
+  cursor: pointer !important;
+  border:none !important;
+  outline: none !important;
+  background: none !important;
+}
 /* 隐藏掉页面的滚动条 */
   body::-webkit-scrollbar{
-    display: none;
+    display: none !important;
   }
   :root {
       --webrowse-widget-bg-color: #056CF2;
@@ -74,20 +80,9 @@ export default function Webrowse() {
   const [loading, setLoading] = useState(true);
   const { username, fake } = useUsername();
   const [regPanelVisible, setRegPanelVisible] = useState(!username || fake);
-  const [invitePanelVisible, setInvitePanelVisible] = useState(username && !fake);
   const { temp: tempRoom, roomName, initializing, users, sendSocketMessage, initializeSocketRoom } = useSocketRoom();
-  const togglePanelVisible = async () => {
-    if (!panelVisible) {
-      //由不可见转为可见 设置临时room
-      setRoomId(`${Math.random().toString(36).substring(7)}_temp`);
-      // 新起个window
-      console.log("new window from panelVisibleToggle");
-      sendMessageToBackground({}, MessageLocation.Content, EVENTS.NEW_WINDOW)
-    } else {
-      //由可见转为不可见：重置room id为空
-      setRoomId(null);
-    }
-    setPanelVisible((prev) => !prev);
+  const hideVeraPanel = () => {
+    setPanelVisible(false);
   };
   // const toggleChatVisible = () => {
   //   setChatVisible((prev) => !prev);
@@ -96,8 +91,8 @@ export default function Webrowse() {
     console.log("toggle reg panel visible");
     setRegPanelVisible(prev => !prev);
   }
-  const toggleInvitePanelVisible = () => {
-    setInvitePanelVisible(prev => !prev);
+  const toggleFloaterVisible = () => {
+    setFloaterVisible(prev => !prev)
   }
   const showVeraPanel = async () => {
     if (panelVisible) return;
@@ -112,7 +107,7 @@ export default function Webrowse() {
     }
   }, [roomId]);
   useEffect(() => {
-    if (roomId) {
+    if (roomId && winId) {
       initializeSocketRoom({ roomId, winId });
     }
   }, [roomId, winId]);
@@ -120,6 +115,7 @@ export default function Webrowse() {
     // 监听workspace connect变化
     onMessageFromBackground(MessageLocation.Content, {
       [EVENTS.CHECK_CONNECTION]: (connected = false) => {
+        console.log("connection check", connected);
         setFloaterVisible(connected);
       },
       [EVENTS.ROOM_WINDOW]: ({ roomId, winId }) => {
@@ -144,11 +140,9 @@ export default function Webrowse() {
     <StyledWrapper id="WEBROWSE_FULLSCREEN_CONTAINER" className={floaterVisible ? 'cobrowsing' : ''}>
       <GlobalStyle />
       {floaterVisible && <CobrowseStatus />}
-      {floaterVisible && <Floater />}
+      {floaterVisible && <Floater closeFloater={toggleFloaterVisible} />}
       {/* 未登录/注册panel */}
       {regPanelVisible && <RegPanel closePanel={toggleRegPanelVisible} />}
-      {/* 邀请panel */}
-      {invitePanelVisible && <InvitePanel closePanel={toggleInvitePanelVisible} username={username} />}
       {/* 主panel */}
       {panelVisible && (
         <>
@@ -158,10 +152,9 @@ export default function Webrowse() {
             tempRoom={tempRoom}
             sendSocketMessage={sendSocketMessage}
             roomName={roomName}
-            closePanel={togglePanelVisible}
-            // chatVisible={chatVisible}
-            // toggleChatVisible={toggleChatVisible}
-            toggleInvitePanelVisible={toggleInvitePanelVisible}
+            closePanel={hideVeraPanel}
+          // chatVisible={chatVisible}
+          // toggleChatVisible={toggleChatVisible}
           />
           {/* <ChatBox channelId={roomId} visible={chatVisible} toggleVisible={toggleChatVisible} /> */}
         </>
