@@ -15,7 +15,7 @@ chrome.runtime.onInstalled.addListener(function (details) {
           chrome.tabs.create(
             {
               active: true,
-              url: 'https://nicegoodthings.com/landing/webrowse'
+              url: 'https://webrow.se/guiding/'
             },
             null
           );
