@@ -9338,10 +9338,10 @@ word-wrap@^1.2.3:
   resolved "https://registry.yarnpkg.com/word-wrap/-/word-wrap-1.2.3.tgz#610636f6b1f703891bd34771ccb17fb93b47079c"
   integrity sha512-Hz/mrNwitNRh/HUAtM/VT/5VH+ygD6DV7mYKZAtHOrbs8U7lvPS6xf7EJKMF0uW1KJCl0H701g3ZGus+muE5vQ==
 
-workspace-api-for-chrome@^2.2.1:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/workspace-api-for-chrome/-/workspace-api-for-chrome-2.2.1.tgz#7431dd06f4865b77d8b57d0a9f43dfa964ea2c4a"
-  integrity sha512-9HLPolTNuk/5VdBoBvOxNJQM7uyPYWm1YeV8ctwM/9rGbH1kdJQTShyKbFn2fYIRzdikrz96BkGT8ZNzjuDwyQ==
+workspace-api-for-chrome@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/workspace-api-for-chrome/-/workspace-api-for-chrome-2.3.0.tgz#3e04086a47f4f5957d0339ebd95a7a23d7c23525"
+  integrity sha512-vLCR1vyqDj0+mE+0pQsz2JCSITdowq3L6zgn86EMxiCimBWy6aLwFi1vqOAIFXbx8Nclqg9+ctCwtERsrYcwPw==
   dependencies:
     "@types/chrome" "^0.0.145"
 

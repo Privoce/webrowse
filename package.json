@@ -84,6 +84,6 @@
     "webpack": "^5.50.0",
     "webpack-cli": "^4.8.0",
     "webpack-dev-server": "^3.11.2",
-    "workspace-api-for-chrome": "^2.2.1"
+    "workspace-api-for-chrome": "^2.3.0"
   }
 }
