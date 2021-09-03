@@ -6,7 +6,7 @@ import Tabs from './Tabs';
 import FollowMode from './FollowMode';
 import useCopy from '../hooks/useCopy';
 // const mock_data = [{ id: 1, host: true, username: "杨二", photo: "https://files.authing.co/user-contents/photos/9be86bd9-5f18-419b-befa-2356dd889fe6.png" }, { id: 2, username: "杨二", photo: "https://files.authing.co/user-contents/photos/9be86bd9-5f18-419b-befa-2356dd889fe6.png" }]
-export default function Floater() {
+export default function Floater({ closeFloater }) {
   const [users, setUsers] = useState([]);
   const [tabs, setTabs] = useState([]);
   const [title, setTitle] = useState("")
@@ -15,6 +15,7 @@ export default function Floater() {
   const [host, setHost] = useState(undefined)
   const [visible, setVisible] = useState({ tab: false, follow: true, audio: false });
   const [inviteLink, setInviteLink] = useState('');
+  const [popup, setPopup] = useState(false)
   const { copied, copy } = useCopy();
   const toggleVisible = ({ target }) => {
     const { type } = target.dataset;
@@ -25,6 +26,14 @@ export default function Floater() {
   const handleCopyLink = () => {
     if (copied) return;
     copy(inviteLink);
+  }
+  const togglePopup = () => {
+    setPopup(prev => !prev)
+  }
+  const handleLeave = () => {
+    const keepTabs = confirm("Would you like to save this window so you can cobrowse it again?");
+    sendMessageToBackground({ keepTabs }, MessageLocation.Content, EVENTS.DISCONNECT_SOCKET);
+    closeFloater()
   }
   useEffect(() => {
     onMessageFromBackground(MessageLocation.Content, {
@@ -74,6 +83,15 @@ export default function Floater() {
   console.log({ users, host, currUser });
   return (
     <StyledWidget >
+      <div className="quit">
+        {popup && <div className="selects">
+          {currUser?.host && <button className="select">End Session For All</button>}
+          <button className="select" onClick={handleLeave}>Leave Session</button>
+        </div>}
+        <button onClick={togglePopup} className="btn">
+          {popup ? 'Cancel' : (currUser?.host ? 'End' : 'Leave')}
+        </button>
+      </div>
       <div className="title">{title}</div>
       <div className="opts">
         <div className="btns">
@@ -82,7 +100,7 @@ export default function Floater() {
           <button title="Audio Channel" className={`btn audio ${audio ? 'curr' : ''}`} data-type='audio' onClick={showVeraPanel}></button>
         </div>
         {inviteLink && <div className="copy">
-          <button className="btn" onClick={handleCopyLink}>{copied ? `Invite Link Copied` : `Copy Link to Invite`}</button>
+          <button className={`btn ${copied ? 'copied' : ''}`} onClick={handleCopyLink}>{copied ? `Link Copied` : `Copy Link to Invite`}</button>
         </div>}
       </div>
       {tab && <Tabs tabs={tabs} users={users} closeBlock={closeBlock} />}

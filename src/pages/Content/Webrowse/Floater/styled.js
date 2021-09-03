@@ -13,6 +13,54 @@ const StyledWidget = styled.aside`
   &:hover{
     background:#fff;
   }
+  > .quit{
+    display: flex;
+    position: absolute;
+    top: 14px;
+    right: 20px;
+    >.btn{
+      background: #DCDCDC;
+      border-radius: 15px;
+      font-size: 12px;
+      line-height: 15px;
+      color:#767676;
+      padding:4px 12px ;
+      &:hover{
+        color:#fff;
+        background: #B63546;
+      }
+    }
+    .selects{
+      z-index: 9;
+      position: absolute;
+      top: 0;
+      right: 0;
+      transition: transform .5s ease-in;
+      transform: translateY(-110%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap:8px;
+      padding:12px;
+      background: #FFFFFF;
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+      border-radius: 5px;
+      .select{
+        color: #000;
+        white-space: nowrap;
+        width: 100%;
+        text-align: center;
+        border-radius: 5px;
+        background: #DCDCDC;
+        font-weight: bold;
+        font-size: 12px;
+        line-height: 15px;
+        padding:8px 12px;
+      }
+
+    }
+
+  }
   > .title{
     color:#000;
     padding-bottom:11px;
@@ -31,11 +79,7 @@ const StyledWidget = styled.aside`
       padding-right:16px;
       .btn{
         position: relative;
-        cursor: pointer;
-        border:none;
         border-radius:50%;
-        outline: none;
-        background: none;
         width: 36px;
         height: 36px;
         background-size: 18px;
@@ -73,16 +117,27 @@ const StyledWidget = styled.aside`
       padding-left:16px;
       border-left:1px solid #E6E9EF;
       .btn{
+        min-width: 156px;
+        position: relative;
         font-weight: bold;
         color:#056CF2;
         padding:5px 12px;
         border:2px solid #056CF2;
         border-radius:20px;
-        outline: none;
-        background:none;
         &:hover{
           background:  rgba(5, 108, 242, 0.1);;
         }
+        &.copied{
+          padding-left: 30px;
+          color: #fff;
+          background: #056CF2;
+          &:before{
+            content: "ヘ";
+            transform: rotateX(180deg);
+            position: absolute;
+            left: 16px;
+            top: 15%;
+        }}
       }
     }
 
