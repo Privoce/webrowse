@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import styled from 'styled-components';
 import { sendMessageToBackground, MessageLocation } from '@wbet/message-api'
 import StyledBlock from './StyledBlock';
+import Avator from './Avator'
 import { EVENTS } from '../../../../common'
 const StyledWrapper = styled(StyledBlock)`
     background:#FFF9EB;
@@ -101,8 +102,8 @@ export default function Tabs({ tabs, users, closeBlock }) {
             <span className="title">{title}</span>
             <div className="members">
               {activeUsers.map(u => {
-                const { photo = 'https://files.authing.co/authing-console/default-user-avatar.png', id } = u;
-                return <img key={id} className="head" src={photo} alt="member head" />
+                const { username = '', photo = '', id } = u;
+                return <Avator title={username} key={id} photo={photo} letter={username[0]} alt="member head" />
               })}
             </div>
           </li>

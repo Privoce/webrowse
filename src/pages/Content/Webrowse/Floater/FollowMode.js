@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { sendMessageToBackground, MessageLocation } from '@wbet/message-api'
 import { EVENTS } from '../../../../common'
 import StyledBlock from './StyledBlock'
+import Avator from './Avator'
 const StyledWrapper = styled(StyledBlock)`
   background:#F0FBFC;
   .block{
@@ -20,7 +21,7 @@ const StyledWrapper = styled(StyledBlock)`
       flex-direction:column;
       user-select: none;
       gap:10px;
-      padding-bottom: 12px;
+      padding: 15px 0;
       .up{
         display: flex;
         justify-content: flex-start;
@@ -66,8 +67,8 @@ const StyledWrapper = styled(StyledBlock)`
       display: flex;
       flex-direction: column;
       gap: 14px;
-      padding-top: 10px;
-      border-top: 1px solid rgba(104, 214, 221, 0.5);
+      padding: 15px 0;
+      border-bottom: 1px solid rgba(104, 214, 221, 0.5);
       .current{
         display: flex;
         align-items: center;
@@ -103,10 +104,7 @@ const StyledWrapper = styled(StyledBlock)`
       font-size:16px;
       width: fit-content;
       padding: 5px 12px;
-      background: none;
-      outline: none;
       white-space: nowrap;
-      border: none;
       box-sizing: border-box;
       border-radius: 20px;
       color: #fff;
@@ -155,12 +153,22 @@ export default function FollowMode({ host = null, currUser = {}, closeBlock }) {
       </div>
     </StyledWrapper>
   }
-  const { username, photo } = host;
+  const { username, photo = '' } = host;
   const checked = !!currUser.follow;
   const hostMyself = host.id == currUser.id;
   return (
     <StyledWrapper>
       <div className="close" data-type='follow' onClick={closeBlock}></div>
+      {!hostMyself && <div className="block host">
+        <div className="current">
+          <span className="pf prefix">Host</span>
+          <div className="member">
+            <Avator title={username} photo={photo} letter={username[0]} alt="host head image" />
+            <div className="name">{username}</div>
+          </div>
+        </div>
+        <button className="btn takeover" data-be-host="yes" onClick={handleBeHost}>Take Over as Host</button>
+      </div>}
       <div className="block toggle" onClick={hostMyself ? null : toggleCheck}>
         <div className="up">
           <span className="pf">Follow Mode</span>
@@ -173,16 +181,7 @@ export default function FollowMode({ host = null, currUser = {}, closeBlock }) {
           {hostMyself && <button className="btn stop" data-be-host="no" onClick={handleBeHost}>Stop Being Host</button>}
         </div>
       </div>
-      {!hostMyself && <div className="block host">
-        <div className="current">
-          <span className="pf prefix">Host</span>
-          <div className="member">
-            <img src={photo || 'https://files.authing.co/authing-console/default-user-avatar.png'} alt="host head image" className="head" />
-            <div className="name">{username}</div>
-          </div>
-        </div>
-        <button className="btn takeover" data-be-host="yes" onClick={handleBeHost}>Take Over as Host</button>
-      </div>}
+
     </StyledWrapper>
   )
 }
