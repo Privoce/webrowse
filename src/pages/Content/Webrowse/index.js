@@ -94,7 +94,7 @@ export default function Webrowse() {
   const toggleLeaveModalVisible = () => {
     setLeaveModalVisible(prev => !prev)
   }
-  const startCoBrowse = (name) => {
+  const startWithCustomName = (name) => {
     setCurrUser({ username: name })
   }
   const showVeraPanel = async () => {
@@ -104,16 +104,13 @@ export default function Webrowse() {
     if (!isActiveTab) return;
     setPanelVisible(true);
   }
-  useEffect(() => {
-    const initUser = async () => {
-      let curr = await getUser();
-      if (curr) {
-        let { id = "", username, photo = "" } = curr;
-        setCurrUser({ uid: id, username, photo });
-      }
-    };
-    initUser();
-  }, []);
+  const initUser = async () => {
+    let curr = await getUser();
+    if (curr) {
+      let { id = "", username, photo = "" } = curr;
+      setCurrUser({ uid: id, username, photo });
+    }
+  };
   useEffect(() => {
     // 只要roomId 和 winId 都没有，则不显示name录入弹窗
     setNameModalVisible(roomId && winId)
@@ -142,14 +139,16 @@ export default function Webrowse() {
       },
       [EVENTS.LOAD_VERA]: () => {
         showVeraPanel();
-      },
+      }
     });
     // 初次初始化
-
+    initUser();
     sendMessageToBackground({}, MessageLocation.Content, EVENTS.ROOM_WINDOW)
     const handleVisibleChange = () => {
       if (!document.hidden) {
         sendMessageToBackground({}, MessageLocation.Content, EVENTS.CHECK_CONNECTION);
+        // 再次初始化用户信息
+        initUser();
       }
     }
     document.addEventListener('visibilitychange', handleVisibleChange, false);
@@ -181,7 +180,7 @@ export default function Webrowse() {
         </>
       )}
       {/* 不存在或者未设置用户名的话，先设置 */}
-      {!currUser && nameModalVisible && <UsernameModal roomId={roomId} closeModal={toggleNameModalVisible} startCoBrowse={startCoBrowse} />}
+      {!currUser && nameModalVisible && <UsernameModal roomId={roomId} closeModal={toggleNameModalVisible} startCoBrowse={startWithCustomName} />}
       {leaveModalVisible && <LeaveModal user={currUser} closeModal={toggleLeaveModalVisible} />}
     </StyledWrapper>
   );

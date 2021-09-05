@@ -111,14 +111,7 @@ export default function LeaveModal({ user = null, closeModal, type = 'guest' }) 
   const handleQuit = () => {
     sendMessageToBackground({}, MessageLocation.Content, EVENTS.DISCONNECT_SOCKET);
     closeModal()
-
   }
-
-  // const handleStart = () => {
-  //   chrome.storage.sync.set({ fakename: input }, () => {
-  //     startCoBrowse(input)
-  //   })
-  // }
   const handleClose = () => {
     // to do
     closeModal()
