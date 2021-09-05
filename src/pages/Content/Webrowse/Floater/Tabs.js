@@ -103,7 +103,7 @@ export default function Tabs({ tabs, users, closeBlock }) {
             <div className="members">
               {activeUsers.map(u => {
                 const { username = '', photo = '', id } = u;
-                return <Avator title={username} key={id} photo={photo} letter={username[0]} alt="member head" />
+                return <Avator title={username} key={id} photo={photo} username={username} alt="member head" />
               })}
             </div>
           </li>

@@ -163,7 +163,7 @@ export default function FollowMode({ host = null, currUser = {}, closeBlock }) {
         <div className="current">
           <span className="pf prefix">Host</span>
           <div className="member">
-            <Avator title={username} photo={photo} letter={username[0]} alt="host head image" />
+            <Avator title={username} photo={photo} username={username} alt="host head image" />
             <div className="name">{username}</div>
           </div>
         </div>
