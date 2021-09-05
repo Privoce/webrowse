@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getUser } from './utils';
+
 import emitter, { VeraEvents } from './useEmitter';
 import { EVENTS } from '../../../../common'
 import { sendMessageToBackground, onMessageFromBackground, MessageLocation } from '@wbet/message-api'
@@ -19,23 +19,10 @@ const useSocketRoom = () => {
   const [temp, setTemp] = useState(false);
   const [roomId, setRoomId] = useState('');
   const [winId, setWinId] = useState('')
+  const [user, setUser] = useState(null)
   const [roomName, setRoomName] = useState('')
   const [users, setUsers] = useState([]);
   const [initializing, setInitializing] = useState(true);
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const initUser = async () => {
-      let curr = await getUser();
-      if (curr) {
-        let { id, username, photo } = curr;
-        setUser({ uid: id, username, photo });
-      } else {
-        setUser({ username: 'Guest' });
-      }
-    };
-    initUser();
-  }, []);
   useEffect(() => {
     console.log('io init', user, roomId);
     if (!user || !roomId) {
@@ -98,10 +85,11 @@ const useSocketRoom = () => {
     sendMessageToBackground({ data }, MessageLocation.Content, EVENTS.SOCKET_MSG);
     joined = true;
   };
-  const initializeSocketRoom = ({ roomId, winId }) => {
+  const initializeSocketRoom = ({ roomId, winId, user }) => {
     console.log("from index ids", roomId, winId);
     setRoomId(roomId);
     setWinId(winId);
+    setUser(user)
   };
   return {
     temp,

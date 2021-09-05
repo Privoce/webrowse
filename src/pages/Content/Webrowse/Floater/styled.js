@@ -1,4 +1,12 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+const AniPopup = keyframes`
+  from{
+    transform: translateY(0);
+  }
+  to{
+    transform: translateY(-110%);
+  }
+`;
 const StyledWidget = styled.aside`
   position: absolute;
   right: 10px;
@@ -35,8 +43,7 @@ const StyledWidget = styled.aside`
       position: absolute;
       top: 0;
       right: 0;
-      transition: transform .5s ease-in;
-      transform: translateY(-110%);
+      animation:${AniPopup} .5s forwards;
       display: flex;
       flex-direction: column;
       align-items: center;

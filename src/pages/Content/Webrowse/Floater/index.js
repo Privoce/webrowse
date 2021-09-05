@@ -6,7 +6,7 @@ import Tabs from './Tabs';
 import FollowMode from './FollowMode';
 import useCopy from '../hooks/useCopy';
 // const mock_data = [{ id: 1, host: true, username: "杨二", photo: "https://files.authing.co/user-contents/photos/9be86bd9-5f18-419b-befa-2356dd889fe6.png" }, { id: 2, username: "杨二", photo: "https://files.authing.co/user-contents/photos/9be86bd9-5f18-419b-befa-2356dd889fe6.png" }]
-export default function Floater({ closeFloater }) {
+export default function Floater({ showLeaveModal }) {
   const [users, setUsers] = useState([]);
   const [tabs, setTabs] = useState([]);
   const [title, setTitle] = useState("")
@@ -31,9 +31,8 @@ export default function Floater({ closeFloater }) {
     setPopup(prev => !prev)
   }
   const handleLeave = () => {
-    const keepTabs = confirm("Would you like to save this window so you can cobrowse it again?");
-    sendMessageToBackground({ keepTabs }, MessageLocation.Content, EVENTS.DISCONNECT_SOCKET);
-    closeFloater()
+    showLeaveModal();
+    setPopup(false)
   }
   useEffect(() => {
     onMessageFromBackground(MessageLocation.Content, {
@@ -83,16 +82,16 @@ export default function Floater({ closeFloater }) {
   console.log({ users, host, currUser });
   return (
     <StyledWidget >
-      <div className="quit">
+      {title && <div className="quit">
         {popup && <div className="selects">
-          {currUser?.host && <button className="select">End Session For All</button>}
+          {currUser?.creator && <button className="select">End Session For All</button>}
           <button className="select" onClick={handleLeave}>Leave Session</button>
         </div>}
         <button onClick={togglePopup} className="btn">
-          {popup ? 'Cancel' : (currUser?.host ? 'End' : 'Leave')}
+          {popup ? 'Cancel' : (currUser?.creator ? 'End' : 'Leave')}
         </button>
-      </div>
-      <div className="title">{title}</div>
+      </div>}
+      {title && <div className="title">{title}</div>}
       <div className="opts">
         <div className="btns">
           <button title="Tab Status" className={`btn tab ${tab ? 'curr' : ''}`} data-type='tab' onClick={toggleVisible}></button>

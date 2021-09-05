@@ -2,12 +2,10 @@ import { io } from "socket.io-client";
 import Workspace, { ITabEvent as TabEvent } from 'workspace-api-for-chrome'
 // import Workspace, { TabEvent } from './lib/main';
 import { sendMessageToContentScript, onMessageFromPopup, sendMessageToPopup, onMessageFromContentScript, MessageLocation } from '@wbet/message-api'
-import { EVENTS } from '../../common';
+import { EVENTS, SOCKET_SERVER_DOMAIN, DEFAULT_LANDING } from '../../common';
 import { getActiveTab, debounce } from './utils'
-const SOCKET_SERVER_URL = 'wss://stage.vera.nicegoodthings.com';
-// const SOCKET_SERVER_URL = 'wss://vera.nicegoodthings.com';
-// const SOCKET_SERVER_URL = 'http://localhost:4000';
-const DEFAULT_LANDING_PAGE = 'https://webrow.se/landing';
+const SOCKET_SERVER_URL = `wss://${SOCKET_SERVER_DOMAIN}`;
+// const SOCKET_SERVER_URL = `http://${SOCKET_SERVER_DOMAIN}`;
 const DATA_HUB = {};
 // init user info
 chrome.storage.sync.get(['user'], (res) => {
@@ -148,7 +146,6 @@ const initWorkspace = ({ roomId = "", winId = "", urls = [], tabId = undefined }
         sendTabSyncMsg(currWorkspace, currSocket);
       }
       // 每次有变动 应该执行的事件
-      notifyActiveTab({ windowId, action: EVENTS.CHECK_CONNECTION });
       notifyActiveTab({ windowId, action: EVENTS.UPDATE_FLOATER });
     });
     notifyActiveTab({ windowId, action: EVENTS.CHECK_CONNECTION });
@@ -161,7 +158,7 @@ const notifyActiveTab = ({ windowId = 0, action = EVENTS.UPDATE_TABS }) => {
     if (!tab) return;
     switch (action) {
       case EVENTS.CHECK_CONNECTION: {
-        let connected = !!DATA_HUB[tab.windowId]?.workspace;
+        let connected = !!DATA_HUB[tab.windowId]?.socket;
         sendMessageToContentScript(tab?.id, connected, MessageLocation.Background, EVENTS.CHECK_CONNECTION)
       }
         break;
@@ -198,7 +195,7 @@ const notifyActiveTab = ({ windowId = 0, action = EVENTS.UPDATE_TABS }) => {
 onMessageFromPopup(MessageLocation.Background, {
   [EVENTS.LOGOUT]: () => {
     delete DATA_HUB?.user;
-    chrome.storage.sync.remove(['user']);
+    chrome.storage.sync.remove(['user', 'fakename']);
   },
   [EVENTS.POP_UP_DATA]: () => {
     console.log("popup event");
@@ -232,7 +229,7 @@ onMessageFromPopup(MessageLocation.Background, {
         initWorkspace({ roomId, winId, urls })
       })
     } else {
-      initWorkspace({ roomId, winId, urls: [DEFAULT_LANDING_PAGE] })
+      initWorkspace({ roomId, winId, urls: [DEFAULT_LANDING] })
     }
   }
 })
@@ -249,7 +246,7 @@ onMessageFromContentScript(MessageLocation.Background, {
           console.log({ rid });
           // 从co-browse 点过来的  种下bg room id 告诉vera的加载不新开窗口
           // chrome.storage.sync.set({ room_id: rid });
-          const initUrls = urls ? (urls.length == 0 ? [DEFAULT_LANDING_PAGE] : urls) : [DEFAULT_LANDING_PAGE]
+          const initUrls = urls ? (urls.length == 0 ? [DEFAULT_LANDING] : urls) : [DEFAULT_LANDING]
           initWorkspace({ roomId: rid, winId: wid, urls: initUrls });
         }
         break;
@@ -273,7 +270,7 @@ onMessageFromContentScript(MessageLocation.Background, {
       transports: ['websocket'],
       reconnectionAttempts: 8,
       upgrade: false,
-      query: { roomId, winId, link: url, temp, peerId, ...user }
+      query: { type: 'WEBROWSE', roomId, winId, link: url, temp, peerId, ...user }
     });
     console.log('init websocket', { roomId, winId, temp, peerId, user });
     DATA_HUB[windowId].socket = newSocket;
@@ -285,6 +282,7 @@ onMessageFromContentScript(MessageLocation.Background, {
       console.log('ws room io connect', socket.id);
       // 全局维护window 与 peerid,roomId 的映射
       DATA_HUB[windowId].userId = socket.id;
+      sendMessageToContentScript(tabId, true, MessageLocation.Background, EVENTS.CHECK_CONNECTION)
     });
     socket.on('message', (wtf) => {
       console.log('io message', wtf);
@@ -301,6 +299,10 @@ onMessageFromContentScript(MessageLocation.Background, {
         // 如果有workspace数据 则全量更新一次
         if (workspaceData) {
           console.log("update current workspace", workspaceData);
+          if (!DATA_HUB.user?.host) {
+            // 如果是guest 则删掉activeIndex
+            delete workspaceData?.activeIndex;
+          }
           DATA_HUB[windowId].workspace?.write(workspaceData);
         }
         // 立即开始监听房间新加入人员事件
@@ -325,13 +327,9 @@ onMessageFromContentScript(MessageLocation.Background, {
       const currentUser = DATA_HUB[windowId].users.find(u => u.id == socket.id);
       const { data: tabsData, fromHost = false } = tab;
       const curWS = DATA_HUB[windowId].workspace;
-      console.log('tab event received', { tab, currentUser, curWS });
-      let filter = [TabEvent.OnCreated, TabEvent.OnMoved, TabEvent.OnRemoved];
-      if (currentUser?.follow) {
-        filter.push(TabEvent.OnActivated)
-      }
-      if (fromHost) {
-        filter.push(TabEvent.OnUpdated)
+      console.log('tab event received', { tab, currentUser, fromHost });
+      if (!currentUser?.follow) {
+        delete tabsData.activeTabIndex
       }
       await curWS?.write(tabsData)
     });

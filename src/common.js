@@ -50,5 +50,8 @@ const EVENTS = {
   // pop up 数据集合
   POP_UP_DATA: 'POP_UP_DATA',
 }
-
-export { EVENTS }
+const SOCKET_SERVER_DOMAIN = 'stage.vera.nicegoodthings.com';
+// const SOCKET_SERVER_DOMAIN = 'vera.nicegoodthings.com';
+// const SOCKET_SERVER_DOMAIN = 'localhost:4000';
+const DEFAULT_LANDING = 'https://webrow.se/landing';
+export { EVENTS, SOCKET_SERVER_DOMAIN, DEFAULT_LANDING }

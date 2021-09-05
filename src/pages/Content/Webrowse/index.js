@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import { sendMessageToBackground, onMessageFromBackground, MessageLocation } from '@wbet/message-api'
-
+import { getUser } from './hooks/utils';
 import Panel from './Panel';
-import RegPanel from './RegPanel'
+import UsernameModal from './UsernameModal';
+import LeaveModal from './LeaveModal';
 // import ChatBox from './Chat';
 import useSocketRoom from './hooks/useSocketRoom';
-import useUsername from './hooks/useUsername'
-// import { getUser } from './hooks/utils';
+// import useUsername from './hooks/useUsername'
 import { EVENTS } from '../../../common'
 import Floater from './Floater';
 import CobrowseStatus from './CobrowseStatus';
@@ -30,10 +30,10 @@ const StyledWrapper = styled.section`
 `;
 const GlobalStyle = createGlobalStyle`
 button{
-  cursor: pointer !important;
-  border:none !important;
-  outline: none !important;
-  background: none !important;
+  cursor: pointer;
+  border:none;
+  outline: none;
+  background: none;
 }
 /* 隐藏掉页面的滚动条 */
   body::-webkit-scrollbar{
@@ -74,25 +74,28 @@ button{
 export default function Webrowse() {
   const [floaterVisible, setFloaterVisible] = useState(false)
   // const [chatVisible, setChatVisible] = useState(false);
+  const [nameModalVisible, setNameModalVisible] = useState(false)
+  const [leaveModalVisible, setLeaveModalVisible] = useState(false)
   const [panelVisible, setPanelVisible] = useState(false);
   const [roomId, setRoomId] = useState(null);
   const [winId, setWinId] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { username, fake } = useUsername();
-  const [regPanelVisible, setRegPanelVisible] = useState(!username || fake);
+  const [currUser, setCurrUser] = useState(null)
   const { temp: tempRoom, roomName, initializing, users, sendSocketMessage, initializeSocketRoom } = useSocketRoom();
   const hideVeraPanel = () => {
     setPanelVisible(false);
   };
+  const toggleNameModalVisible = () => {
+    setNameModalVisible((prev) => !prev);
+  };
   // const toggleChatVisible = () => {
   //   setChatVisible((prev) => !prev);
   // };
-  const toggleRegPanelVisible = () => {
-    console.log("toggle reg panel visible");
-    setRegPanelVisible(prev => !prev);
+  const toggleLeaveModalVisible = () => {
+    setLeaveModalVisible(prev => !prev)
   }
-  const toggleFloaterVisible = () => {
-    setFloaterVisible(prev => !prev)
+  const startCoBrowse = (name) => {
+    setCurrUser({ username: name })
   }
   const showVeraPanel = async () => {
     if (panelVisible) return;
@@ -102,15 +105,28 @@ export default function Webrowse() {
     setPanelVisible(true);
   }
   useEffect(() => {
-    if (!roomId) {
-      setRegPanelVisible(false);
-    }
-  }, [roomId]);
+    const initUser = async () => {
+      let curr = await getUser();
+      if (curr) {
+        let { id = "", username, photo = "" } = curr;
+        setCurrUser({ uid: id, username, photo });
+      }
+    };
+    initUser();
+  }, []);
   useEffect(() => {
-    if (roomId && winId) {
-      initializeSocketRoom({ roomId, winId });
+    // 只要roomId 和 winId 都没有，则不显示name录入弹窗
+    setNameModalVisible(roomId && winId)
+    if (roomId && winId && currUser) {
+      initializeSocketRoom({ roomId, winId, user: currUser });
     }
-  }, [roomId, winId]);
+  }, [roomId, winId, currUser]);
+  useEffect(() => {
+    if (!leaveModalVisible) {
+      // 相当于每关掉一次leave modal 就检查一下
+      sendMessageToBackground({}, MessageLocation.Content, EVENTS.CHECK_CONNECTION);
+    }
+  }, [leaveModalVisible])
   useEffect(() => {
     // 监听workspace connect变化
     onMessageFromBackground(MessageLocation.Content, {
@@ -129,20 +145,25 @@ export default function Webrowse() {
       },
     });
     // 初次初始化
-    sendMessageToBackground({}, MessageLocation.Content, EVENTS.CHECK_CONNECTION);
-  }, []);
-  useEffect(() => {
+
     sendMessageToBackground({}, MessageLocation.Content, EVENTS.ROOM_WINDOW)
+    const handleVisibleChange = () => {
+      if (!document.hidden) {
+        sendMessageToBackground({}, MessageLocation.Content, EVENTS.CHECK_CONNECTION);
+      }
+    }
+    document.addEventListener('visibilitychange', handleVisibleChange, false);
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibleChange, false)
+    }
   }, []);
   if (loading) return null;
-  console.log({ floaterVisible });
+  console.log({ currUser, nameModalVisible, floaterVisible });
   return (
     <StyledWrapper id="WEBROWSE_FULLSCREEN_CONTAINER" className={floaterVisible ? 'cobrowsing' : ''}>
       <GlobalStyle />
       {floaterVisible && <CobrowseStatus />}
-      {floaterVisible && <Floater closeFloater={toggleFloaterVisible} />}
-      {/* 未登录/注册panel */}
-      {regPanelVisible && <RegPanel closePanel={toggleRegPanelVisible} />}
+      {floaterVisible && <Floater showLeaveModal={toggleLeaveModalVisible} />}
       {/* 主panel */}
       {panelVisible && (
         <>
@@ -159,6 +180,9 @@ export default function Webrowse() {
           {/* <ChatBox channelId={roomId} visible={chatVisible} toggleVisible={toggleChatVisible} /> */}
         </>
       )}
+      {/* 不存在或者未设置用户名的话，先设置 */}
+      {!currUser && nameModalVisible && <UsernameModal roomId={roomId} closeModal={toggleNameModalVisible} startCoBrowse={startCoBrowse} />}
+      {leaveModalVisible && <LeaveModal user={currUser} closeModal={toggleLeaveModalVisible} />}
     </StyledWrapper>
   );
 }

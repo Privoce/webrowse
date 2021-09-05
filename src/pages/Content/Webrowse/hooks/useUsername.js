@@ -44,13 +44,13 @@ const useUsername = (defaultName = '') => {
       chrome.storage.sync.remove(['fakename']);
     }
   }, [fake]);
-  const updateUsername = (name) => {
+  const updateFakename = (name) => {
     chrome.storage.sync.set({ fakename: name }, () => {
       // Notify that we saved.
       console.log('set fakename');
     });
   };
-  return { username: name, fake, updateUsername };
+  return { username: name, fake, updateFakename };
 };
 
 export default useUsername;

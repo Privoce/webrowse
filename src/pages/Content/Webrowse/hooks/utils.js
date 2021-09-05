@@ -29,9 +29,10 @@ function getUsername() {
 }
 function getUser() {
   return new Promise((resolve) => {
-    let arr = ['user'];
+    let arr = ['user', 'fakename'];
     chrome.storage.sync.get(arr, (result) => {
-      resolve(result.user || null);
+      const { user, fakename } = result;
+      resolve(user || (fakename ? { username: fakename } : null));
     });
   });
 }
