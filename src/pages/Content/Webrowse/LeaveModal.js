@@ -100,16 +100,13 @@ const Content = {
     </ul>
   </>
 }
-export default function LeaveModal({ user = null, closeModal, type = 'guest' }) {
-  const handleSave = () => {
-    sendMessageToBackground({ keepTabs: true }, MessageLocation.Content, EVENTS.DISCONNECT_SOCKET);
-    closeModal()
-  }
+export default function LeaveModal({ endAll = false, user = null, closeModal, type = 'guest' }) {
   const handleSignup = () => {
     sendMessageToBackground({}, MessageLocation.Content, EVENTS.LOGIN)
   }
-  const handleQuit = () => {
-    sendMessageToBackground({}, MessageLocation.Content, EVENTS.DISCONNECT_SOCKET);
+  const handleQuit = (keepTabs) => {
+    console.log("click quit", { keepTabs, endAll });
+    sendMessageToBackground({ keepTabs, endAll }, MessageLocation.Content, EVENTS.DISCONNECT_SOCKET);
     closeModal()
   }
   const handleClose = () => {
@@ -127,8 +124,8 @@ export default function LeaveModal({ user = null, closeModal, type = 'guest' }) 
           {Content[type]}
         </div>
         <div className="btns">
-          {(user && user.uid) ? <button onClick={handleSave} className="btn">Save</button> : <button onClick={handleSignup} className="btn">Sign Up</button>}
-          <button onClick={handleQuit} className="btn ghost">Quit</button>
+          {(user && user.uid) ? <button onClick={handleQuit.bind(null, true)} className="btn">Save</button> : <button onClick={handleSignup} className="btn">Sign Up</button>}
+          <button onClick={handleQuit.bind(null, false)} className="btn ghost">Quit</button>
         </div>
       </div>
     </StyledModal>

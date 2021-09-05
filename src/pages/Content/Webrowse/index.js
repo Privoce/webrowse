@@ -76,6 +76,7 @@ export default function Webrowse() {
   // const [chatVisible, setChatVisible] = useState(false);
   const [nameModalVisible, setNameModalVisible] = useState(false)
   const [leaveModalVisible, setLeaveModalVisible] = useState(false)
+  const [endAll, setEndAll] = useState(false)
   const [panelVisible, setPanelVisible] = useState(false);
   const [roomId, setRoomId] = useState(null);
   const [winId, setWinId] = useState(null);
@@ -91,8 +92,9 @@ export default function Webrowse() {
   // const toggleChatVisible = () => {
   //   setChatVisible((prev) => !prev);
   // };
-  const toggleLeaveModalVisible = () => {
-    setLeaveModalVisible(prev => !prev)
+  const toggleLeaveModalVisible = (endForAll = false) => {
+    setLeaveModalVisible(prev => !prev);
+    setEndAll(endForAll)
   }
   const startWithCustomName = (name) => {
     setCurrUser({ username: name })
@@ -143,6 +145,7 @@ export default function Webrowse() {
     });
     // 初次初始化
     initUser();
+    sendMessageToBackground({}, MessageLocation.Content, EVENTS.CHECK_CONNECTION);
     sendMessageToBackground({}, MessageLocation.Content, EVENTS.ROOM_WINDOW)
     const handleVisibleChange = () => {
       if (!document.hidden) {
@@ -181,7 +184,7 @@ export default function Webrowse() {
       )}
       {/* 不存在或者未设置用户名的话，先设置 */}
       {!currUser && nameModalVisible && <UsernameModal roomId={roomId} closeModal={toggleNameModalVisible} startCoBrowse={startWithCustomName} />}
-      {leaveModalVisible && <LeaveModal user={currUser} closeModal={toggleLeaveModalVisible} />}
+      {leaveModalVisible && <LeaveModal endAll={endAll} user={currUser} closeModal={toggleLeaveModalVisible} />}
     </StyledWrapper>
   );
 }

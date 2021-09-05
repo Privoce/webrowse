@@ -3,9 +3,9 @@ import Workspace, { ITabEvent as TabEvent } from 'workspace-api-for-chrome'
 // import Workspace, { TabEvent } from './lib/main';
 import { sendMessageToContentScript, onMessageFromPopup, sendMessageToPopup, onMessageFromContentScript, MessageLocation } from '@wbet/message-api'
 import { EVENTS, SOCKET_SERVER_DOMAIN, DEFAULT_LANDING } from '../../common';
-import { getActiveTab, debounce } from './utils'
-const SOCKET_SERVER_URL = `wss://${SOCKET_SERVER_DOMAIN}`;
-// const SOCKET_SERVER_URL = `http://${SOCKET_SERVER_DOMAIN}`;
+import { getActiveTab, debounce } from './utils';
+const protocolPrefix = SOCKET_SERVER_DOMAIN.indexOf('localhost') ? 'http://' : 'wss://';
+const SOCKET_SERVER_URL = `${protocolPrefix}${SOCKET_SERVER_DOMAIN}`;
 const DATA_HUB = {};
 // init user info
 chrome.storage.sync.get(['user'], (res) => {
@@ -346,6 +346,14 @@ onMessageFromContentScript(MessageLocation.Background, {
       console.log('io leave user', user);
       sendMessageToTab(currTabId, { user }, EVENTS.USER_LEAVE)
     });
+    // 服务器端触发，主动断掉
+    socket.on("disconnect", () => {
+      console.log("disconnect from server");
+      // 销毁该销毁的
+      DATA_HUB[windowId]?.workspace.destroy();
+      delete DATA_HUB[windowId];
+      notifyActiveTab({ windowId, action: EVENTS.CHECK_CONNECTION })
+    })
     // 出错则重连
     socket.on('connect_error', () => {
       console.log('io socket connect error');
@@ -373,7 +381,8 @@ onMessageFromContentScript(MessageLocation.Background, {
   },
   // socket 断开
   [EVENTS.DISCONNECT_SOCKET]: async (request = {}, sender) => {
-    const { keepTabs = false } = request;
+    const { keepTabs = false, endAll = false } = request;
+    console.log("disconnect args", { keepTabs, endAll });
     const { windowId } = sender.tab;
     if (keepTabs) {
       let { tabs } = await DATA_HUB[windowId].workspace.readRaw();
@@ -386,7 +395,11 @@ onMessageFromContentScript(MessageLocation.Background, {
       console.log({ tabs });
       DATA_HUB[windowId].socket.send({ cmd: "KEEP_TABS", payload: { tabs } })
     }
-
+    // 关闭所有socket连接，包括自己
+    if (endAll) {
+      DATA_HUB[windowId].socket.send({ cmd: "END_ALL" });
+      return;
+    }
     if (DATA_HUB[windowId].socket) {
       DATA_HUB[windowId].socket.disconnect();
       delete DATA_HUB[windowId];

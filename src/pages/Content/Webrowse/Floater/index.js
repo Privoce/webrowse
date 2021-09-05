@@ -30,6 +30,10 @@ export default function Floater({ showLeaveModal }) {
   const togglePopup = () => {
     setPopup(prev => !prev)
   }
+  const handleAllLeave = () => {
+    showLeaveModal(true);
+    setPopup(false)
+  }
   const handleLeave = () => {
     showLeaveModal();
     setPopup(false)
@@ -84,7 +88,7 @@ export default function Floater({ showLeaveModal }) {
     <StyledWidget >
       {title && <div className="quit">
         {popup && <div className="selects">
-          {currUser?.creator && <button className="select">End Session For All</button>}
+          {currUser?.creator && <button className="select" onClick={handleAllLeave}>End Session For All</button>}
           <button className="select" onClick={handleLeave}>Leave Session</button>
         </div>}
         <button onClick={togglePopup} className="btn">
