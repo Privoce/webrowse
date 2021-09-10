@@ -210,7 +210,7 @@ onMessageFromPopup(MessageLocation.Background, {
     const { loginUser, ...windows } = DATA_HUB;
     let filteredWindows = [];
     if (windows) {
-      let keeps = ['roomId', "roomName", "title", 'tabs', 'socketId', 'users'];
+      let keeps = ['roomId', 'winId', "roomName", "title", 'tabs', 'socketId', 'users'];
       Object.entries(windows).forEach(([, obj]) => {
         let tmp = {};
         Object.keys(obj).forEach(k => {

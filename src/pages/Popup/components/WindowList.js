@@ -1,8 +1,16 @@
-import React from 'react'
-import styled from 'styled-components';
+import React, { useEffect, useState } from 'react'
+import styled, { keyframes } from 'styled-components';
+import userSWR from 'swr'
 import { sendMessageToBackground, MessageLocation } from '@wbet/message-api'
-import { EVENTS } from '../../../common'
-
+import { EVENTS, SOCKET_SERVER_DOMAIN } from '../../../common'
+const AniDot = keyframes`
+  from{
+    opacity:0.2;
+  }
+  to{
+    opacity:1;
+  }
+`;
 const StyledWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -46,6 +54,7 @@ const StyledWrapper = styled.div`
       padding:0;
       margin-bottom: 10px;
       .title{
+        position: relative;
         display: flex;
         align-items: center;
         gap: 8px;
@@ -62,7 +71,7 @@ const StyledWrapper = styled.div`
           background-image: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/arrow.down.svg`});
           background-repeat: no-repeat;
           background-position: center;
-          transition: transform .5s ease-in;
+          transform: rotate(-90deg);
         }
         .con{
           font-weight: 600;
@@ -70,6 +79,9 @@ const StyledWrapper = styled.div`
           line-height: 22px;
           color: inherit;
           white-space: nowrap;
+          width: 152px;
+          text-overflow: ellipsis;
+          overflow: hidden;
         }
 
         .num{
@@ -80,6 +92,49 @@ const StyledWrapper = styled.div`
           line-height: 13px;
           color: #757575;
         }
+        .live{
+          position: absolute;
+          top:50%;
+          transform: translateY(-50%);
+          right:10px;
+          background: rgba(57, 255, 20, 0.1);
+          border-radius: 5px;
+          padding:4px 8px 4px 21px;
+          font-weight: bold;
+          font-size: 10px;
+          line-height: 13px;
+          color: #606368;
+          text-transform: uppercase;
+          &:before{
+            content: "";
+            position: absolute;
+            left: 8px;
+            top:50%;
+            transform: translateY(-50%);
+            width: 8px ;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #39FF14;
+            animation: ${AniDot} 1s ease-in-out infinite alternate;
+          }
+        }
+        .start{
+          display: none;
+          cursor: pointer;
+          border: none;
+          padding:0 8px;
+            position: absolute;
+            top:50%;
+            transform: translateY(-50%);
+            right:10px;
+            color:#fff;
+            background: #056CF2;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 10px;
+            line-height: 22px;
+            text-align: center;
+          }
 
       }
       .tabs{
@@ -94,6 +149,7 @@ const StyledWrapper = styled.div`
         margin-left: 28px;
         margin-bottom: 10px;
         .tab{
+          position: relative;
           display: flex;
           align-items: center;
           cursor: pointer;
@@ -111,6 +167,7 @@ const StyledWrapper = styled.div`
             line-height: 18px;
             color: #000;
           }
+
         }
       }
       &.expand{
@@ -118,52 +175,107 @@ const StyledWrapper = styled.div`
           display: flex;
         }
         .title .arrow{
-          transform: rotate(180deg);
+          transform: rotate(0);
         }
       }
       &:hover{
         .title{
           background: #E8F2FF;
+          .start{
+            display: block;
+          }
         }
       }
     }
   }
 `;
-export default function WindowList({ windows = null }) {
-  console.log("window list", windows);
+
+const fetcher = (...args) => fetch(...args).then(res => res.json());
+const prefix = SOCKET_SERVER_DOMAIN.indexOf('localhost') > -1 ? 'http:' : 'https:';
+export default function WindowList({ windows = null, roomId = "" }) {
+  const [savedWindows, setSavedWindows] = useState(null);
+  const [unsavedWindows, setUnsavedWindows] = useState([])
+  const { data, } = userSWR(`${prefix}//${SOCKET_SERVER_DOMAIN}/webrowse/window/list/${roomId}`, fetcher)
   const handleJumpTab = ({ currentTarget }) => {
     const { tabId, windowId } = currentTarget.dataset;
+    if (!windowId) return;
     sendMessageToBackground({ tabId, windowId }, MessageLocation.Popup, EVENTS.JUMP_TAB)
   }
   const toggleExpand = ({ currentTarget }) => {
     currentTarget.parentElement.classList.toggle('expand')
   }
-  if (!windows) return null;
+  const handleNewBrowsing = (evt) => {
+    evt.stopPropagation();
+    const { roomId, winId } = evt.target.dataset;
+    const urls = savedWindows.find(w => w.winId == winId)?.tabs.map(({ url }) => url) || []
+    sendMessageToBackground({ roomId, winId, urls }, MessageLocation.Popup, EVENTS.NEW_WINDOW)
+  }
+  useEffect(() => {
+    if (data && data.windows) {
+      let newArr = data.windows.map(saved => {
+        let live = !!windows.find(w => w.winId == saved.id);
+        return { ...saved, live }
+      })
+      setSavedWindows(newArr)
+    }
+  }, [data, windows]);
+  useEffect(() => {
+    if (windows && windows.length) {
+      setUnsavedWindows(windows.filter(w => w.winId.endsWith('_temp')));
+    }
+  }, [windows])
   return (
-    <StyledWrapper>
-      <h2 className="title">Active Windows</h2>
-      <div className={`block ${windows.length == 0 ? 'empty' : ''}`}>
-        {windows.length == 0 && <div className="tip">You haven’t saved any windows yet. Start cobrowsing and save any window that you would like to share again!</div>}
-        {windows.map(({ roomId, roomName, tabs }) => {
-          return <div key={roomId} className="window">
-            <h3 className="title" onClick={toggleExpand}>
-              <i className='arrow'></i>
-              <span className="con">
-                {roomName}
-              </span>
-              <span className="num">{tabs.length} tabs</span>
-            </h3>
-            <ul className="tabs">
-              {tabs.map(({ id, title, favIconUrl, windowId }) => {
-                return <li onClick={handleJumpTab} data-window-id={windowId} data-tab-id={id} key={id} title={title} className="tab">
-                  <img src={favIconUrl || "https://files.authing.co/authing-console/default-user-avatar.png"} alt="favicon" />
-                  <span className="con">{title}</span>
-                </li>
-              })}
-            </ul>
-          </div>
-        })}
-      </div>
-    </StyledWrapper>
+    <>
+      {unsavedWindows && unsavedWindows.length !== 0 && <StyledWrapper>
+        <h2 className="title">Unsaved Windows</h2>
+        <div className={`block`}>
+          {unsavedWindows.map(({ title, winId, tabs }) => {
+            return <div key={winId} className="window">
+              <h3 className="title" onClick={toggleExpand}>
+                <i className='arrow'></i>
+                <span className="con">
+                  {title || "untitled window"}
+                </span>
+                <span className="num">{tabs.length} tabs</span>
+              </h3>
+              <ul className="tabs">
+                {tabs.map(({ id, title, favIconUrl, windowId = '' }) => {
+                  return <li onClick={handleJumpTab} data-window-id={windowId} data-tab-id={id} key={id} title={title} className="tab">
+                    <img src={favIconUrl || "https://files.authing.co/authing-console/default-user-avatar.png"} alt="favicon" />
+                    <span className="con">{title}</span>
+                  </li>
+                })}
+              </ul>
+            </div>
+          })}
+        </div>
+      </StyledWrapper>}
+      {savedWindows && <StyledWrapper>
+        <h2 className="title">Saved Windows</h2>
+        <div className={`block ${savedWindows.length == 0 ? 'empty' : ''}`}>
+          {savedWindows.length == 0 && <div className="tip">You haven’t saved any windows yet. Start cobrowsing and save any window that you would like to share again!</div>}
+          {savedWindows.map(({ title, id, live, room, tabs }) => {
+            return <div key={id} className="window">
+              <h3 className="title" onClick={toggleExpand}>
+                <i className='arrow'></i>
+                <span className="con">
+                  {title || "untitled window"}
+                </span>
+                <span className="num">{tabs.length} tabs</span>
+                {live ? <span className="live">live</span> : <button data-room-id={room} data-win-id={id} onClick={handleNewBrowsing} className="start">cobrowse</button>}
+              </h3>
+              <ul className="tabs">
+                {tabs.map(({ id, title, icon, windowId = '' }) => {
+                  return <li onClick={handleJumpTab} data-window-id={windowId} data-tab-id={id} key={id} title={title} className="tab">
+                    <img src={icon || "https://files.authing.co/authing-console/default-user-avatar.png"} alt="favicon" />
+                    <span className="con">{title}</span>
+                  </li>
+                })}
+              </ul>
+            </div>
+          })}
+        </div>
+      </StyledWrapper>}
+    </>
   )
 }
