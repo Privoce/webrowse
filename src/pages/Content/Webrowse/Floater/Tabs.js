@@ -14,7 +14,7 @@ const StyledWrapper = styled(StyledBlock)`
       flex-direction: column;
       gap: 8px;
       max-height: 80vh;
-      overflow: auto;
+      overflow: visible;
       width: 100%;
       padding-left: 0;
       .tab{
@@ -67,10 +67,25 @@ const StyledWrapper = styled(StyledBlock)`
           display: flex;
           gap: 4px;
           .head{
-            font-size: 12px;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
+            position: relative;
+            .username{
+              color: #fff;
+              display: none;
+              position: absolute;
+              left:50%;
+              bottom:-20px;
+              transform: translateX(-50%);
+              padding:2px 4px;
+              background: #000;
+              box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+              border-radius: 5px;
+              font-weight: 600;
+              font-size: 10px;
+              line-height: 13px;
+            }
+            &:hover .username{
+              display: inline-block;
+            }
           }
         }
       }
@@ -103,7 +118,10 @@ export default function Tabs({ tabs, users, closeBlock }) {
             <div className="members">
               {activeUsers.map(u => {
                 const { username = '', photo = '', id } = u;
-                return <Avator title={username} key={id} photo={photo} username={username} alt="member head" />
+                return <div className="head" key={id}>
+                  <Avator photo={photo} username={username} alt="member head" />
+                  <span className="username">{username}</span>
+                </div>
               })}
             </div>
           </li>

@@ -10,7 +10,7 @@ const StyledContainer = styled.div`
     align-items: flex-start;
     padding: 12px 14px;
     transition: all .5s ease-in;
-    min-width: 360px;
+    min-width: 384px;
     max-width:400px;
     >.title{
       color: #000;
