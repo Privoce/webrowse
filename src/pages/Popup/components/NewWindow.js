@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components';
 // import StyledBlock from './StyledBlock'
 import { sendMessageToBackground, MessageLocation } from '@wbet/message-api'
@@ -11,62 +11,107 @@ const StyledWrapper = styled.div`
   justify-content: space-between;
   padding:16px 24px;
   .block{
+    position: relative;
     width: 100%;
     width:-webkit-fill-available;
-    display: flex;
-    flex-direction: column;
-    gap:12px;
-    background: #fff;
-    border-radius: 5px;
-    padding:12px 14px;
-    .dup{
-      cursor: pointer;
-      white-space: nowrap;
-      display: flex;
-      align-items: center;
-      font-size: 14px;
-      color:#3B4256;
-      line-height: 140%;
-      gap:10px;
-      .check{
-        cursor: pointer;
-      }
-    }
+    margin:12px 14px;
     .start{
+      margin: 0 auto;
+      display: block;
       cursor: pointer;
       align-self: center;
       font-size: 14px;
       line-height: 22px;
       border:none;
       color:#fff;
-      background: #056CF2;
+      padding:8px 16px;
+      background: linear-gradient(271.12deg, #056CF2 0.35%, #74D6D7 95.13%);
       border-radius: 20px;
-      padding:8px 14px 8px 42px;
-      background-size: 22px;
-      background-image: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/add.svg`});
-      background-repeat: no-repeat;
-      background-position: 14px 8px;
+    }
+    .opts{
+      margin: 0;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #FFFFFF;
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+      border-radius: 5px;
+      padding:10px 0;
+      display: flex;
+      list-style: none;
+      flex-direction: column;
+      align-items: flex-start;
+      .opt{
+        box-sizing: border-box;
+        cursor: pointer;
+        width: 226px;
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 22px;
+        padding:8px 0 8px 48px;
+        background-repeat: no-repeat;
+        background-size: 20px;
+        background-position: 14px 8px;
+        &.new{
+          background-image: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/add.svg`});
+        }
+        &.cur{
+          background-image: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/copy.svg`});
+        }
+        &:hover{
+          background-color:#E8F2FF ;
+        }
+      }
     }
   }
 `;
 export default function NewWindow() {
-  const [dupChecked, setDupChecked] = useState(false);
-  const toggleDupCheckChange = () => {
-    setDupChecked(prev => !prev)
+  const [subMenuVisible, setSubMenuVisible] = useState(false);
+  const node = useRef(null)
+  const showSubMenu = () => {
+    setSubMenuVisible(true)
   }
-  const handleNewBrowsing = () => {
-    sendMessageToBackground({ currentTab: dupChecked }, MessageLocation.Popup, EVENTS.NEW_WINDOW)
+  const handleNewBrowsing = (evt) => {
+    const { type } = evt.currentTarget.dataset;
+    switch (type) {
+      case 'new':
+        sendMessageToBackground({ newWindow: true }, MessageLocation.Popup, EVENTS.NEW_WINDOW)
+        break;
+
+      case 'current':
+        sendMessageToBackground({ newWindow: false }, MessageLocation.Popup, EVENTS.NEW_WINDOW)
+        break;
+
+      default:
+        break;
+    }
+
   }
+  const handleClickOutside = e => {
+    console.log("clicking anywhere");
+    if (node.current.contains(e.target)) {
+      // inside click
+      return;
+    }
+    // outside click
+    setSubMenuVisible(false);
+  };
+  useEffect(() => {
+    if (subMenuVisible) {
+      document.addEventListener('mouseup', handleClickOutside, false);
+    } else {
+      document.removeEventListener('mouseup', handleClickOutside, false);
+    }
+  }, [subMenuVisible]);
   return (
     <StyledWrapper>
-      <div className="block">
-        <div className="dup" onClick={toggleDupCheckChange}>
-          <input className="check" readOnly checked={dupChecked} type="checkbox" name="dup" id="dup" />
-          <span>
-            Duplicate tabs in current window
-          </span>
-        </div>
-        <button onClick={handleNewBrowsing} className="start">Start Cobrowsing</button>
+      <div className="block" ref={node}>
+        <button onClick={showSubMenu} className="start">Start a New Cobrowsing Session</button>
+        {subMenuVisible && <ul className="opts" >
+          <li className="opt new" data-type="new" onClick={handleNewBrowsing}>New Window</li>
+          <li className="opt cur" data-type="current" onClick={handleNewBrowsing}>Current Window</li>
+        </ul>}
       </div>
     </StyledWrapper>
   )
