@@ -88,7 +88,7 @@ const StyledModal = styled.section`
   }
 `;
 const fetcher = (...args) => fetch(...args).then(res => res.json());
-const prefix = SOCKET_SERVER_DOMAIN.indexOf('localhost') > -1 ? 'http:' : ''
+const prefix = SOCKET_SERVER_DOMAIN.indexOf('localhost') > -1 ? 'http:' : 'https:'
 export default function UsernameModal({ roomId, startCoBrowse, closeModal }) {
   const { data, error } = userSWR(`${prefix}//${SOCKET_SERVER_DOMAIN}/webrowse/user/active/${roomId}`, fetcher)
   const [input, setInput] = useState('')
