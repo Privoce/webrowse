@@ -1,4 +1,4 @@
-// import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import styled from 'styled-components';
 import { sendMessageToBackground, MessageLocation } from '@wbet/message-api'
 import { EVENTS } from '../../../common'
@@ -83,11 +83,11 @@ const StyledModal = styled.section`
   }
 `;
 const Title = {
-  creator: 'Save It for Later',
+  logined: 'Save It for Later',
   guest: "Want to save this window?"
 };
 const Content = {
-  creator: 'Would you like to save this window so you can cobrowse it again?',
+  logined: 'Would you like to save this window so you can cobrowse it again?',
   guest: <>
     <div>By signing up, you can:</div>
     <ul>
@@ -100,7 +100,15 @@ const Content = {
     </ul>
   </>
 }
-export default function LeaveModal({ endAll = false, user = null, closeModal, type = 'guest' }) {
+export default function LeaveModal({ endAll = false, user = null, closeModal }) {
+  const [modalType, setModalType] = useState(null);
+  useEffect(() => {
+    if (user?.uid) {
+      setModalType('logined')
+    } else {
+      setModalType('guest')
+    }
+  }, [user])
   const handleSignup = () => {
     sendMessageToBackground({}, MessageLocation.Content, EVENTS.LOGIN)
   }
@@ -113,18 +121,19 @@ export default function LeaveModal({ endAll = false, user = null, closeModal, ty
     // to do
     closeModal()
   }
+  if (!modalType) return null;
   return (
     <StyledModal>
       <div className="modal">
         <div className="close" onClick={handleClose}>
           <IconClose color="#333" />
         </div>
-        <h3 className="title">{Title[type]}</h3>
-        <div className={`content ${type}`}>
-          {Content[type]}
+        <h3 className="title">{Title[modalType]}</h3>
+        <div className={`content ${modalType}`}>
+          {Content[modalType]}
         </div>
         <div className="btns">
-          {(user && user.uid) ? <button onClick={handleQuit.bind(null, true)} className="btn">Save</button> : <button onClick={handleSignup} className="btn">Sign Up</button>}
+          {modalType == 'logined' ? <button onClick={handleQuit.bind(null, true)} className="btn">Save</button> : <button onClick={handleSignup} className="btn">Sign Up</button>}
           <button onClick={handleQuit.bind(null, false)} className="btn ghost">Quit</button>
         </div>
       </div>
