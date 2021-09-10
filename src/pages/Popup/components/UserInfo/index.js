@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components';
+import Avator from './Avator'
 const StyledWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -16,11 +17,6 @@ const StyledWrapper = styled.div`
       border-radius: 50%;
       border:2px solid #68D6DD;
       padding:2px;
-      img{
-        border-radius: 50%;
-        width:100%;
-        height:100%;
-      }
     }
     .username{
       color:#000;
@@ -39,6 +35,7 @@ const StyledWrapper = styled.div`
     line-height: 22px;
   }
 `;
+
 export default function UserInfo({ user, logout }) {
   const handleLogout = () => {
     logout()
@@ -49,7 +46,7 @@ export default function UserInfo({ user, logout }) {
     <StyledWrapper>
       <div className="info" data-id={id}>
         <div className="avator">
-          <img src={photo || "https://files.authing.co/authing-console/default-user-avatar.png"} alt="user avator" />
+          <Avator photo={photo} username={username} alt="user avator" />
         </div>
         <span className="username">{username}</span>
       </div>
