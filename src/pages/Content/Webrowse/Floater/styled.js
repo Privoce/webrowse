@@ -27,14 +27,13 @@ const StyledWidget = styled.aside`
     top: 14px;
     right: 20px;
     >.btn{
-      background: #DCDCDC;
+      background: #CE7E89;
       border-radius: 15px;
       font-size: 12px;
       line-height: 15px;
-      color:#767676;
+      color:#fff;
       padding:4px 12px ;
       &:hover{
-        color:#fff;
         background: #B63546;
       }
     }
@@ -72,17 +71,22 @@ const StyledWidget = styled.aside`
     color:#000;
     padding-bottom:11px;
     font-weight: 800;
-    font-size: 16px;
+    font-size: 16px !important;
     white-space: nowrap;
     text-align: left;
+    padding-right: 50px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 320px;
   }
   .opts{
     display: flex;
     align-items: center;
+    justify-content:space-between ;
     .btns {
       display: flex;
       align-items: center;
-      gap:12px;
+      gap:30px;
       padding-right:16px;
       .btn{
         position: relative;
@@ -122,7 +126,7 @@ const StyledWidget = styled.aside`
       display: flex;
       align-items: center;
       padding-left:16px;
-      border-left:1px solid #E6E9EF;
+      /* border-left:1px solid #E6E9EF; */
       .btn{
         min-width: 156px;
         position: relative;

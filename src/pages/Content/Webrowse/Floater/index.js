@@ -44,7 +44,7 @@ export default function Floater({ showLeaveModal }) {
         console.log("get link", url);
         setInviteLink(url)
       },
-      [EVENTS.UPDATE_FLOATER]: ({ roomName, floaterTabVisible, users, tabs, userId }) => {
+      [EVENTS.UPDATE_FLOATER]: ({ roomName, title = "", floaterTabVisible, users, tabs, userId }) => {
         console.log({ floaterTabVisible, users, tabs, userId });
         setVisible(floaterTabVisible);
         setUsers(users);
@@ -53,7 +53,7 @@ export default function Floater({ showLeaveModal }) {
         let tmp2 = users.find(u => u.host);
         setCurrUser(tmp);
         setHost(tmp2);
-        setTitle(roomName)
+        setTitle(title ? `${roomName} - ${title}` : roomName)
       }
     });
     // 初次初始化
@@ -79,10 +79,12 @@ export default function Floater({ showLeaveModal }) {
     if (!type) return;
     sendMessageToBackground({ tab: type, visible: false }, MessageLocation.Content, EVENTS.CHANGE_FLOATER_TAB)
   }
-  const showVeraPanel = () => {
-    sendMessageToBackground({}, MessageLocation.Content, EVENTS.LOAD_VERA)
-  }
-  const { tab, follow, audio } = visible;
+  // const showVeraPanel = () => {
+  //   alert("Working In Progress, Coming soon!");
+  //   return;
+  //   // sendMessageToBackground({}, MessageLocation.Content, EVENTS.LOAD_VERA)
+  // }
+  const { tab, follow } = visible;
   console.log({ users, host, currUser });
   return (
     <StyledWidget >
@@ -100,7 +102,7 @@ export default function Floater({ showLeaveModal }) {
         <div className="btns">
           <button title="Tab Status" className={`btn tab ${tab ? 'curr' : ''}`} data-type='tab' onClick={toggleVisible}></button>
           <button title="Follow Mode" className={`btn follow ${follow ? 'curr' : ''}`} data-type='follow' onClick={toggleVisible}></button>
-          <button title="Audio Channel" className={`btn audio ${audio ? 'curr' : ''}`} data-type='audio' onClick={showVeraPanel}></button>
+          {/* <button title="Audio Channel" className={`btn audio ${audio ? 'curr' : ''}`} data-type='audio' onClick={showVeraPanel}></button> */}
         </div>
         {inviteLink && <div className="copy">
           <button className={`btn ${copied ? 'copied' : ''}`} onClick={handleCopyLink}>{copied ? `Link Copied` : `Copy Link to Invite`}</button>
