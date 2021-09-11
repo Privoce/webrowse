@@ -36,54 +36,90 @@ const StyledStatus = styled.div`
         font-weight: 800;
       }
     }
-    .follow{
+    .status_btn{
+      user-select: none;
       border:none;
       outline: none;
       color:inherit;
       flex:1;
-      background-color:#68D6DD;
-      padding-left: 20px;
-      background-image: url('https://static.nicegoodthings.com/works/vera/follow.icon.png') ;
-      background-repeat: no-repeat;
-      background-size: 11px auto;
-      background-position: 8px;
+      margin: 0;
       padding:5px 25px 5px 24px;
-      &.following{
-        background-color:#B63546;
+      padding-left: 20px;
+      &.follow,&.host{
+        background-color:#68D6DD;
+        background-image: url('https://static.nicegoodthings.com/works/vera/follow.icon.png') ;
+        background-repeat: no-repeat;
+        background-size: 11px auto;
+        background-position: 8px;
+        &.warning{
+          position: relative;
+          background-image: none;
+          background-color:#B63546;
+          &:before{
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            left: 16px;
+            content: "";
+            display: block;
+            width: 8px;
+            height: 8px;
+            background-color: #fff;
+          }
+        }
       }
     }
 `;
 
 export default function CobrowseStatus() {
   const [host, setHost] = useState(null);
-  const [follow, setFollow] = useState(false)
-  const toggleFollow = () => {
+  const [currUser, setCurrUser] = useState(null)
+  const stopBeHost = () => {
+    if (!currUser) return;
     sendMessageToBackground({
       data: {
-        cmd: EVENTS.FOLLOW_MODE, payload: { follow: !follow }
+        cmd: EVENTS.BE_HOST, payload: { enable: false }
       }
     }, MessageLocation.Content, EVENTS.SOCKET_MSG);
-    setFollow(!follow)
+    setHost(null)
+  }
+  const toggleFollow = () => {
+    if (!currUser) return;
+    sendMessageToBackground({
+      data: {
+        cmd: EVENTS.FOLLOW_MODE, payload: { follow: !currUser.follow }
+      }
+    }, MessageLocation.Content, EVENTS.SOCKET_MSG);
+    setCurrUser(prev => {
+      return { ...prev, follow: !prev.follow }
+    })
   }
   useEffect(() => {
     onMessageFromBackground(MessageLocation.Content, {
       [EVENTS.UPDATE_FLOATER]: ({ users, userId }) => {
         console.log({ users, userId });
         let currUser = users.find(u => u.id == userId);
-        let host = users.find(u => u.host && u.id !== userId) || null;
+        let host = users.find(u => u.host) || null;
         setHost(host);
-        setFollow(currUser.follow)
+        setCurrUser(currUser)
       }
     });
   }, []);
+  if (!currUser) return null;
   if (!host) return <StyledStatus>
     <div className="tip">
       You are cobrowsing this window
-    </div></StyledStatus>
+    </div></StyledStatus>;
+  const hostMyself = host.id == currUser.id;
   return (
     <StyledStatus>
-      <div className="status"> <strong className="host">{host.username}</strong> become the host</div>
-      <button className={`follow ${follow ? 'following' : ''}`} onClick={toggleFollow}>{follow ? 'Stop Following' : 'Follow Host'}</button>
+      <div className="status">
+        {hostMyself ? <span><strong className="host">You</strong> are now the host</span> : <span><strong className="host">{host.username}</strong> is now the host</span>}
+      </div>
+      {hostMyself ?
+        <button className={`status_btn host warning`} onClick={stopBeHost}>Stop Hosting</button>
+        :
+        <button className={`status_btn follow ${currUser.follow ? 'warning' : ''}`} onClick={toggleFollow}>{currUser.follow ? 'Stop Following' : 'Follow Host'}</button>}
     </StyledStatus>
   )
 }
