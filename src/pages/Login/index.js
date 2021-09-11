@@ -13,8 +13,7 @@ const guard = new AuthingGuard('6034a70af621af721e5320b9', {
 
 // 事件监听
 const loginHandler = (user) => {
-  console.log(user)
-  console.log('debug', chrome.storage)
+  console.log(user);
   // 本地种下用户数据
   chrome.storage.sync.set({ user }, function () {
     console.log('user from login page ', user)
@@ -22,8 +21,8 @@ const loginHandler = (user) => {
   chrome.tabs.getCurrent((tab) => {
     console.log({ tab })
     let { id, openerTabId } = tab
-    sendMessageToContentScript(openerTabId, { user }, MessageLocation.Content, 'LOGIN')
-    chrome.tabs.remove(id)
+    sendMessageToContentScript(openerTabId, { user }, MessageLocation.Content, 'LOGIN');
+    chrome.tabs.update(id, { url: `https://webrow.se/logined?name=${encodeURI(user.username)}` })
   })
 }
 guard.on('load', (authClient) => console.log(authClient))
