@@ -9,6 +9,7 @@ import WindowList from './WindowList';
 import { EVENTS } from '../../../common'
 
 const StyledContainer = styled.section`
+  min-width: 380px;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -35,7 +36,7 @@ export default function Container() {
     <StyledContainer>
       <UserInfo user={user} logout={logout} />
       <NewWindow />
-      <WindowList windows={wins} />
+      <WindowList windows={wins} roomId={user.id} />
     </StyledContainer>
   )
 }
