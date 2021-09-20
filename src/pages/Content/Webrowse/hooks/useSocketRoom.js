@@ -4,7 +4,6 @@ import emitter, { VeraEvents } from './useEmitter';
 import { EVENTS } from '../../../../common'
 import { sendMessageToBackground, onMessageFromBackground, MessageLocation } from '@wbet/message-api'
 
-// import { destoryCursor } from '../Cursor';
 import { Howl } from 'howler';
 let joined = false;
 var SoundEnterRoom = new Howl({

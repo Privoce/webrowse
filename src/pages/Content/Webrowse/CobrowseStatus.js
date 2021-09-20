@@ -37,9 +37,11 @@ const StyledStatus = styled.div`
       }
     }
     .status_btn{
+      white-space: nowrap;
       user-select: none;
       border:none;
       outline: none;
+      font-size: inherit;
       color:inherit;
       flex:1;
       margin: 0;

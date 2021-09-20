@@ -48,7 +48,7 @@ const sendTabSyncMsg = debounce((ws, socket) => {
     console.log({ wsUpdateCopy });
     socket.send({ cmd: EVENTS.TAB_EVENT, payload: { data: wsUpdateCopy } });
   });
-});
+}, 1000);
 const getNewWindow = (params) => {
   return new Promise((resolve) => {
     chrome.windows.create(params, (w) => {
