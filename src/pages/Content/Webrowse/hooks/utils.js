@@ -157,60 +157,6 @@ const stopVideoStreams = () => {
       }
     });
 };
-const pinVideoList = async (videos) => {
-  const canvas = document.createElement("canvas");
-  // both videos share the same 16/9 ratio
-  // so in this case it's really easy to draw both on the same canvas
-  // to make it dynamic would require more maths
-  // but I'll let it to the readers
-  const height = 400;
-  const width = 400;
-  canvas.height = height * videos.length; // vertical disposition
-  canvas.width = width;
-  const ctx = canvas.getContext("2d");
-  const video = document.createElement("video");
-  video.classList.add('pip');
-  video.muted = 'muted';
-  video.autoplay = true;
-  video.onloadedmetadata = ({ target }) => {
-    console.log("video event loadedmetadata", target);
-    // anim()
-  }
-  // video.onloadeddata = ({ target }) => {
-  //   console.log("video event loadeddata", target);
-  //   anim()
-  // }
-  video.srcObject = canvas.captureStream();
-
-  let began = false; // rPiP needs video's metadata
-  anim();
-  await video.play();
-  began = true;
-  try {
-    video.requestPictureInPicture();
-  } catch (error) {
-    console.log("video PiP error", error);
-  }
-
-  function anim() {
-    console.log('anim canvas', began, document.pictureInPictureElement);
-    for (let index = 0; index < videos.length; index++) {
-      let currVideo = videos[index];
-      // if (currVideo.readyStatus == currVideo.HAVE_ENOUGH_DATA) {
-      ctx.drawImage(currVideo, 0, index * height, width, height);
-      // }
-    }
-    // iff we are still in PiP mode
-    if (!began || (document.pictureInPictureElement && document.pictureInPictureElement.classList.contains('pip'))) {
-      requestAnimationFrame(anim);
-    }
-    //  else {
-    //   // kill the stream
-    //   video.srcObject.getTracks().forEach(track => track.stop());
-
-    // }
-  }
-}
 function createUUID() {
   // http://www.ietf.org/rfc/rfc4122.txt
   var s = [];
@@ -226,7 +172,6 @@ function createUUID() {
   return uuid;
 }
 export {
-  pinVideoList,
   getVideoPlayer,
   stringToHexColor,
   throttle,
