@@ -7,6 +7,7 @@ import { getActiveTab, debounce } from './utils';
 const protocolPrefix = SOCKET_SERVER_DOMAIN.indexOf('localhost') > -1 ? 'http://' : 'wss://';
 const SOCKET_SERVER_URL = `${protocolPrefix}${SOCKET_SERVER_DOMAIN}`;
 const DATA_HUB = {};
+const Tabs = {};
 // init user info
 chrome.storage.sync.get(['user'], (res) => {
   console.log('local user data', res.user);
@@ -46,9 +47,9 @@ const sendTabSyncMsg = debounce((ws, socket) => {
   if (!socket) return;
   ws.read().then(wsUpdateCopy => {
     console.log({ wsUpdateCopy });
-    socket.send({ cmd: EVENTS.TAB_EVENT, payload: { data: wsUpdateCopy } });
+    socket.send({ cmd: EVENTS.WORKSPACE, payload: { workspace: wsUpdateCopy } });
   });
-}, 1000);
+}, 500);
 const getNewWindow = (params) => {
   return new Promise((resolve) => {
     chrome.windows.create(params, (w) => {
@@ -71,12 +72,13 @@ const initWorkspace = async ({ windowId = null, roomId = "", winId = "", urls = 
     const currUser = DATA_HUB[finalWindowId].users.find(u => u.id == DATA_HUB[finalWindowId].socketId)
     // 捕捉并处理对应的tab事件
     let currSocket = null;
-    let needSyncTabsList = false;
+    let needSyncTabsList = true;
     console.log('workspace trigger tab event', { event, rawParams });
     switch (event) {
       case TabEvent.onActivated:
         // case TabEvent.onHighlighted:
         {
+          needSyncTabsList = false;
           let wid = null;
           if (event == TabEvent.onActivated) {
             wid = rawParams.activeInfo.windowId;
@@ -91,44 +93,58 @@ const initWorkspace = async ({ windowId = null, roomId = "", winId = "", urls = 
         }
         break;
       case TabEvent.onCreated: {
+        needSyncTabsList = false;
         // 给新建的tab做标记
         const { tab: { id, windowId } } = rawParams;
         DATA_HUB[windowId].createTabs.push(id);
       }
         break;
       case TabEvent.onUpdated: {
-        needSyncTabsList = true;
         const { changeInfo, tab } = rawParams;
-        const { windowId, active, url } = tab;
+        const { windowId, active, url, title } = tab;
+        // 备份到全局变量 Tabs
+        Tabs[tab.id] = { title, url };
         // const { windowId, active,url,title} = tab;
         // 条件：活跃，非空页，正在加载，(host 或者 属于新建tab)
         // youtube的判断条件： active && url && !url.startsWith('chrome') && url.indexOf(title)>-1 && pageLoadingStatus == "loading"
         const { status: pageLoadingStatus } = changeInfo;
-
-        const shouldSync = currUser?.host || DATA_HUB[windowId].createTabs.includes(tab.id);
+        const isCreated = DATA_HUB[windowId].createTabs.includes(tab.id);
+        const shouldSync = currUser?.host || isCreated;
         console.log("tab update sync flag", { active, pageLoadingStatus, shouldSync, changeInfo, tab });
         if (active && url && !url.startsWith('chrome') && pageLoadingStatus == "complete" && shouldSync) {
           console.log(`page load status: ${pageLoadingStatus} `, changeInfo, tab);
           // 拿到socket
           currSocket = DATA_HUB[windowId].socket;
+          if (isCreated) {
+            currSocket.send({
+              cmd: EVENTS.TAB_EVENT, payload: {
+                type: "create", tab: { title, url }
+              }
+            })
+          }
           // 从创建tab id 集合中移除
           DATA_HUB[windowId].createTabs = DATA_HUB[windowId].createTabs.filter(tid => tid !== tab.id)
         }
       }
         break;
       case TabEvent.onRemoved: {
-        needSyncTabsList = true;
-        const { removeInfo: { windowId, isWindowClosing } } = rawParams;
+        const { tabId, removeInfo: { windowId, isWindowClosing } } = rawParams;
         // 关闭window引起的
         if (isWindowClosing) {
           DATA_HUB[windowId].socket?.disconnect();
           return
         };
         currSocket = DATA_HUB[windowId].socket;
+        console.log("tab removed", tabId, Tabs);
+        currSocket.send({
+          cmd: EVENTS.TAB_EVENT, payload: {
+            type: "remove", tab: Tabs[tabId]
+          }
+        })
+        delete Tabs[tabId];
       }
         break;
       case TabEvent.onMoved: {
-        needSyncTabsList = true;
         // to do: workspace api lib bug
         const { moveInfo: { windowId } } = rawParams;
         console.log('tab moved', windowId);
@@ -162,7 +178,7 @@ const initWorkspace = async ({ windowId = null, roomId = "", winId = "", urls = 
   notifyActiveTab({ finalWindowId, action: EVENTS.CHECK_CONNECTION });
 }
 // update tabs
-const notifyActiveTab = ({ windowId = 0, action = EVENTS.UPDATE_TABS }) => {
+const notifyActiveTab = ({ windowId = 0, action = EVENTS.UPDATE_TABS, payload = {} }) => {
   chrome.tabs.query({ active: true, windowId }, ([tab]) => {
     console.log('active tab', { tab });
     if (!tab) return;
@@ -170,6 +186,11 @@ const notifyActiveTab = ({ windowId = 0, action = EVENTS.UPDATE_TABS }) => {
       case EVENTS.CHECK_CONNECTION: {
         let connected = !!DATA_HUB[tab.windowId]?.workspace;
         sendMessageToContentScript(tab?.id, connected, MessageLocation.Background, EVENTS.CHECK_CONNECTION)
+      }
+        break;
+      case EVENTS.TAB_EVENT: {
+
+        sendMessageToContentScript(tab?.id, { ...payload }, MessageLocation.Background, EVENTS.TAB_EVENT)
       }
         break;
       case EVENTS.UPDATE_USERS: {
@@ -328,11 +349,17 @@ onMessageFromContentScript(MessageLocation.Background, {
         notifyActiveTab({ windowId, action: EVENTS.UPDATE_FLOATER })
       }
     });
-    // tab事件：CRUD
-    socket.on(EVENTS.TAB_EVENT, async (tab) => {
-      // tab更新
+    // TAB EVENT
+    socket.on(EVENTS.TAB_EVENT, (operation) => {
+      const { username, type, tab } = operation;
+      console.log("tab operation event", username, type, tab);
+      notifyActiveTab({ windowId, action: EVENTS.TAB_EVENT, payload: { username, type, tab } })
+    });
+    // workspace 事件
+    socket.on(EVENTS.WORKSPACE, async (workspace) => {
+      // workspace更新
       const currentUser = DATA_HUB[windowId].users.find(u => u.id == socket.id);
-      const { data: tabsData, fromHost = false } = tab;
+      const { data: wsData, fromHost = false } = workspace;
       const curWS = DATA_HUB[windowId].workspace;
       let filter = [TabEvent.onCreated, TabEvent.onMoved, TabEvent.onRemoved];
       // 没有开启follow mode 则忽略active index的更新
@@ -342,7 +369,7 @@ onMessageFromContentScript(MessageLocation.Background, {
       if (fromHost) {
         filter.push(TabEvent.onUpdated)
       }
-      await curWS?.write(tabsData, { filter })
+      await curWS?.write(wsData, { filter })
     });
     // 更新user列表
     socket.on(EVENTS.UPDATE_USERS, async ({ users }) => {

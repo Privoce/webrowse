@@ -19,6 +19,8 @@ const EVENTS = {
   NEW_WINDOW: 'NEW_WINDOW',
   // 检查连接（workspace初始化完成即代表连接存在，可能有问题）
   CHECK_CONNECTION: 'CHECK_CONNECTION',
+  // workspace 事件
+  WORKSPACE: 'WORKSPACE',
   // tab事件，新增，删除，更新
   TAB_EVENT: 'TAB_EVENT',
   // websocket当前房间存在的用户
@@ -50,8 +52,8 @@ const EVENTS = {
   // pop up 数据集合
   POP_UP_DATA: 'POP_UP_DATA',
 }
-const SOCKET_SERVER_DOMAIN = 'stage.vera.nicegoodthings.com';
+// const SOCKET_SERVER_DOMAIN = 'stage.vera.nicegoodthings.com';
 // const SOCKET_SERVER_DOMAIN = 'vera.nicegoodthings.com';
-// const SOCKET_SERVER_DOMAIN = 'localhost:4000';
-const DEFAULT_LANDING = 'https://webrow.se/landing';
+const SOCKET_SERVER_DOMAIN = 'localhost:4000';
+const DEFAULT_LANDING = 'https://webrow.se/#howto';
 export { EVENTS, SOCKET_SERVER_DOMAIN, DEFAULT_LANDING }

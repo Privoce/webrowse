@@ -1,7 +1,18 @@
 import { useEffect, useState } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { onMessageFromBackground, sendMessageToBackground, MessageLocation } from '@wbet/message-api'
-import { EVENTS } from '../../../common'
+import { EVENTS } from '../../../common';
+const AniSlideDown = keyframes`
+  from {
+    opacity: 0.2;
+    transform: translate3d(0, -100%, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+`;
 const StyledStatus = styled.div`
     overflow: hidden;
     position: absolute;
@@ -27,6 +38,28 @@ const StyledStatus = styled.div`
       padding:5px 0;
       white-space: nowrap;
       font-size: 12px;
+      &.operation{
+        display: flex;
+        align-items: center;
+        padding-left: 15px;
+        white-space: pre;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: -webkit-fill-available;
+        height: -webkit-fill-available;
+        z-index: 9;
+        background: #056CF2;
+        margin-left: 30px;
+        text-align: left;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        animation: ${AniSlideDown} .8s;
+        animation-fill-mode: both;
+        strong{
+          font-weight: bold;
+        }
+      }
     }
     .status{
       flex: 1;
@@ -61,7 +94,7 @@ const StyledStatus = styled.div`
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            left: 16px;
+            left: 12px;
             content: "";
             display: block;
             width: 8px;
@@ -72,10 +105,14 @@ const StyledStatus = styled.div`
       }
     }
 `;
-
+const operations = {
+  create: 'opened new tab',
+  remove: 'closed tab'
+}
 export default function CobrowseStatus() {
   const [host, setHost] = useState(null);
-  const [currUser, setCurrUser] = useState(null)
+  const [currUser, setCurrUser] = useState(null);
+  const [htmlTip, setHtmlTip] = useState(null)
   const stopBeHost = () => {
     if (!currUser) return;
     sendMessageToBackground({
@@ -104,6 +141,13 @@ export default function CobrowseStatus() {
         let host = users.find(u => u.host) || null;
         setHost(host);
         setCurrUser(currUser)
+      },
+      [EVENTS.TAB_EVENT]: ({ username, type, tab }) => {
+        let htmlStr = `<strong>${username}</strong> ${operations[type]} <strong>${tab.title}</strong>`;
+        setHtmlTip(htmlStr);
+        setTimeout(() => {
+          setHtmlTip(null)
+        }, 3000)
       }
     });
   }, []);
@@ -115,6 +159,7 @@ export default function CobrowseStatus() {
   const hostMyself = host.id == currUser.id;
   return (
     <StyledStatus>
+      {htmlTip && <div className="tip operation" dangerouslySetInnerHTML={{ __html: htmlTip }}></div>}
       <div className="status">
         {hostMyself ? <span><strong className="host">You</strong> are now the host</span> : <span><strong className="host">{host.username}</strong> is now the host</span>}
       </div>
