@@ -3,6 +3,13 @@ import './message-events';
 import './ws-workspace';
 
 // 安装扩展触发的事件
+const executeScripts = () => {
+  chrome.tabs.query({ active: false }, (tabs = []) => {
+    tabs.forEach(tab => {
+      chrome.tabs.reload(tab.id)
+    })
+  })
+}
 chrome.runtime.onInstalled.addListener(function (details) {
   const { reason } = details;
   console.log("install reason", reason);
@@ -15,8 +22,9 @@ chrome.runtime.onInstalled.addListener(function (details) {
             {
               active: true,
               url: 'https://webrow.se/guiding/'
-            },
-            null
+            }, () => {
+              executeScripts();
+            }
           );
         } else {
           for (let i = 0; i < tabs.length; i++) {
@@ -32,6 +40,7 @@ chrome.runtime.onInstalled.addListener(function (details) {
               chrome.tabs.remove(tab.id);
             }
           }
+          executeScripts()
         }
       });
     }
