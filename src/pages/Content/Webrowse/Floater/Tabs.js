@@ -13,8 +13,8 @@ const StyledWrapper = styled(StyledBlock)`
       display: flex;
       flex-direction: column;
       gap: 8px;
-      max-height: 80vh;
-      overflow: visible;
+      max-height: 70vh;
+      overflow: scroll;
       width: 100%;
       padding-left: 0;
       .tab{
