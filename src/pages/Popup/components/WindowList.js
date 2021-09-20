@@ -207,8 +207,9 @@ export default function WindowList({ windows = null, roomId = "" }) {
   const handleNewBrowsing = (evt) => {
     evt.stopPropagation();
     const { roomId, winId } = evt.target.dataset;
-    const urls = savedWindows.find(w => w.winId == winId)?.tabs.map(({ url }) => url) || []
-    sendMessageToBackground({ roomId, winId, urls }, MessageLocation.Popup, EVENTS.NEW_WINDOW)
+    const urls = savedWindows.find(w => w.id == winId)?.tabs.map(({ url }) => url) || []
+    sendMessageToBackground({ roomId, winId, urls }, MessageLocation.Popup, EVENTS.NEW_WINDOW);
+    window.close()
   }
   useEffect(() => {
     if (data && data.windows) {
