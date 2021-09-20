@@ -1,7 +1,6 @@
 
 import './message-events';
 import './ws-workspace';
-import './ws-notification';
 
 // 安装扩展触发的事件
 chrome.runtime.onInstalled.addListener(function (details) {
