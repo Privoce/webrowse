@@ -8,6 +8,51 @@ const protocolPrefix = SOCKET_SERVER_DOMAIN.indexOf('localhost') > -1 ? 'http://
 const SOCKET_SERVER_URL = `${protocolPrefix}${SOCKET_SERVER_DOMAIN}`;
 const DATA_HUB = {};
 const Tabs = {};
+
+
+const inactiveWindows = [];
+// 安装扩展触发的事件
+chrome.runtime.onInstalled.addListener(function (details) {
+  const { reason } = details;
+  console.log("install reason", reason);
+  switch (reason) {
+    case 'install': {
+      // 初始化未激活的window list
+      chrome.windows.getAll((windows) => {
+        let winIds = windows.map(w => {
+          return w.id
+        });
+        inactiveWindows.push(...winIds)
+      })
+      chrome.tabs.query({ url: "*://*/transfer/wb/*" }, function (tabs) {
+        console.log('query invite tabs', tabs);
+        if (!tabs || tabs.length === 0) {
+          chrome.tabs.create(
+            {
+              active: true,
+              url: 'https://webrow.se/guiding/'
+            }
+          );
+        } else {
+          for (let i = 0; i < tabs.length; i++) {
+            const tab = tabs[i];
+            if (i == 0) {
+              chrome.tabs.executeScript(tab.id, {
+                file: 'catchInviteId.bundle.js'
+              }, () => {
+                console.log('catch script executed');
+                chrome.tabs.update(tab.id, { active: true });
+              });
+            } else {
+              chrome.tabs.remove(tab.id);
+            }
+          }
+        }
+      });
+    }
+      break;
+  }
+});
 // init user info
 chrome.storage.sync.get(['user'], (res) => {
   console.log('local user data', res.user);
@@ -180,7 +225,7 @@ const initWorkspace = async ({ windowId = null, roomId = "", winId = "", urls = 
 // update tabs
 const notifyActiveTab = ({ windowId = 0, action = EVENTS.UPDATE_TABS, payload = {} }) => {
   chrome.tabs.query({ active: true, windowId }, ([tab]) => {
-    console.log('active tab', { tab });
+    console.log('notify active tab', { tab });
     if (!tab) return;
     switch (action) {
       case EVENTS.CHECK_CONNECTION: {
@@ -189,7 +234,7 @@ const notifyActiveTab = ({ windowId = 0, action = EVENTS.UPDATE_TABS, payload = 
       }
         break;
       case EVENTS.TAB_EVENT: {
-
+        console.log("send msg to active tab", tab, payload);
         sendMessageToContentScript(tab?.id, { ...payload }, MessageLocation.Background, EVENTS.TAB_EVENT)
       }
         break;
@@ -251,7 +296,16 @@ onMessageFromPopup(MessageLocation.Background, {
     if (!newWindow) {
       // 不新开窗口的逻辑
       chrome.tabs.create({ url: DEFAULT_LANDING, active: true }, ({ windowId }) => {
-        initWorkspace({ windowId, roomId: finalRoomId, winId: finalWinId })
+        initWorkspace({ windowId, roomId: finalRoomId, winId: finalWinId });
+        // 如果是未激活的window 则刷新其它tab
+        // eslint-disable-next-line no-undef
+        if (inactiveWindows.includes(windowId)) {
+          chrome.tabs.query({ active: false, currentWindow: true }, (tabs = []) => {
+            tabs.forEach(tab => {
+              chrome.tabs.reload(tab.id)
+            })
+          })
+        }
       })
     } else {
       initWorkspace({ roomId: finalRoomId, winId: finalWinId, urls: urls.length == 0 ? [DEFAULT_LANDING] : urls })
