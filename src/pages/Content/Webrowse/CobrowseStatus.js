@@ -38,14 +38,16 @@ const StyledStatus = styled.div`
       padding:5px 0;
       white-space: nowrap;
       font-size: 12px;
+      &.overlay{
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
       &.operation{
         display: flex;
         align-items: center;
         padding-left: 15px;
         white-space: pre;
-        position: absolute;
-        left: 0;
-        top: 0;
         width: -webkit-fill-available;
         height: -webkit-fill-available;
         z-index: 9;
@@ -143,23 +145,28 @@ export default function CobrowseStatus() {
         setCurrUser(currUser)
       },
       [EVENTS.TAB_EVENT]: ({ username, type, tab }) => {
+        console.log('receive tab event', username, type, tab);
         let htmlStr = `<strong>${username}</strong> ${operations[type]} <strong>${tab.title}</strong>`;
         setHtmlTip(htmlStr);
         setTimeout(() => {
           setHtmlTip(null)
-        }, 3000)
+        }, 3500)
       }
     });
   }, []);
   if (!currUser) return null;
   if (!host) return <StyledStatus>
-    <div className="tip">
-      You are cobrowsing this window
-    </div></StyledStatus>;
+    {htmlTip ?
+      <div className="tip operation" dangerouslySetInnerHTML={{ __html: htmlTip }}></div>
+      :
+      <div className="tip">
+        You are cobrowsing this window
+      </div>
+    }</StyledStatus>;
   const hostMyself = host.id == currUser.id;
   return (
     <StyledStatus>
-      {htmlTip && <div className="tip operation" dangerouslySetInnerHTML={{ __html: htmlTip }}></div>}
+      {htmlTip && <div className="tip overlay operation" dangerouslySetInnerHTML={{ __html: htmlTip }}></div>}
       <div className="status">
         {hostMyself ? <span><strong className="host">You</strong> are now the host</span> : <span><strong className="host">{host.username}</strong> is now the host</span>}
       </div>
