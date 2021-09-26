@@ -2,15 +2,23 @@ import { useEffect, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { onMessageFromBackground, sendMessageToBackground, MessageLocation } from '@wbet/message-api'
 import { EVENTS } from '../../../common';
-const AniSlideDown = keyframes`
-  from {
+const AniSlideToggle = keyframes`
+  0% {
     opacity: 0.2;
     transform: translate3d(0, -100%, 0);
   }
 
-  to {
+  16% {
     opacity: 1;
     transform: translate3d(0, 0, 0);
+  }
+  84%{
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  100%{
+    opacity: 0.2;
+    transform: translate3d(0, -100%, 0);
   }
 `;
 const StyledStatus = styled.div`
@@ -52,14 +60,21 @@ const StyledStatus = styled.div`
         height: -webkit-fill-available;
         z-index: 9;
         background: #056CF2;
-        margin-left: 30px;
+        margin-left: 20px;
         text-align: left;
         overflow: hidden;
         text-overflow: ellipsis;
-        animation: ${AniSlideDown} .8s;
+        animation: ${AniSlideToggle} 6s;
         animation-fill-mode: both;
         strong{
           font-weight: bold;
+          &.tab_title{
+            width: fit-content;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding-right: 10px;
+          }
         }
       }
     }
@@ -146,18 +161,18 @@ export default function CobrowseStatus() {
       },
       [EVENTS.TAB_EVENT]: ({ username, type, tab }) => {
         console.log('receive tab event', username, type, tab);
-        let htmlStr = `<strong>${username}</strong> ${operations[type]} <strong>${tab.title}</strong>`;
+        let htmlStr = `<strong>${username}</strong> ${operations[type]} <strong class="tab_title">${tab.title}</strong>`;
         setHtmlTip(htmlStr);
-        setTimeout(() => {
-          setHtmlTip(null)
-        }, 3500)
       }
     });
   }, []);
+  const resetHtmlTip = () => {
+    setHtmlTip(null)
+  }
   if (!currUser) return null;
   if (!host) return <StyledStatus>
     {htmlTip ?
-      <div className="tip operation" dangerouslySetInnerHTML={{ __html: htmlTip }}></div>
+      <div className="tip operation" onAnimationEnd={resetHtmlTip} dangerouslySetInnerHTML={{ __html: htmlTip }}></div>
       :
       <div className="tip">
         You are cobrowsing this window
@@ -166,7 +181,7 @@ export default function CobrowseStatus() {
   const hostMyself = host.id == currUser.id;
   return (
     <StyledStatus>
-      {htmlTip && <div className="tip overlay operation" dangerouslySetInnerHTML={{ __html: htmlTip }}></div>}
+      {htmlTip && <div className="tip overlay operation" onAnimationEnd={resetHtmlTip} dangerouslySetInnerHTML={{ __html: htmlTip }}></div>}
       <div className="status">
         {hostMyself ? <span><strong className="host">You</strong> are now the host</span> : <span><strong className="host">{host.username}</strong> is now the host</span>}
       </div>

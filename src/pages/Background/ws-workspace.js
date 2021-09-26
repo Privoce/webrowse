@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { io } from "socket.io-client";
 // import Workspace, { ITabEvent as TabEvent } from 'workspace-api-for-chrome'
 import Workspace, { TabEvent } from './lib/main';
@@ -8,9 +9,8 @@ const protocolPrefix = SOCKET_SERVER_DOMAIN.indexOf('localhost') > -1 ? 'http://
 const SOCKET_SERVER_URL = `${protocolPrefix}${SOCKET_SERVER_DOMAIN}`;
 const DATA_HUB = {};
 const Tabs = {};
-
-
 const inactiveWindows = [];
+const tabOperations = []
 // 安装扩展触发的事件
 chrome.runtime.onInstalled.addListener(function (details) {
   const { reason } = details;
@@ -79,7 +79,6 @@ chrome.storage.sync.get(['user'], (res) => {
     }
   });
 });
-
 // 向特定tab发消息
 const sendMessageToTab = (tid = null, params, actionType = '') => {
   if (tid) {
@@ -407,7 +406,12 @@ onMessageFromContentScript(MessageLocation.Background, {
     socket.on(EVENTS.TAB_EVENT, (operation) => {
       const { username, type, tab } = operation;
       console.log("tab operation event", username, type, tab);
-      notifyActiveTab({ windowId, action: EVENTS.TAB_EVENT, payload: { username, type, tab } })
+      if (type == 'remove') {
+        // remove tab 特殊处理下
+        tabOperations.push({ username, type, tab })
+      } else {
+        notifyActiveTab({ windowId, action: EVENTS.TAB_EVENT, payload: { username, type, tab } })
+      }
     });
     // workspace 事件
     socket.on(EVENTS.WORKSPACE, async (workspace) => {
@@ -577,4 +581,11 @@ chrome.windows.onRemoved.addListener(async (windowId) => {
   }
   currWorkspace.destroy();
   delete DATA_HUB[windowId]
+});
+// tab标签关闭的处理事件
+chrome.tabs.onRemoved.addListener((tabId, { windowId, isWindowClosing }) => {
+  const currWorkspace = DATA_HUB[windowId]?.workspace || null;
+  console.log('tab remove event', windowId, tabOperations, !currWorkspace);
+  if (!currWorkspace || isWindowClosing || tabOperations.length == 0) return;
+  notifyActiveTab({ windowId, action: EVENTS.TAB_EVENT, payload: tabOperations.pop() })
 })
