@@ -3,10 +3,12 @@ import { onMessageFromBackground, sendMessageToBackground, MessageLocation } fro
 import { EVENTS } from '../../../../common'
 import StyledWidget from './styled';
 import Tabs from './Tabs';
+import FollowModeTipModal from './FollowModeTipModal'
 import FollowMode from './FollowMode';
 import useCopy from '../hooks/useCopy';
 // const mock_data = [{ id: 1, host: true, username: "杨二", photo: "https://files.authing.co/user-contents/photos/9be86bd9-5f18-419b-befa-2356dd889fe6.png" }, { id: 2, username: "杨二", photo: "https://files.authing.co/user-contents/photos/9be86bd9-5f18-419b-befa-2356dd889fe6.png" }]
 export default function Floater({ showLeaveModal }) {
+  const [followTipModalVisible, setFollowTipModalVisible] = useState(false)
   const [users, setUsers] = useState([]);
   const [tabs, setTabs] = useState([]);
   const [title, setTitle] = useState("")
@@ -73,6 +75,8 @@ export default function Floater({ showLeaveModal }) {
       // 立即同步
       sendMessageToBackground({ tabId: activeTabId }, MessageLocation.Content, EVENTS.JUMP_TAB);
     }
+    setFollowTipModalVisible(!!currUser?.follow)
+
   }, [currUser, activeTabId]);
   const closeBlock = (evt) => {
     const { type } = evt.target.dataset;
@@ -87,29 +91,34 @@ export default function Floater({ showLeaveModal }) {
   const { tab, follow } = visible;
   console.log({ users, host, currUser });
   return (
-    <StyledWidget >
-      {title && <div className="quit">
-        {popup && <div className="selects">
-          {currUser?.creator && <button className="select" onClick={handleAllLeave}>End Session For All</button>}
-          <button className="select" onClick={handleLeave}>Leave Session</button>
+    <>
+      <StyledWidget >
+        {title && <div className="quit">
+          {popup && <div className="selects">
+            {currUser?.creator && <button className="select" onClick={handleAllLeave}>End Session For All</button>}
+            <button className="select" onClick={handleLeave}>Leave Session</button>
+          </div>}
+          <button onClick={togglePopup} className="btn">
+            {popup ? 'Cancel' : (currUser?.creator ? 'End' : 'Leave')}
+          </button>
         </div>}
-        <button onClick={togglePopup} className="btn">
-          {popup ? 'Cancel' : (currUser?.creator ? 'End' : 'Leave')}
-        </button>
-      </div>}
-      {title && <div className="title">{title}</div>}
-      <div className="opts">
-        <div className="btns">
-          <button title="Tab Status" className={`btn tab ${tab ? 'curr' : ''}`} data-type='tab' onClick={toggleVisible}></button>
-          <button title="Follow Mode" className={`btn follow ${follow ? 'curr' : ''}`} data-type='follow' onClick={toggleVisible}></button>
-          {/* <button title="Audio Channel" className={`btn audio ${audio ? 'curr' : ''}`} data-type='audio' onClick={showVeraPanel}></button> */}
+        {title && <div className="title">{title}</div>}
+        <div className="opts">
+          <div className="btns">
+            <button title="Tab Status" className={`btn tab ${tab ? 'curr' : ''}`} data-type='tab' onClick={toggleVisible}></button>
+            <button title="Follow Mode" className={`btn follow ${follow ? 'curr' : ''}`} data-type='follow' onClick={toggleVisible}></button>
+            {/* <button title="Audio Channel" className={`btn audio ${audio ? 'curr' : ''}`} data-type='audio' onClick={showVeraPanel}></button> */}
+          </div>
+          {inviteLink && <div className="copy">
+            <button className={`btn ${copied ? 'copied' : ''}`} onClick={handleCopyLink}>{copied ? `Link Copied` : `Copy Link to Invite`}</button>
+          </div>}
         </div>
-        {inviteLink && <div className="copy">
-          <button className={`btn ${copied ? 'copied' : ''}`} onClick={handleCopyLink}>{copied ? `Link Copied` : `Copy Link to Invite`}</button>
-        </div>}
-      </div>
-      {tab && <Tabs tabs={tabs} users={users} closeBlock={closeBlock} />}
-      {follow && <FollowMode host={host} currUser={currUser} closeBlock={closeBlock} />}
-    </StyledWidget>
+        {tab && <Tabs tabs={tabs} users={users} closeBlock={closeBlock} />}
+        {follow && <FollowMode host={host} currUser={currUser} closeBlock={closeBlock} />}
+      </StyledWidget>
+      {followTipModalVisible && <FollowModeTipModal closeModal={() => {
+        setFollowTipModalVisible(false)
+      }} />}
+    </>
   );
 }
