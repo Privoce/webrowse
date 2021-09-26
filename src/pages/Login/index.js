@@ -4,6 +4,7 @@ import '@authing/native-js-ui-components/lib/index.min.css'
 import { sendMessageToContentScript, MessageLocation } from '@wbet/message-api';
 
 const guard = new AuthingGuard('6034a70af621af721e5320b9', {
+  socialConnections: ['google', 'github'],
   lang: navigator.language == 'zh-CN' ? 'zh-CN' : 'en-US',
   localesConfig: {
     defaultLang: navigator.language == 'zh-CN' ? 'zh-CN' : 'en-US',
