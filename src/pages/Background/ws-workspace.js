@@ -527,8 +527,9 @@ onMessageFromContentScript(MessageLocation.Background, {
     }
   },
   [EVENTS.CHECK_CONNECTION]: (request, sender) => {
-    const { windowId } = sender.tab;
-    notifyActiveTab({ windowId, action: EVENTS.CHECK_CONNECTION })
+    const { id, windowId } = sender.tab;
+    let connected = !!DATA_HUB[windowId]?.workspace;
+    sendMessageToTab(id, connected, EVENTS.CHECK_CONNECTION)
   },
   [EVENTS.GET_INVITE_LINK]: (request, sender) => {
     const { windowId } = sender.tab;
