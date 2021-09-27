@@ -254,13 +254,6 @@ const notifyActiveTab = ({ windowId = 0, action = EVENTS.UPDATE_TABS, payload = 
         });
       }
         break;
-      case EVENTS.GET_INVITE_LINK: {
-        const { roomId, winId } = DATA_HUB[tab.windowId] || {};
-        let inviteLink = roomId ? `https://nicegoodthings.com/transfer/wb/${roomId}?wid=${winId}&extid=${chrome.runtime.id
-          }` : ''
-        sendMessageToContentScript(tab?.id, inviteLink, MessageLocation.Background, EVENTS.GET_INVITE_LINK)
-      }
-        break;
     }
   })
 }
@@ -536,8 +529,11 @@ onMessageFromContentScript(MessageLocation.Background, {
     sendMessageToTab(id, connected, EVENTS.CHECK_CONNECTION)
   },
   [EVENTS.GET_INVITE_LINK]: (request, sender) => {
-    const { windowId } = sender.tab;
-    notifyActiveTab({ windowId, action: EVENTS.GET_INVITE_LINK })
+    const { id, windowId } = sender.tab;
+    const { roomId, winId } = DATA_HUB[windowId] || {};
+    let inviteLink = roomId ? `https://nicegoodthings.com/transfer/wb/${roomId}?wid=${winId}&extid=${chrome.runtime.id
+      }` : ''
+    sendMessageToTab(id, inviteLink, EVENTS.GET_INVITE_LINK)
   },
   [EVENTS.UPDATE_TABS]: (request, sender) => {
     const { windowId } = sender.tab;

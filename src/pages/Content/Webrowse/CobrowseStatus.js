@@ -54,6 +54,7 @@ const StyledStatus = styled.div`
       &.operation{
         display: flex;
         align-items: center;
+        justify-content: center;
         padding-left: 15px;
         white-space: pre;
         width: -webkit-fill-available;
@@ -61,9 +62,7 @@ const StyledStatus = styled.div`
         z-index: 9;
         background: #056CF2;
         margin-left: 20px;
-        text-align: left;
         overflow: hidden;
-        text-overflow: ellipsis;
         animation: ${AniSlideToggle} 6s;
         animation-fill-mode: both;
         strong{
