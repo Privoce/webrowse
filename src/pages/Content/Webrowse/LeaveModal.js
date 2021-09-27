@@ -110,7 +110,7 @@ export default function LeaveModal({ endAll = false, user = null, closeModal }) 
     }
   }, [user])
   const handleSignup = () => {
-    sendMessageToBackground({}, MessageLocation.Content, EVENTS.LOGIN)
+    sendMessageToBackground({ scene: 'register' }, MessageLocation.Content, EVENTS.LOGIN)
   }
   const handleQuit = (keepTabs) => {
     console.log("click quit", { keepTabs, endAll });

@@ -7,12 +7,13 @@ onMessageFromContentScript(MessageLocation.Background, {
     console.log('jump tab', request);
     chrome.tabs.update(Number(request.tabId), { active: true })
   },
-  [EVENTS.LOGIN]: (request, sender) => {
+  [EVENTS.LOGIN]: (request = {}, sender) => {
+    const { scene = 'login' } = request;
     chrome.tabs.create(
       {
         openerTabId: sender.tab.id,
         active: true,
-        url: `Login/index.html?tid=${sender.tab.id}`
+        url: `Login/index.html?tid=${sender.tab.id}&scene=${scene}`
       },
       null
     );

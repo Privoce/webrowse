@@ -2,8 +2,9 @@ import { AuthingGuard } from '@authing/native-js-ui-components'
 // 引入 css 文件
 import '@authing/native-js-ui-components/lib/index.min.css'
 import { sendMessageToContentScript, MessageLocation } from '@wbet/message-api';
-
+const scene = new URLSearchParams(location.search).get('scene') || 'login'
 const guard = new AuthingGuard('6034a70af621af721e5320b9', {
+  defaultScenes: scene,
   socialConnections: ['google', 'github'],
   lang: navigator.language == 'zh-CN' ? 'zh-CN' : 'en-US',
   localesConfig: {
@@ -26,8 +27,15 @@ const loginHandler = (user) => {
     chrome.tabs.update(id, { url: `https://webrow.se/logined?name=${encodeURI(user.username)}` })
   })
 }
-guard.on('load', (authClient) => console.log(authClient))
+guard.on('load', (authClient) => { console.log({ authClient }) })
+guard.on('load-error', (loadError) => {
+  console.log({ loadError })
+})
+guard.on('login-error', (loginError) => {
+  console.log({ loginError })
+})
 guard.on('login', (user) => {
+  console.log("logined", user);
   loginHandler(user)
 })
 guard.on('register-info-completed', (user) => {

@@ -24,7 +24,7 @@
     ]
   },
   "dependencies": {
-    "@authing/native-js-ui-components": "^2.4.47",
+    "@authing/native-js-ui-components": "^2.4.49",
     "@tensorflow-models/body-pix": "^2.2.0",
     "@tensorflow/tfjs": "^3.9.0",
     "@wbet/message-api": "^1.0.14",

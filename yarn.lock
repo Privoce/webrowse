@@ -36,19 +36,19 @@
     lodash "^4.17.21"
     resize-observer-polyfill "^1.5.0"
 
-"@authing/native-js-ui-components@^2.4.47":
-  version "2.4.47"
-  resolved "https://registry.yarnpkg.com/@authing/native-js-ui-components/-/native-js-ui-components-2.4.47.tgz#076a2af60ba200d5c782cfd21cab4e400b240652"
-  integrity sha512-TrxpJV/ymuv+kOgK2MY6nBQqusFt8P+sRQ2gIg/Cp8YSf9MUhqE+mhzpj5I3P75U1DnDjGnDQNvg2XdhW5QALA==
+"@authing/native-js-ui-components@^2.4.49":
+  version "2.4.49"
+  resolved "https://registry.yarnpkg.com/@authing/native-js-ui-components/-/native-js-ui-components-2.4.49.tgz#89a85b39b8958ce7f97337e96ee8238e14da2e8b"
+  integrity sha512-bxOjiOOjda5Sz0o0+SVFeiAy3m9G53eqdnbXAdJYKd1cy0erEH4gAl/lNFVz5yJVpP4NueXn1t4OCtjev+KsnA==
   dependencies:
-    "@authing/react-ui-components" "^2.4.44"
+    "@authing/react-ui-components" "^2.4.49"
     react "16.14.0"
     react-dom "16.14.0"
 
-"@authing/react-ui-components@^2.4.44":
-  version "2.4.44"
-  resolved "https://registry.yarnpkg.com/@authing/react-ui-components/-/react-ui-components-2.4.44.tgz#c8e16d93b8ae97c1343ba22b6344f0fdd76468bc"
-  integrity sha512-XC0z+ZcQv+nxN7Cbsp/yh5JZ0pC76SLfeSUoY9YXm9bUcNEqy5M0EGI3IP8RI+qbJMjCYDZ58s8LuovhmcHkjg==
+"@authing/react-ui-components@^2.4.49":
+  version "2.4.49"
+  resolved "https://registry.yarnpkg.com/@authing/react-ui-components/-/react-ui-components-2.4.49.tgz#5cbb973dcc391034f0c20245114a3684189b47b1"
+  integrity sha512-ZBxvItKRXbZ20yYZHDEpI0rdDuPcJ2n/HEiewzKyn5ZroSoIg7D0Bb4SrjbJYGdbuildHGR0ag3Y4ibLH0+JJA==
   dependencies:
     antd "^4.8.0"
     authing-js-sdk "4.20.23"
