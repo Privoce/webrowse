@@ -23,9 +23,7 @@ export default function Panel({
   tempRoom,
   roomName,
   initializing,
-  // chatVisible = false,
   closePanel,
-  // toggleChatVisible
 }) {
   const { permissions } = useUserMedia();
   const { peer, shutdownPeer, dataConnections, mediaConnections, streams, status } = usePeer(sendSocketMessage);
@@ -149,8 +147,6 @@ export default function Panel({
           peerId={peer?.id}
           layout={layout}
           handleLayout={handleLayout}
-        // chatVisible={chatVisible}
-        // toggleChatBoxVisible={toggleChatVisible}
         />
         <Info />
       </div>

@@ -3,7 +3,6 @@ import Setting from './Setting'
 import HangUp from './HangUp'
 import Arrange from './Arrange'
 import IconCursor from '../../icons/Cursor';
-// import IconChat from '../../icons/Chat';
 // import IconInvite from '../../icons/Invite';
 import IconSync from '../../icons/Sync';
 import usePagePlayer from '../../hooks/usePagePlayer';
@@ -16,8 +15,6 @@ export default function Topbar({
   sendDataToPeers,
   layout,
   handleLayout,
-  // chatVisible = false,
-  // toggleChatBoxVisible
 }) {
   const { dark, updateDarkTheme } = useDarkTheme();
   const { player, setPlayTime, setPlay, setPause } = usePagePlayer();
@@ -124,10 +121,7 @@ export default function Topbar({
           <IconCursor enable={cursor} />
         </div>
 
-        {/* <div className={`rect chat`} onClick={toggleChatBoxVisible}>
-          <IconChat visible={chatVisible} />
-        </div>
-        <div className={`rect invite`} onClick={toggleInvitePanelVisible}>
+        {/*<div className={`rect invite`} onClick={toggleInvitePanelVisible}>
           <IconInvite visible={inviteVisible} />
         </div>*/}
         <div className={`rect setting`} >

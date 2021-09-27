@@ -5,7 +5,6 @@ import { getUser } from './hooks/utils';
 import Panel from './Panel';
 import UsernameModal from './UsernameModal';
 import LeaveModal from './LeaveModal';
-// import ChatBox from './Chat';
 import useSocketRoom from './hooks/useSocketRoom';
 // import useUsername from './hooks/useUsername'
 import { EVENTS } from '../../../common'
@@ -73,7 +72,6 @@ button{
 `;
 export default function Webrowse() {
   const [floaterVisible, setFloaterVisible] = useState(false)
-  // const [chatVisible, setChatVisible] = useState(false);
   const [nameModalVisible, setNameModalVisible] = useState(false)
   const [leaveModalVisible, setLeaveModalVisible] = useState(false)
   const [endAll, setEndAll] = useState(false)
@@ -89,9 +87,6 @@ export default function Webrowse() {
   const toggleNameModalVisible = () => {
     setNameModalVisible((prev) => !prev);
   };
-  // const toggleChatVisible = () => {
-  //   setChatVisible((prev) => !prev);
-  // };
   const toggleLeaveModalVisible = (endForAll = false) => {
     setLeaveModalVisible(prev => !prev);
     setEndAll(endForAll)
@@ -176,10 +171,7 @@ export default function Webrowse() {
             sendSocketMessage={sendSocketMessage}
             roomName={roomName}
             closePanel={hideVeraPanel}
-          // chatVisible={chatVisible}
-          // toggleChatVisible={toggleChatVisible}
           />
-          {/* <ChatBox channelId={roomId} visible={chatVisible} toggleVisible={toggleChatVisible} /> */}
         </>
       )}
       {/* 不存在或者未设置用户名的话，先设置 */}
