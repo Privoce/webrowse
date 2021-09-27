@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled, { keyframes } from 'styled-components';
-import userSWR from 'swr'
+import useSWR from 'swr'
 import { sendMessageToBackground, MessageLocation } from '@wbet/message-api'
 import { EVENTS, SOCKET_SERVER_DOMAIN } from '../../../common'
 const AniDot = keyframes`
@@ -195,7 +195,7 @@ const prefix = SOCKET_SERVER_DOMAIN.indexOf('localhost') > -1 ? 'http:' : 'https
 export default function WindowList({ windows = null, roomId = "" }) {
   const [savedWindows, setSavedWindows] = useState(null);
   const [unsavedWindows, setUnsavedWindows] = useState([])
-  const { data, } = userSWR(`${prefix}//${SOCKET_SERVER_DOMAIN}/webrowse/window/list/${roomId}`, fetcher)
+  const { data, } = useSWR(`${prefix}//${SOCKET_SERVER_DOMAIN}/webrowse/window/list/${roomId}`, fetcher)
   const handleJumpTab = ({ currentTarget }) => {
     const { tabId, windowId } = currentTarget.dataset;
     if (!windowId) return;

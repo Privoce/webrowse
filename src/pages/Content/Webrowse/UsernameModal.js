@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import styled from 'styled-components';
-import userSWR from 'swr'
+import useSWR from 'swr'
 import Avator from './Floater/Avator';
 import IconClose from './icons/Close'
 import { SOCKET_SERVER_DOMAIN } from '../../../common'
@@ -90,7 +90,7 @@ const StyledModal = styled.section`
 const fetcher = (...args) => fetch(...args).then(res => res.json());
 const prefix = SOCKET_SERVER_DOMAIN.indexOf('localhost') > -1 ? 'http:' : 'https:'
 export default function UsernameModal({ roomId, startCoBrowse, closeModal }) {
-  const { data, error } = userSWR(`${prefix}//${SOCKET_SERVER_DOMAIN}/webrowse/user/active/${roomId}`, fetcher)
+  const { data, error } = useSWR(`${prefix}//${SOCKET_SERVER_DOMAIN}/webrowse/user/active/${roomId}`, fetcher)
   const [input, setInput] = useState('')
   const handleInput = (evt) => {
     const currInput = evt.target.value;
