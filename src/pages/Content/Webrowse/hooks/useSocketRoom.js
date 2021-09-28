@@ -23,8 +23,8 @@ const useSocketRoom = () => {
   const [users, setUsers] = useState([]);
   const [initializing, setInitializing] = useState(true);
   useEffect(() => {
-    console.log('io init', user, roomId);
-    if (!user || !roomId) {
+    console.log('io init', user, roomId, initializing);
+    if (!user || !roomId || !initializing) {
       return;
     }
     let finalRoomId = roomId;

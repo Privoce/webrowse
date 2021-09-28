@@ -339,7 +339,6 @@ onMessageFromContentScript(MessageLocation.Background, {
     const { id: tabId, windowId } = sender.tab;
     // 如果已初始化，则不必再次初始化
     if (DATA_HUB[windowId]?.socket) return;
-    console.log('init websocket', user);
     const newSocket = io(SOCKET_SERVER_URL, {
       jsonp: false,
       transports: ['websocket'],
@@ -448,7 +447,7 @@ onMessageFromContentScript(MessageLocation.Background, {
     socket.on('connect_error', () => {
       console.log('io socket connect error');
       setTimeout(() => {
-        if (retryCount >= 10) {
+        if (retryCount >= 3) {
           // 超过十次重连，毁灭吧，赶紧的。
           if (DATA_HUB[windowId]) {
             DATA_HUB[windowId].workspace.destroy();
@@ -519,6 +518,7 @@ onMessageFromContentScript(MessageLocation.Background, {
       return;
     }
     if (DATA_HUB[windowId].socket) {
+      DATA_HUB[windowId]?.workspace.destroy();
       DATA_HUB[windowId].socket.disconnect();
       delete DATA_HUB[windowId];
     }

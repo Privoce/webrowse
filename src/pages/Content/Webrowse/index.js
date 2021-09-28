@@ -108,13 +108,7 @@ export default function Webrowse() {
       setCurrUser({ uid: id, username, photo });
     }
   };
-  useEffect(() => {
-    // 只要roomId 和 winId 都没有，则不显示name录入弹窗
-    setNameModalVisible(roomId && winId)
-    if (roomId && winId && currUser) {
-      initializeSocketRoom({ roomId, winId, user: currUser });
-    }
-  }, [roomId, winId, currUser]);
+
   useEffect(() => {
     if (!leaveModalVisible) {
       // 相当于每关掉一次leave modal 就检查一下
@@ -122,11 +116,16 @@ export default function Webrowse() {
     }
   }, [leaveModalVisible])
   useEffect(() => {
+    console.log('workspace connect effect');
     // 监听workspace connect变化
     onMessageFromBackground(MessageLocation.Content, {
       [EVENTS.CHECK_CONNECTION]: (connected = false) => {
         console.log("connection check", connected);
         setFloaterVisible(connected);
+        if (!connected) {
+          setRoomId(null)
+          setWinId(null)
+        }
       },
       [EVENTS.ROOM_WINDOW]: ({ roomId, winId }) => {
         console.log("background ids", roomId, winId);
@@ -146,7 +145,7 @@ export default function Webrowse() {
       if (!document.hidden) {
         sendMessageToBackground({}, MessageLocation.Content, EVENTS.CHECK_CONNECTION);
         // 再次初始化用户信息
-        initUser();
+        // initUser();
       }
     }
     document.addEventListener('visibilitychange', handleVisibleChange, false);
@@ -154,6 +153,14 @@ export default function Webrowse() {
       document.removeEventListener('visibilitychange', handleVisibleChange, false)
     }
   }, []);
+  useEffect(() => {
+    // 只要roomId 和 winId 都没有，则不显示name录入弹窗
+    setNameModalVisible(roomId && winId)
+    if (roomId && winId && currUser) {
+      console.log("initialize socket room");
+      initializeSocketRoom({ roomId, winId, user: currUser });
+    }
+  }, [roomId, winId, currUser]);
   if (loading) return null;
   console.log({ currUser, nameModalVisible, floaterVisible });
   return (
