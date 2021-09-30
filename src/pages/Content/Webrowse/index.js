@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import { sendMessageToBackground, onMessageFromBackground, MessageLocation } from '@wbet/message-api'
 import { getUser } from './hooks/utils';
-import Panel from './Panel';
 import UsernameModal from './UsernameModal';
 import LeaveModal from './LeaveModal';
 import useSocketRoom from './hooks/useSocketRoom';
@@ -80,10 +79,7 @@ export default function Webrowse() {
   const [winId, setWinId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [currUser, setCurrUser] = useState(null)
-  const { temp: tempRoom, roomName, initializing, users, sendSocketMessage, initializeSocketRoom } = useSocketRoom();
-  const hideVeraPanel = () => {
-    setPanelVisible(false);
-  };
+  const { initializeSocketRoom } = useSocketRoom();
   const toggleNameModalVisible = () => {
     setNameModalVisible((prev) => !prev);
   };
@@ -168,19 +164,6 @@ export default function Webrowse() {
       <GlobalStyle />
       {floaterVisible && <CobrowseStatus />}
       {floaterVisible && <Floater showLeaveModal={toggleLeaveModalVisible} />}
-      {/* 主panel */}
-      {panelVisible && (
-        <>
-          <Panel
-            initializing={initializing}
-            users={users}
-            tempRoom={tempRoom}
-            sendSocketMessage={sendSocketMessage}
-            roomName={roomName}
-            closePanel={hideVeraPanel}
-          />
-        </>
-      )}
       {/* 不存在或者未设置用户名的话，先设置 */}
       {!currUser && nameModalVisible && <UsernameModal roomId={roomId} closeModal={toggleNameModalVisible} startCoBrowse={startWithCustomName} />}
       {leaveModalVisible && <LeaveModal endAll={endAll} user={currUser} closeModal={toggleLeaveModalVisible} />}
