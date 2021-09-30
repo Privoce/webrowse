@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import { sendMessageToBackground, onMessageFromBackground, MessageLocation } from '@wbet/message-api'
+
 import { getUser } from './hooks/utils';
 import UsernameModal from './UsernameModal';
 import LeaveModal from './LeaveModal';
@@ -70,6 +71,7 @@ button{
 
 `;
 export default function Webrowse() {
+  const containerRef = useRef(null)
   const [floaterVisible, setFloaterVisible] = useState(false)
   const [nameModalVisible, setNameModalVisible] = useState(false)
   const [leaveModalVisible, setLeaveModalVisible] = useState(false)
@@ -110,7 +112,7 @@ export default function Webrowse() {
       // 相当于每关掉一次leave modal 就检查一下
       sendMessageToBackground({}, MessageLocation.Content, EVENTS.CHECK_CONNECTION);
     }
-  }, [leaveModalVisible])
+  }, [leaveModalVisible]);
   useEffect(() => {
     console.log('workspace connect effect');
     // 监听workspace connect变化
@@ -160,10 +162,10 @@ export default function Webrowse() {
   if (loading) return null;
   console.log({ currUser, nameModalVisible, floaterVisible });
   return (
-    <StyledWrapper id="WEBROWSE_FULLSCREEN_CONTAINER" className={floaterVisible ? 'cobrowsing' : ''}>
+    <StyledWrapper ref={containerRef} id="WEBROWSE_FULLSCREEN_CONTAINER" className={floaterVisible ? 'cobrowsing' : ''}>
       <GlobalStyle />
       {floaterVisible && <CobrowseStatus />}
-      {floaterVisible && <Floater showLeaveModal={toggleLeaveModalVisible} />}
+      {floaterVisible && <Floater dragContainerRef={containerRef} showLeaveModal={toggleLeaveModalVisible} />}
       {/* 不存在或者未设置用户名的话，先设置 */}
       {!currUser && nameModalVisible && <UsernameModal roomId={roomId} closeModal={toggleNameModalVisible} startCoBrowse={startWithCustomName} />}
       {leaveModalVisible && <LeaveModal endAll={endAll} user={currUser} closeModal={toggleLeaveModalVisible} />}

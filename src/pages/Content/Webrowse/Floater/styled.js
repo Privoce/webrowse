@@ -8,9 +8,6 @@ const AniPopup = keyframes`
   }
 `;
 const StyledWidget = styled.aside`
-  position: absolute;
-  right: 10px;
-  bottom: 60px;
   pointer-events: all;
   font-family: sans-serif;
   background: rgba(255, 255, 255, 0.6);
