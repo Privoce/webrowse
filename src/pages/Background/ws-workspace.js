@@ -9,6 +9,7 @@ const protocolPrefix = SOCKET_SERVER_DOMAIN.indexOf('localhost') > -1 ? 'http://
 const SOCKET_SERVER_URL = `${protocolPrefix}${SOCKET_SERVER_DOMAIN}`;
 const DATA_HUB = {};
 const Tabs = {};
+const InvitedWindows = {};
 const inactiveWindows = [];
 const tabOperations = []
 // 安装扩展触发的事件
@@ -102,13 +103,15 @@ const getNewWindow = (params) => {
   });
 }
 // 初始化workspace
-const initWorkspace = async ({ windowId = null, roomId = "", winId = "", urls = [], tabId = undefined }) => {
+const initWorkspace = async ({ invited = false, windowId = null, roomId = "", winId = "", urls = [], tabId = undefined }) => {
   console.log('init workspace', { windowId, urls, tabId });
   let finalWindowId = windowId;
   if (!finalWindowId) {
     const newWindow = await getNewWindow({ url: urls, tabId });
     finalWindowId = newWindow.id;
   }
+  // 标识该window是不是通过邀请链接初始化的
+  InvitedWindows[finalWindowId] = invited;
   const currWorkspace = new Workspace(finalWindowId, true);
   // 初始化datahub
   DATA_HUB[finalWindowId] = { socket: null, workspace: currWorkspace, roomId, winId, title: "", roomName: "", floaterTabVisible: { tab: true, follow: false, audio: false }, tabs: [], createTabs: [], users: [], socketId: "" }
@@ -328,7 +331,7 @@ onMessageFromContentScript(MessageLocation.Background, {
       case 'INVITE_LINK':
         {
           // 从widget & invite url 过来的
-          initWorkspace({ tabId, roomId: rid, winId: wid })
+          initWorkspace({ invited: true, tabId, roomId: rid, winId: wid })
         }
         break;
     }
@@ -344,8 +347,9 @@ onMessageFromContentScript(MessageLocation.Background, {
       transports: ['websocket'],
       reconnectionAttempts: 8,
       upgrade: false,
-      query: { type: 'WEBROWSE', roomId, winId, temp, ...user }
+      query: { type: 'WEBROWSE', roomId, winId, temp, invited: InvitedWindows[windowId], ...user }
     });
+    console.log('invited', InvitedWindows[windowId]);
     console.log('init websocket', { roomId, winId, temp, user });
     DATA_HUB[windowId].socket = newSocket;
     // 当前room的socket实例
