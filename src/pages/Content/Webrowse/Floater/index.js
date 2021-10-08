@@ -9,6 +9,7 @@ import FollowModeTipModal from './FollowModeTipModal'
 import FollowMode from './FollowMode';
 import useCopy from '../hooks/useCopy';
 // const mock_data = [{ id: 1, host: true, username: "杨二", photo: "https://files.authing.co/user-contents/photos/9be86bd9-5f18-419b-befa-2356dd889fe6.png" }, { id: 2, username: "杨二", photo: "https://files.authing.co/user-contents/photos/9be86bd9-5f18-419b-befa-2356dd889fe6.png" }]
+let followModalClosed = false;
 export default function Floater({ showLeaveModal, dragContainerRef = null }) {
   const [followTipModalVisible, setFollowTipModalVisible] = useState(false)
   const [users, setUsers] = useState([]);
@@ -85,11 +86,6 @@ export default function Floater({ showLeaveModal, dragContainerRef = null }) {
     if (!type) return;
     sendMessageToBackground({ tab: type, visible: false }, MessageLocation.Content, EVENTS.CHANGE_FLOATER_TAB)
   }
-  // const showVeraPanel = () => {
-  //   alert("Working In Progress, Coming soon!");
-  //   return;
-  //   // sendMessageToBackground({}, MessageLocation.Content, EVENTS.LOAD_VERA)
-  // }
   const { tab, follow } = visible;
   console.log({ users, host, currUser });
   return (
@@ -102,7 +98,7 @@ export default function Floater({ showLeaveModal, dragContainerRef = null }) {
         style={{ position: 'absolute', right: '10px', bottom: '60px' }}
       >
         <StyledWidget >
-          {title && <div className="quit">
+          <div className="quit">
             {popup && <div className="selects">
               {currUser?.creator && <button className="select" onClick={handleAllLeave}>End Session For All</button>}
               <button className="select" onClick={handleLeave}>Leave Session</button>
@@ -110,7 +106,7 @@ export default function Floater({ showLeaveModal, dragContainerRef = null }) {
             <button onClick={togglePopup} className="btn">
               {popup ? 'Cancel' : (currUser?.creator ? 'End' : 'Leave')}
             </button>
-          </div>}
+          </div>
           {title && <div className="title">{title}</div>}
           <div className="opts">
             <div className="btns">
@@ -126,8 +122,9 @@ export default function Floater({ showLeaveModal, dragContainerRef = null }) {
           {follow && <FollowMode host={host} currUser={currUser} closeBlock={closeBlock} />}
         </StyledWidget>
       </motion.div>
-      {followTipModalVisible && <FollowModeTipModal closeModal={() => {
-        setFollowTipModalVisible(false)
+      {followTipModalVisible && !followModalClosed && <FollowModeTipModal closeModal={() => {
+        setFollowTipModalVisible(false);
+        followModalClosed = true;
       }} />}
     </>
   );
