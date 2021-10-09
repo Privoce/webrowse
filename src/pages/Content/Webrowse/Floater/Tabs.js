@@ -5,6 +5,7 @@ import StyledBlock from './StyledBlock';
 import Avator from './Avator'
 import { EVENTS } from '../../../../common'
 const StyledWrapper = styled(StyledBlock)`
+    bottom: 120px;
     background:#FFF9EB;
     >.title{
       background-image: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/tab.svg`});

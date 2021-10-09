@@ -51,6 +51,8 @@ const EVENTS = {
   GET_INVITE_LINK: 'GET_INVITE_LINK',
   // pop up 数据集合
   POP_UP_DATA: 'POP_UP_DATA',
+  // 更新window标题
+  UPDATE_WIN_TITLE: 'UPDATE_WIN_TITLE',
 }
 // const SOCKET_SERVER_DOMAIN = 'stage.vera.nicegoodthings.com';
 // const SOCKET_SERVER_DOMAIN = 'vera.nicegoodthings.com';

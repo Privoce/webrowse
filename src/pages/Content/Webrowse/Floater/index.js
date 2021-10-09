@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { onMessageFromBackground, sendMessageToBackground, MessageLocation } from '@wbet/message-api'
 import { motion } from 'framer-motion'
-
+import { MdModeEditOutline, MdCancel } from 'react-icons/md'
+import { AiFillCheckCircle } from 'react-icons/ai'
 import { EVENTS } from '../../../../common'
 import StyledWidget from './styled';
 import Tabs from './Tabs';
@@ -10,7 +11,9 @@ import FollowMode from './FollowMode';
 import useCopy from '../hooks/useCopy';
 // const mock_data = [{ id: 1, host: true, username: "杨二", photo: "https://files.authing.co/user-contents/photos/9be86bd9-5f18-419b-befa-2356dd889fe6.png" }, { id: 2, username: "杨二", photo: "https://files.authing.co/user-contents/photos/9be86bd9-5f18-419b-befa-2356dd889fe6.png" }]
 let followModalClosed = false;
+let tempTitle = '';
 export default function Floater({ showLeaveModal, dragContainerRef = null }) {
+  const [editable, setEditable] = useState(false);
   const [followTipModalVisible, setFollowTipModalVisible] = useState(false)
   const [users, setUsers] = useState([]);
   const [tabs, setTabs] = useState([]);
@@ -49,7 +52,7 @@ export default function Floater({ showLeaveModal, dragContainerRef = null }) {
         console.log("get link", url);
         setInviteLink(url)
       },
-      [EVENTS.UPDATE_FLOATER]: ({ roomName, title = "", floaterTabVisible, users, tabs, userId }) => {
+      [EVENTS.UPDATE_FLOATER]: ({ title = "", floaterTabVisible, users, tabs, userId }) => {
         console.log({ floaterTabVisible, users, tabs, userId });
         setVisible(floaterTabVisible);
         setUsers(users);
@@ -58,7 +61,7 @@ export default function Floater({ showLeaveModal, dragContainerRef = null }) {
         let tmp2 = users.find(u => u.host);
         setCurrUser(tmp);
         setHost(tmp2);
-        setTitle(title ? `${roomName} - ${title}` : roomName)
+        setTitle(title)
       }
     });
     // 初次初始化
@@ -86,6 +89,22 @@ export default function Floater({ showLeaveModal, dragContainerRef = null }) {
     if (!type) return;
     sendMessageToBackground({ tab: type, visible: false }, MessageLocation.Content, EVENTS.CHANGE_FLOATER_TAB)
   }
+  const handleEditTitle = () => {
+    if (!editable) {
+      tempTitle = title;
+    } else {
+      sendMessageToBackground({ title }, MessageLocation.Content, EVENTS.UPDATE_WIN_TITLE)
+    }
+
+    setEditable(prev => !prev)
+  }
+  const handleTitleChange = (evt) => {
+    setTitle(evt.target.value)
+  }
+  const handleCancelEditTitle = () => {
+    setEditable(false);
+    setTitle(tempTitle);
+  }
   const { tab, follow } = visible;
   console.log({ users, host, currUser });
   return (
@@ -98,16 +117,29 @@ export default function Floater({ showLeaveModal, dragContainerRef = null }) {
         style={{ position: 'absolute', right: '10px', bottom: '60px' }}
       >
         <StyledWidget >
-          <div className="quit">
-            {popup && <div className="selects">
-              {currUser?.creator && <button className="select" onClick={handleAllLeave}>End Session For All</button>}
-              <button className="select" onClick={handleLeave}>Leave Session</button>
-            </div>}
-            <button onClick={togglePopup} className="btn">
-              {popup ? 'Cancel' : (currUser?.creator ? 'End' : 'Leave')}
-            </button>
+          <div className="top">
+            <div className={`title ${(editable || title) ? "" : 'hiden'}`}>
+              <input readOnly={!editable} value={title} onChange={handleTitleChange} />
+              <div className="btns">
+
+                <button onClick={handleEditTitle}>
+                  {editable ? <AiFillCheckCircle size={20} color={'#056CF2'} /> : <MdModeEditOutline color={'#056CF2'} size={20} />}
+                </button>
+                {editable && <button onClick={handleCancelEditTitle}>
+                  <MdCancel size={20} color={'#CE7E89'} />
+                </button>}
+              </div>
+            </div>
+            <div className="quit">
+              {popup && <div className="selects">
+                {currUser?.creator && <button className="select" onClick={handleAllLeave}>End Session For All</button>}
+                <button className="select" onClick={handleLeave}>Leave Session</button>
+              </div>}
+              <button onClick={togglePopup} className="btn">
+                {popup ? 'Cancel' : (currUser?.creator ? 'End' : 'Leave')}
+              </button>
+            </div>
           </div>
-          {title && <div className="title">{title}</div>}
           <div className="opts">
             <div className="btns">
               <button title="Tab Status" className={`btn tab ${tab ? 'curr' : ''}`} data-type='tab' onClick={toggleVisible}></button>

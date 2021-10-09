@@ -114,7 +114,7 @@ const initWorkspace = async ({ invited = false, windowId = null, roomId = "", wi
   InvitedWindows[finalWindowId] = invited;
   const currWorkspace = new Workspace(finalWindowId, true);
   // 初始化datahub
-  DATA_HUB[finalWindowId] = { socket: null, workspace: currWorkspace, roomId, winId, title: "", roomName: "", floaterTabVisible: { tab: true, follow: false, audio: false }, tabs: [], createTabs: [], users: [], socketId: "" }
+  DATA_HUB[finalWindowId] = { socket: null, workspace: currWorkspace, roomId, winId, title: "", floaterTabVisible: { tab: true, follow: false, audio: false }, tabs: [], createTabs: [], users: [], socketId: "" }
   currWorkspace.addEventHandler(async ({ event, rawParams }) => {
     const currUser = DATA_HUB[finalWindowId].users.find(u => u.id == DATA_HUB[finalWindowId].socketId)
     // 捕捉并处理对应的tab事件
@@ -252,8 +252,8 @@ const notifyActiveTab = ({ windowId = 0, action = EVENTS.UPDATE_TABS, payload = 
         console.log("current DATA_HUB data", DATA_HUB[windowId]);
         chrome.tabs.query({ windowId }, (tabs) => {
           DATA_HUB[windowId].tabs = tabs;
-          const { floaterTabVisible, tabs: floaterTabs, users, socketId, roomName, title } = DATA_HUB[windowId];
-          sendMessageToContentScript(tab?.id, { floaterTabVisible, tabs: floaterTabs, users, userId: socketId, roomName, title }, MessageLocation.Background, EVENTS.UPDATE_FLOATER)
+          const { floaterTabVisible, tabs: floaterTabs, users, socketId, title } = DATA_HUB[windowId];
+          sendMessageToContentScript(tab?.id, { floaterTabVisible, tabs: floaterTabs, users, userId: socketId, title }, MessageLocation.Background, EVENTS.UPDATE_FLOATER)
         });
       }
         break;
@@ -271,7 +271,7 @@ onMessageFromPopup(MessageLocation.Background, {
     const { loginUser, ...windows } = DATA_HUB;
     let filteredWindows = [];
     if (windows) {
-      let keeps = ['roomId', 'winId', "roomName", "title", 'tabs', 'socketId', 'users'];
+      let keeps = ['roomId', 'winId', "title", 'tabs', 'socketId', 'users'];
       Object.entries(windows).forEach(([, obj]) => {
         let tmp = {};
         Object.keys(obj).forEach(k => {
@@ -369,9 +369,8 @@ onMessageFromContentScript(MessageLocation.Background, {
     socket.on(EVENTS.CURRENT_USERS, ({ room = {}, title = "", workspaceData = null, users, update = false }) => {
       // 更新到全局变量
       DATA_HUB[windowId].users = users;
-      console.log("current users", room, update);
-      const computedRoomName = room?.name || DATA_HUB[windowId]?.roomName || (room?.temp == 'true' ? 'Temporary Room' : '') || (room?.id == DATA_HUB.loginUser?.id ? 'Personal Room' : '');
-      sendMessageToTab(currTabId, { roomName: computedRoomName, users, update }, EVENTS.CURRENT_USERS);
+      console.log("current users", room, workspaceData, update);
+      sendMessageToTab(currTabId, { title, users, update }, EVENTS.CURRENT_USERS);
       // 首次
       if (!update) {
         // 如果有workspace数据 则全量更新一次
@@ -393,7 +392,6 @@ onMessageFromContentScript(MessageLocation.Background, {
           sendMessageToTab(currTabId, { user }, EVENTS.USER_JOIN_MEETING)
         });
         // 更新floater
-        DATA_HUB[windowId].roomName = computedRoomName;
         DATA_HUB[windowId].title = title;
         notifyActiveTab({ windowId, action: EVENTS.UPDATE_FLOATER })
       }
@@ -437,6 +435,12 @@ onMessageFromContentScript(MessageLocation.Background, {
     socket.on(EVENTS.USER_LEAVE, (user) => {
       console.log('io leave user', user);
       sendMessageToTab(currTabId, { user }, EVENTS.USER_LEAVE)
+    });
+    // 离开房间事件
+    socket.on(EVENTS.UPDATE_WIN_TITLE, ({ title }) => {
+      console.log('update window title', title);
+      DATA_HUB[windowId].title = title;
+      notifyActiveTab({ windowId, action: EVENTS.UPDATE_FLOATER });
     });
     // 服务器端触发，主动断掉
     socket.on("disconnect", () => {
@@ -550,15 +554,15 @@ onMessageFromContentScript(MessageLocation.Background, {
     const { windowId } = sender.tab;
     notifyActiveTab({ windowId, action: EVENTS.UPDATE_USERS })
   },
-  [EVENTS.LOAD_VERA]: (request, sender) => {
-    const { windowId } = sender.tab;
-    chrome.tabs.query({ index: 0, currentWindow: true }, ([tab]) => {
-      console.log("first tab", tab);
-      chrome.tabs.update(tab.id, { active: true }, () => {
-        notifyActiveTab({ windowId, action: EVENTS.LOAD_VERA })
-      })
-    })
-  },
+  // [EVENTS.LOAD_VERA]: (request, sender) => {
+  //   const { windowId } = sender.tab;
+  //   chrome.tabs.query({ index: 0, currentWindow: true }, ([tab]) => {
+  //     console.log("first tab", tab);
+  //     chrome.tabs.update(tab.id, { active: true }, () => {
+  //       notifyActiveTab({ windowId, action: EVENTS.LOAD_VERA })
+  //     })
+  //   })
+  // },
   [EVENTS.CHANGE_FLOATER_TAB]: (request, sender) => {
     const { tab = "", visible = true } = request;
     const { windowId } = sender.tab;
@@ -568,6 +572,15 @@ onMessageFromContentScript(MessageLocation.Background, {
     tmp[tab] = visible;
     DATA_HUB[windowId].floaterTabVisible = tmp;
     notifyActiveTab({ windowId, action: EVENTS.UPDATE_FLOATER })
+  },
+  [EVENTS.UPDATE_WIN_TITLE]: (request, sender) => {
+    const { title = "" } = request;
+    if (!title) return;
+    const { windowId } = sender.tab;
+    const currSocket = DATA_HUB[windowId].socket;
+    currSocket.send(
+      { cmd: EVENTS.UPDATE_WIN_TITLE, payload: { title } }
+    )
   }
 })
 // 关闭窗口
