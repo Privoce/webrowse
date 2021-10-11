@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 const StyledContainer = styled.div`
     position: absolute;
-    bottom:100px;
+    bottom:120px;
     right:0;
     background:  ${(bg = '#333') => bg};
     border-radius: 15px;

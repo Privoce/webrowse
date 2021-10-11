@@ -76,11 +76,11 @@ export default function NewWindow() {
     const { type } = evt.currentTarget.dataset;
     switch (type) {
       case 'new':
-        sendMessageToBackground({ newWindow: true }, MessageLocation.Popup, EVENTS.NEW_WINDOW)
+        sendMessageToBackground({ currentWindow: false }, MessageLocation.Popup, EVENTS.NEW_WINDOW)
         break;
 
       case 'current':
-        sendMessageToBackground({ newWindow: false }, MessageLocation.Popup, EVENTS.NEW_WINDOW)
+        sendMessageToBackground({ currentWindow: true }, MessageLocation.Popup, EVENTS.NEW_WINDOW)
         break;
 
       default:

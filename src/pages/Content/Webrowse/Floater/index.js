@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { onMessageFromBackground, sendMessageToBackground, MessageLocation } from '@wbet/message-api'
 import { motion } from 'framer-motion'
-import { MdModeEditOutline, MdCancel } from 'react-icons/md'
-import { AiFillCheckCircle } from 'react-icons/ai'
+// import { MdModeEditOutline, MdCancel } from 'react-icons/md'
+// import { AiFillCheckCircle } from 'react-icons/ai'
 import { EVENTS } from '../../../../common'
 import StyledWidget from './styled';
 import Tabs from './Tabs';
@@ -89,21 +89,19 @@ export default function Floater({ showLeaveModal, dragContainerRef = null }) {
     if (!type) return;
     sendMessageToBackground({ tab: type, visible: false }, MessageLocation.Content, EVENTS.CHANGE_FLOATER_TAB)
   }
-  const handleEditTitle = () => {
-    if (!editable) {
-      tempTitle = title;
-    } else {
-      sendMessageToBackground({ title }, MessageLocation.Content, EVENTS.UPDATE_WIN_TITLE)
-    }
-
-    setEditable(prev => !prev)
-  }
   const handleTitleChange = (evt) => {
     setTitle(evt.target.value)
   }
-  const handleCancelEditTitle = () => {
+  const handleTitleClick = (evt) => {
+    if (editable) return;
+    tempTitle = evt.target.value;
+    setEditable(true);
+    evt.target.select();
+  }
+  const handleTitleBlur = () => {
     setEditable(false);
-    setTitle(tempTitle);
+    if (!title || tempTitle == title) return;
+    sendMessageToBackground({ title }, MessageLocation.Content, EVENTS.UPDATE_WIN_TITLE)
   }
   const { tab, follow } = visible;
   console.log({ users, host, currUser });
@@ -118,17 +116,8 @@ export default function Floater({ showLeaveModal, dragContainerRef = null }) {
       >
         <StyledWidget >
           <div className="top">
-            <div className={`title ${(editable || title) ? "" : 'hiden'}`}>
-              <input readOnly={!editable} value={title} onChange={handleTitleChange} />
-              <div className="btns">
-
-                <button onClick={handleEditTitle}>
-                  {editable ? <AiFillCheckCircle size={20} color={'#056CF2'} /> : <MdModeEditOutline color={'#056CF2'} size={20} />}
-                </button>
-                {editable && <button onClick={handleCancelEditTitle}>
-                  <MdCancel size={20} color={'#CE7E89'} />
-                </button>}
-              </div>
+            <div className={`title`}>
+              <input onBlur={handleTitleBlur} onClick={handleTitleClick} readOnly={!editable} value={title || 'Temperary Window'} onChange={handleTitleChange} />
             </div>
             <div className="quit">
               {popup && <div className="selects">

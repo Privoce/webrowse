@@ -62,18 +62,13 @@ const StyledWidget = styled.aside`
           line-height: 15px;
           padding:8px 12px;
         }
-
       }
-
     }
     > .title{
       padding-right: 50px;
       display: flex;
       align-items: center;
       gap: 8px;
-      &.hiden{
-        visibility: hidden;
-      }
       input{
         background:none;
         padding: 4px 8px;
@@ -88,16 +83,10 @@ const StyledWidget = styled.aside`
         white-space: nowrap;
         text-align: left;
         &:read-only{
-          border: none;
-          width: fit-content;
+          border-color: rgba(1,1,1,0);
         }
-      }
-      .btns{
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        button{
-          padding: 0;
+        &:hover{
+          border-color: #ccc;
         }
       }
     }

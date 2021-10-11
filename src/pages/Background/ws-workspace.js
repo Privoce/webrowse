@@ -272,8 +272,8 @@ onMessageFromPopup(MessageLocation.Background, {
     let filteredWindows = [];
     if (windows) {
       let keeps = ['roomId', 'winId', "title", 'tabs', 'socketId', 'users'];
-      Object.entries(windows).forEach(([, obj]) => {
-        let tmp = {};
+      Object.entries(windows).forEach(([windowId, obj]) => {
+        let tmp = { windowId };
         Object.keys(obj).forEach(k => {
           if (keeps.includes(k) && typeof obj[k] !== "undefined") {
             tmp[k] = obj[k];
@@ -284,11 +284,21 @@ onMessageFromPopup(MessageLocation.Background, {
     }
     sendMessageToPopup({ user: loginUser, windows: filteredWindows }, MessageLocation.Background, EVENTS.POP_UP_DATA)
   },
-  [EVENTS.NEW_WINDOW]: ({ newWindow = true, roomId, winId, urls = [] }) => {
+  [EVENTS.UPDATE_WIN_TITLE]: (request) => {
+    const { title = "", windowId } = request;
+    console.log("update window title from popup", request, DATA_HUB[windowId]);
+    if (!title || !windowId || !DATA_HUB[windowId]?.socket) return;
+    const currSocket = DATA_HUB[windowId]?.socket;
+    currSocket.send(
+      { cmd: EVENTS.UPDATE_WIN_TITLE, payload: { title } }
+    )
+  },
+  [EVENTS.NEW_WINDOW]: ({ currentWindow = false, roomId = "", winId = "", urls = [] }) => {
     const { loginUser } = DATA_HUB;
+    let isOpenedWindow = Number.isInteger(Number(winId))
     let finalRoomId = roomId || loginUser?.id || `${Math.random().toString(36).substring(7)}_temp`;
-    let finalWinId = winId || `${Math.random().toString(36).substring(7)}_temp`;
-    if (!newWindow) {
+    let finalWinId = isOpenedWindow ? `${Math.random().toString(36).substring(7)}_temp` : (winId || `${Math.random().toString(36).substring(7)}_temp`);
+    if (currentWindow) {
       // 不新开窗口的逻辑
       chrome.tabs.create({ url: DEFAULT_LANDING, active: true }, ({ windowId }) => {
         initWorkspace({ windowId, roomId: finalRoomId, winId: finalWinId });
@@ -303,7 +313,17 @@ onMessageFromPopup(MessageLocation.Background, {
         }
       })
     } else {
-      initWorkspace({ roomId: finalRoomId, winId: finalWinId, urls: urls.length == 0 ? [DEFAULT_LANDING] : urls })
+      if (isOpenedWindow) {
+        // 已有窗口
+        chrome.windows.update(Number(winId), { focused: true }, ({ id }) => {
+          initWorkspace({ windowId: id, roomId: finalRoomId, winId: finalWinId });
+          chrome.tabs.create({ url: DEFAULT_LANDING, active: true }, () => {
+            console.log("create new page");
+          })
+        })
+      } else {
+        initWorkspace({ roomId: finalRoomId, winId: finalWinId, urls: urls.length == 0 ? [DEFAULT_LANDING] : urls })
+      }
     }
   }
 })
@@ -554,15 +574,6 @@ onMessageFromContentScript(MessageLocation.Background, {
     const { windowId } = sender.tab;
     notifyActiveTab({ windowId, action: EVENTS.UPDATE_USERS })
   },
-  // [EVENTS.LOAD_VERA]: (request, sender) => {
-  //   const { windowId } = sender.tab;
-  //   chrome.tabs.query({ index: 0, currentWindow: true }, ([tab]) => {
-  //     console.log("first tab", tab);
-  //     chrome.tabs.update(tab.id, { active: true }, () => {
-  //       notifyActiveTab({ windowId, action: EVENTS.LOAD_VERA })
-  //     })
-  //   })
-  // },
   [EVENTS.CHANGE_FLOATER_TAB]: (request, sender) => {
     const { tab = "", visible = true } = request;
     const { windowId } = sender.tab;
