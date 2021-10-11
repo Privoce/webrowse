@@ -7,7 +7,7 @@ import { EVENTS, SOCKET_SERVER_DOMAIN, DEFAULT_LANDING } from '../../common';
 import { getActiveTab, debounce } from './utils';
 const protocolPrefix = SOCKET_SERVER_DOMAIN.indexOf('localhost') > -1 ? 'http://' : 'wss://';
 const SOCKET_SERVER_URL = `${protocolPrefix}${SOCKET_SERVER_DOMAIN}`;
-const DATA_HUB = {};
+const DATA_HUB = { windowTitles: {}, loginUser: null };
 const Tabs = {};
 const InvitedWindows = {};
 const inactiveWindows = [];
@@ -268,7 +268,7 @@ onMessageFromPopup(MessageLocation.Background, {
   },
   [EVENTS.POP_UP_DATA]: () => {
     console.log("popup event");
-    const { loginUser, ...windows } = DATA_HUB;
+    const { loginUser, windowTitles, ...windows } = DATA_HUB;
     let filteredWindows = [];
     if (windows) {
       let keeps = ['roomId', 'winId', "title", 'tabs', 'socketId', 'users'];
@@ -283,15 +283,19 @@ onMessageFromPopup(MessageLocation.Background, {
       })
     }
     sendMessageToPopup({ user: loginUser, windows: filteredWindows }, MessageLocation.Background, EVENTS.POP_UP_DATA)
+    sendMessageToPopup({ titles: windowTitles }, MessageLocation.Background, EVENTS.WINDOW_TITLES)
   },
   [EVENTS.UPDATE_WIN_TITLE]: (request) => {
     const { title = "", windowId } = request;
-    console.log("update window title from popup", request, DATA_HUB[windowId]);
-    if (!title || !windowId || !DATA_HUB[windowId]?.socket) return;
-    const currSocket = DATA_HUB[windowId]?.socket;
-    currSocket.send(
-      { cmd: EVENTS.UPDATE_WIN_TITLE, payload: { title } }
-    )
+    console.log("update window title from popup", request, DATA_HUB);
+    if (!title || !windowId) return;
+    if (!DATA_HUB[windowId]) {
+      DATA_HUB.windowTitles[windowId] = title
+    } else {
+      DATA_HUB[windowId]?.socket.send(
+        { cmd: EVENTS.UPDATE_WIN_TITLE, payload: { title } }
+      )
+    }
   },
   [EVENTS.NEW_WINDOW]: ({ currentWindow = false, roomId = "", winId = "", urls = [] }) => {
     const { loginUser } = DATA_HUB;
@@ -367,7 +371,7 @@ onMessageFromContentScript(MessageLocation.Background, {
       transports: ['websocket'],
       reconnectionAttempts: 8,
       upgrade: false,
-      query: { type: 'WEBROWSE', roomId, winId, temp, invited: InvitedWindows[windowId], ...user }
+      query: { type: 'WEBROWSE', roomId, winId, temp, title: DATA_HUB.windowTitles[windowId] || "", invited: InvitedWindows[windowId], ...user }
     });
     console.log('invited', InvitedWindows[windowId]);
     console.log('init websocket', { roomId, winId, temp, user });
@@ -378,6 +382,8 @@ onMessageFromContentScript(MessageLocation.Background, {
 
     socket.on('connect', () => {
       console.log('ws room io connect', socket.id);
+      // 去掉本地title
+      delete DATA_HUB.windowTitles[windowId];
       // 全局维护window 与 peerid,roomId 的映射
       DATA_HUB[windowId].socketId = socket.id;
       sendMessageToContentScript(tabId, true, MessageLocation.Background, EVENTS.CHECK_CONNECTION)
@@ -456,10 +462,13 @@ onMessageFromContentScript(MessageLocation.Background, {
       console.log('io leave user', user);
       sendMessageToTab(currTabId, { user }, EVENTS.USER_LEAVE)
     });
-    // 离开房间事件
+    // window title更新
     socket.on(EVENTS.UPDATE_WIN_TITLE, ({ title }) => {
       console.log('update window title', title);
       DATA_HUB[windowId].title = title;
+      DATA_HUB.windowTitles[windowId] = title;
+      // 发送给popup
+      sendMessageToPopup({ titles: DATA_HUB.windowTitles }, MessageLocation.Background, EVENTS.WINDOW_TITLES)
       notifyActiveTab({ windowId, action: EVENTS.UPDATE_FLOATER });
     });
     // 服务器端触发，主动断掉

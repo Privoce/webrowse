@@ -16,14 +16,19 @@ const StyledContainer = styled.section`
   background:#F8FBFF;
 `;
 export default function Container() {
+  const [titles, setTitles] = useState({})
   const [wins, setWins] = useState(null)
   const [user, setUser] = useState(null);
   useEffect(() => {
     onMessageFromBackground(MessageLocation.Popup, {
       [EVENTS.POP_UP_DATA]: ({ user = null, windows = [] }) => {
+        // alert(JSON.stringify(windowTitles))
         setUser(user);
         setWins(windows);
-      }
+      },
+      [EVENTS.WINDOW_TITLES]: ({ titles }) => {
+        setTitles(titles)
+      },
     });
     sendMessageToBackground({}, MessageLocation.Popup, EVENTS.POP_UP_DATA)
   }, []);
@@ -36,7 +41,7 @@ export default function Container() {
     <StyledContainer>
       <UserInfo user={user} logout={logout} />
       <NewWindow />
-      <WindowList windows={wins} roomId={user.id} />
+      <WindowList titles={titles} windows={wins} roomId={user.id} />
     </StyledContainer>
   )
 }

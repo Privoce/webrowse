@@ -8,7 +8,7 @@ import StyledWrapper from './styled'
 const fetcher = (...args) => fetch(...args).then(res => res.json());
 const prefix = SOCKET_SERVER_DOMAIN.indexOf('localhost') > -1 ? 'http:' : 'https:';
 let tempTitle = ""
-export default function WindowList({ windows = null, roomId = "" }) {
+export default function WindowList({ titles = {}, windows = null, roomId = "" }) {
   const [savedWindows, setSavedWindows] = useState(null);
   const [currentWindows, setCurrentWindows] = useState([])
   const { data, } = useSWR(`${prefix}//${SOCKET_SERVER_DOMAIN}/webrowse/window/list/${roomId}`, fetcher)
@@ -51,20 +51,22 @@ export default function WindowList({ windows = null, roomId = "" }) {
   useEffect(() => {
     chrome.windows.getAll({ populate: true }, (wins) => {
       const tmps = wins.map(({ id, tabs }, idx) => {
+        let localTitle = titles[id];
         let browsingWindow = windows?.find(w => w.windowId == id)
         return {
           id,
           live: !!browsingWindow,
-          title: browsingWindow?.title || `Window ${idx + 1}`,
+          title: localTitle || browsingWindow?.title || `Window ${idx + 1}`,
           tabs: tabs.map(t => {
             const { favIconUrl, id, title, windowId, url } = t;
             return { favIconUrl, id, title, windowId, url }
           })
         }
-      })
+      });
+      console.log("window list", tmps);
       setCurrentWindows(tmps)
     })
-  }, [windows]);
+  }, [windows, titles]);
   const handleTitleClick = (evt) => {
     const { target } = evt;
     if (!target.readOnly) return;
@@ -74,11 +76,18 @@ export default function WindowList({ windows = null, roomId = "" }) {
   }
   const handleTitleBlur = (evt) => {
     const { target } = evt;
+
     target.readOnly = true;
     const { windowId } = target.dataset;
     const currVal = target.value;
     if (!currVal || tempTitle == currVal) return;
     sendMessageToBackground({ title: currVal, windowId }, MessageLocation.Popup, EVENTS.UPDATE_WIN_TITLE)
+  }
+  const handleEnterKey = (evt) => {
+    if (evt.keyCode == 13) {
+      evt.target.setSelectionRange(0, 0)
+      evt.target.blur();
+    }
   }
   return (
     <>
@@ -87,9 +96,9 @@ export default function WindowList({ windows = null, roomId = "" }) {
         <div className={`block`}>
           {currentWindows.map(({ title, id, tabs, live }) => {
             return <div key={id} className="window">
-              <h3 className="title" >
+              <h3 className="title" key={title} >
                 <i className='arrow' onClick={toggleExpand}></i>
-                <input className={`con ${live ? 'editable' : ''}`} data-window-id={id} onBlur={handleTitleBlur} onClick={live ? handleTitleClick : null} readOnly defaultValue={title} />
+                <input onKeyDown={handleEnterKey} className={`con ${live ? 'editable' : ''}`} data-window-id={id} onBlur={handleTitleBlur} onClick={handleTitleClick} readOnly defaultValue={title} />
                 <span className="num">{tabs.length} tabs</span>
                 {live ? <span className="live">live</span> : <button data-type="current" data-win-id={id} onClick={handleNewBrowsing} className="start">cobrowse</button>}
               </h3>
@@ -109,7 +118,7 @@ export default function WindowList({ windows = null, roomId = "" }) {
         <h2 className="title">Saved Windows</h2>
         <div className={`block ${savedWindows.length == 0 ? 'empty' : ''}`}>
           {savedWindows.length == 0 && <div className="tip">You haven’t saved any windows yet. Start cobrowsing and save any window that you would like to share again!</div>}
-          {savedWindows.map(({ title, id, live, room, tabs }) => {
+          {savedWindows.map(({ title, id, room, tabs }) => {
             return <div key={id} className="window">
               <h3 className="title">
                 <i className='arrow' onClick={toggleExpand}></i>
@@ -117,7 +126,8 @@ export default function WindowList({ windows = null, roomId = "" }) {
                   {title || "untitled window"}
                 </span>
                 <span className="num">{tabs.length} tabs</span>
-                {live ? <span className="live">live</span> : <button data-type="saved" data-room-id={room} data-win-id={id} onClick={handleNewBrowsing} className="start">cobrowse</button>}
+                <button data-type="saved" data-room-id={room} data-win-id={id} onClick={handleNewBrowsing} className="start">cobrowse</button>
+                {/* {live ? <span className="live">live</span> : <button data-type="saved" data-room-id={room} data-win-id={id} onClick={handleNewBrowsing} className="start">cobrowse</button>} */}
               </h3>
               <ul className="tabs">
                 {tabs.map(({ id, title, icon, windowId = '' }) => {

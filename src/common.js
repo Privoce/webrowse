@@ -51,6 +51,8 @@ const EVENTS = {
   GET_INVITE_LINK: 'GET_INVITE_LINK',
   // pop up 数据集合
   POP_UP_DATA: 'POP_UP_DATA',
+  //local window titles
+  WINDOW_TITLES: 'WINDOW_TITLES',
   // 更新window标题
   UPDATE_WIN_TITLE: 'UPDATE_WIN_TITLE',
 }
