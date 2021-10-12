@@ -24,9 +24,7 @@
     ]
   },
   "dependencies": {
-    "@authing/native-js-ui-components": "^2.4.51",
-    "@tensorflow-models/body-pix": "^2.2.0",
-    "@tensorflow/tfjs": "^3.9.0",
+    "@authing/native-js-ui-components": "^2.4.52",
     "@wbet/message-api": "^1.0.14",
     "buffer": "^6.0.3",
     "framer-motion": "^4.1.17",
@@ -37,14 +35,10 @@
     "react-contenteditable": "^3.3.6",
     "react-dom": "^17.0.2",
     "react-icons": "^4.3.1",
-    "react-resizable": "^3.0.4",
     "react-shadow": "^19.0.2",
     "socket.io-client": "^4.2.0",
-    "stream-chat": "^4.2.0",
-    "stream-chat-react": "^6.9.1",
     "styled": "^1.0.0",
     "styled-components": "^5.3.1",
-    "swiper": "^6.8.2",
     "swr": "^1.0.1"
   },
   "devDependencies": {
@@ -52,7 +46,7 @@
     "@babel/eslint-parser": "^7.15.8",
     "@babel/preset-env": "^7.15.8",
     "@babel/preset-react": "^7.14.5",
-    "@commitlint/cli": "^13.2.0",
+    "@commitlint/cli": "^13.2.1",
     "@commitlint/config-conventional": "^13.2.0",
     "@hot-loader/react-dom": "^17.0.1",
     "babel-loader": "^8.2.2",
@@ -60,15 +54,15 @@
     "babel-plugin-styled-components": "^1.13.2",
     "babel-preset-react-app": "^10.0.0",
     "copy-webpack-plugin": "^9.0.1",
-    "css-loader": "^6.3.0",
-    "eslint": "^7.32.0",
+    "css-loader": "^6.4.0",
+    "eslint": "^8.0.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-react": "^7.26.1",
     "eslint-plugin-react-hooks": "^4.2.0",
     "fs-extra": "^10.0.0",
     "html-webpack-plugin": "^5.3.2",
     "husky": "^7.0.2",
-    "lint-staged": "^11.2.0",
+    "lint-staged": "^11.2.3",
     "mini-css-extract-plugin": "^2.4.2",
     "node-polyfill-webpack-plugin": "^1.1.4",
     "pinst": "^2.1.6",
@@ -81,7 +75,7 @@
     "terser-webpack-plugin": "^5.2.4",
     "webpack": "^5.58.1",
     "webpack-cli": "^4.9.0",
-    "webpack-dev-server": "^3.11.2",
+    "webpack-dev-server": "^4.3.1",
     "workspace-api-for-chrome": "^2.3.1"
   }
 }

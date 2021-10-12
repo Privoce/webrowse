@@ -11,7 +11,6 @@ const ASSET_PATH = process.env.ASSET_PATH || '/';
 var alias = {
   'react-dom': '@hot-loader/react-dom',
   "socket.io-client": path.resolve(__dirname, "node_modules/socket.io-client/dist/socket.io.js"),
-  'stream-chat': path.resolve(__dirname, "node_modules/stream-chat/dist/index.js"),
 };
 
 // load the secrets
