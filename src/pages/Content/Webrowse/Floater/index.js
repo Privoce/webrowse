@@ -103,6 +103,12 @@ export default function Floater({ showLeaveModal, dragContainerRef = null }) {
     if (!title || tempTitle == title) return;
     sendMessageToBackground({ title }, MessageLocation.Content, EVENTS.UPDATE_WIN_TITLE)
   }
+  const handleEnterKey = (evt) => {
+    if (evt.keyCode == 13) {
+      evt.target.setSelectionRange(0, 0)
+      evt.target.blur();
+    }
+  }
   const { tab, follow } = visible;
   console.log({ users, host, currUser });
   return (
@@ -117,7 +123,7 @@ export default function Floater({ showLeaveModal, dragContainerRef = null }) {
         <StyledWidget >
           <div className="top">
             <div className={`title`}>
-              <input onBlur={handleTitleBlur} onClick={handleTitleClick} readOnly={!editable} value={title || 'Temperary Window'} onChange={handleTitleChange} />
+              <input onKeyDown={handleEnterKey} onBlur={handleTitleBlur} onClick={handleTitleClick} readOnly={!editable} value={title || 'Temperary Window'} onChange={handleTitleChange} />
             </div>
             <div className="quit">
               {popup && <div className="selects">

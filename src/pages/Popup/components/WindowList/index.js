@@ -28,7 +28,6 @@ export default function WindowList({ titles = {}, windows = null, roomId = "" })
       case 'current':
         urls = currentWindows.find(w => w.id == winId)?.tabs.map(({ url }) => url) || []
         break;
-
       case 'saved':
         urls = savedWindows.find(w => w.id == winId)?.tabs.map(({ url }) => url) || []
         break;
@@ -78,10 +77,20 @@ export default function WindowList({ titles = {}, windows = null, roomId = "" })
     const { target } = evt;
 
     target.readOnly = true;
-    const { windowId } = target.dataset;
+    const { windowId, type = "" } = target.dataset;
     const currVal = target.value;
     if (!currVal || tempTitle == currVal) return;
-    sendMessageToBackground({ title: currVal, windowId }, MessageLocation.Popup, EVENTS.UPDATE_WIN_TITLE)
+    if (type == 'saved') {
+      fetch(`${prefix}//${SOCKET_SERVER_DOMAIN}/webrowse/window/title`, {
+        method: 'POST', headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id: windowId, title: currVal })
+      })  // <---POST
+    } else {
+      sendMessageToBackground({ title: currVal, windowId }, MessageLocation.Popup, EVENTS.UPDATE_WIN_TITLE)
+    }
   }
   const handleEnterKey = (evt) => {
     if (evt.keyCode == 13) {
@@ -118,13 +127,14 @@ export default function WindowList({ titles = {}, windows = null, roomId = "" })
         <h2 className="title">Saved Windows</h2>
         <div className={`block ${savedWindows.length == 0 ? 'empty' : ''}`}>
           {savedWindows.length == 0 && <div className="tip">You haven’t saved any windows yet. Start cobrowsing and save any window that you would like to share again!</div>}
-          {savedWindows.map(({ title, id, room, tabs }) => {
+          {savedWindows.map(({ title, id, live, room, tabs }) => {
             return <div key={id} className="window">
               <h3 className="title">
                 <i className='arrow' onClick={toggleExpand}></i>
-                <span className="con">
+                <input onKeyDown={handleEnterKey} data-type="saved" className={`con ${live ? 'editable' : ''}`} data-window-id={id} onBlur={handleTitleBlur} onClick={handleTitleClick} readOnly defaultValue={title} />
+                {/* <span className="con">
                   {title || "untitled window"}
-                </span>
+                </span> */}
                 <span className="num">{tabs.length} tabs</span>
                 <button data-type="saved" data-room-id={room} data-win-id={id} onClick={handleNewBrowsing} className="start">cobrowse</button>
                 {/* {live ? <span className="live">live</span> : <button data-type="saved" data-room-id={room} data-win-id={id} onClick={handleNewBrowsing} className="start">cobrowse</button>} */}
