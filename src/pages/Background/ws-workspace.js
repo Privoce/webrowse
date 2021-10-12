@@ -299,7 +299,7 @@ onMessageFromPopup(MessageLocation.Background, {
   },
   [EVENTS.NEW_WINDOW]: ({ currentWindow = false, roomId = "", winId = "", urls = [] }) => {
     const { loginUser } = DATA_HUB;
-    let isOpenedWindow = Number.isInteger(Number(winId))
+    let isOpenedWindow = winId !== '' && Number.isInteger(Number(winId))
     let finalRoomId = roomId || loginUser?.id || `${Math.random().toString(36).substring(7)}_temp`;
     let finalWinId = isOpenedWindow ? `${Math.random().toString(36).substring(7)}_temp` : (winId || `${Math.random().toString(36).substring(7)}_temp`);
     if (currentWindow) {
