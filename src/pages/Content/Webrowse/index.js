@@ -28,12 +28,15 @@ const StyledWrapper = styled.section`
   }
 `;
 const GlobalStyle = createGlobalStyle`
-button{
-  cursor: pointer;
-  border:none;
-  outline: none;
-  background: none;
-}
+  input,textarea{
+    caret-color:#056CF2;
+  }
+  button{
+    cursor: pointer;
+    border:none;
+    outline: none;
+    background: none;
+  }
 /* 隐藏掉页面的滚动条 */
   body::-webkit-scrollbar{
     display: none !important;

@@ -1,5 +1,3 @@
-/*  Temporary workaround for secondary monitors on MacOS where redraws don't happen
-@See https://bugs.chromium.org/p/chromium/issues/detail?id=971701 */
 @keyframes redraw {
   0% {
     opacity: 1;
@@ -15,4 +13,5 @@ body {
   overflow: hidden;
   padding: 0;
   margin: 0;
+  caret-color:rgb(5, 108, 242) ;
 }
