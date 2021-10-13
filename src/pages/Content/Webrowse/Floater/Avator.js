@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import { stringToHexColor } from '../hooks/utils'
 const StyledLetterHead = styled.div`
   border-radius: 50%;
-  width:24px;
-  height: 24px;
+  width:20px;
+  height: 20px;
   text-transform: uppercase;
   display: flex;
   align-items: center;
