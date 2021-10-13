@@ -43,10 +43,19 @@ export default function WindowList({ titles = {}, windows = null, roomId = "" })
       let newArr = data.windows.map(saved => {
         let live = !!windows.find(w => w.winId == saved.id);
         return { ...saved, live }
-      })
+      });
+      chrome.storage.sync.set({ [`local_wins_in_${roomId}`]: newArr })
       setSavedWindows(newArr)
+    } else {
+      chrome.storage.sync.get([`local_wins_in_${roomId}`], (res) => {
+        let list = res[`local_wins_in_${roomId}`];
+        if (list) {
+          console.log({ list });
+          setSavedWindows(list)
+        }
+      })
     }
-  }, [data, windows]);
+  }, [data, windows, roomId]);
   useEffect(() => {
     chrome.windows.getAll({ populate: true }, (wins) => {
       const tmps = wins.map(({ id, tabs }, idx) => {

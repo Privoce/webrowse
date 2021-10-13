@@ -2,7 +2,7 @@
   "name": "__MSG_extName__",
   "description": "__MSG_extDescription__",
   "short_name": "Webrowse",
-  "version": "2021.09.20",
+  "version": "2021.10.13",
   "manifest_version": 2,
   "homepage_url": "https://webrow.se/",
   "permissions": [
@@ -86,6 +86,10 @@
       "matches": [
         "https://*.webrow.se/*",
         "http://localhost/*"
+      ],
+      "exclude_matches": [
+        "https://*.webrow.se/vera/*",
+        "http://localhost/vera/*"
       ],
       "js": [
         "/browseLanding.bundle.js"
