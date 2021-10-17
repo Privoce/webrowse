@@ -7,6 +7,7 @@ import StyledWrapper from './styled'
 
 const fetcher = (...args) => fetch(...args).then(res => res.json());
 const prefix = SOCKET_SERVER_DOMAIN.indexOf('localhost') > -1 ? 'http:' : 'https:';
+const env = SOCKET_SERVER_DOMAIN == 'vera.nicegoodthings.com' ? 'online' : 'stage'
 let tempTitle = ""
 export default function WindowList({ titles = {}, windows = null, roomId = "" }) {
   const [savedWindows, setSavedWindows] = useState(null);
@@ -44,11 +45,11 @@ export default function WindowList({ titles = {}, windows = null, roomId = "" })
         let live = !!windows.find(w => w.winId == saved.id);
         return { ...saved, live }
       });
-      chrome.storage.sync.set({ [`local_wins_in_${roomId}`]: newArr })
+      chrome.storage.sync.set({ [`${env}_local_wins_in_${roomId}`]: newArr })
       setSavedWindows(newArr)
     } else {
-      chrome.storage.sync.get([`local_wins_in_${roomId}`], (res) => {
-        let list = res[`local_wins_in_${roomId}`];
+      chrome.storage.sync.get([`${env}_local_wins_in_${roomId}`], (res) => {
+        let list = res[`${env}_local_wins_in_${roomId}`];
         if (list) {
           console.log({ list });
           setSavedWindows(list)
