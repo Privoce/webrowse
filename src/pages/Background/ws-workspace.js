@@ -98,7 +98,7 @@ const sendTabSyncMsg = debounce((ws, socket) => {
 const getNewWindow = (params) => {
   return new Promise((resolve) => {
     chrome.windows.create(params, (w) => {
-      resolve(w)
+      resolve(w);
     })
   });
 }
@@ -227,7 +227,7 @@ const initWorkspace = async ({ invited = false, windowId = null, roomId = "", wi
 // update tabs
 const notifyActiveTab = ({ windowId = 0, action = EVENTS.UPDATE_TABS, payload = {} }) => {
   chrome.tabs.query({ active: true, windowId }, ([tab]) => {
-    console.log('notify active tab', { tab });
+    console.log('notify active tab', { tab, action });
     if (!tab) return;
     switch (action) {
       case EVENTS.CHECK_CONNECTION: {
@@ -302,6 +302,7 @@ onMessageFromPopup(MessageLocation.Background, {
     let isOpenedWindow = winId !== '' && Number.isInteger(Number(winId))
     let finalRoomId = roomId || loginUser?.id || `${Math.random().toString(36).substring(7)}_temp`;
     let finalWinId = isOpenedWindow ? `${Math.random().toString(36).substring(7)}_temp` : (winId || `${Math.random().toString(36).substring(7)}_temp`);
+    console.log({ currentWindow, finalRoomId, finalWinId, urls, isOpenedWindow });
     if (currentWindow) {
       // 不新开窗口的逻辑
       chrome.tabs.create({ url: DEFAULT_LANDING, active: true }, ({ windowId }) => {
@@ -400,7 +401,7 @@ onMessageFromContentScript(MessageLocation.Background, {
       // 首次
       if (!update) {
         // 如果有workspace数据 则全量更新一次
-        if (workspaceData) {
+        if (workspaceData && workspaceData.tabs?.length) {
           console.log("update current workspace", workspaceData);
           // 首次删掉 activeTabIndex
           delete workspaceData?.activeTabIndex;
