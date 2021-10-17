@@ -79,7 +79,6 @@ export default function Webrowse() {
   const [nameModalVisible, setNameModalVisible] = useState(false)
   const [leaveModalVisible, setLeaveModalVisible] = useState(false)
   const [endAll, setEndAll] = useState(false)
-  const [panelVisible, setPanelVisible] = useState(false);
   const [roomId, setRoomId] = useState(null);
   const [winId, setWinId] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -94,13 +93,6 @@ export default function Webrowse() {
   }
   const startWithCustomName = (name) => {
     setCurrUser({ username: name })
-  }
-  const showVeraPanel = async () => {
-    if (panelVisible) return;
-    const currentActiveTab = await sendMessageToBackground({}, MessageLocation.Content, EVENTS.CURRENT_TAB);
-    const { active: isActiveTab } = currentActiveTab;
-    if (!isActiveTab) return;
-    setPanelVisible(true);
   }
   const initUser = async () => {
     let curr = await getUser();
@@ -133,9 +125,6 @@ export default function Webrowse() {
         setRoomId(roomId);
         setWinId(winId);
         setLoading(false);
-      },
-      [EVENTS.LOAD_VERA]: () => {
-        showVeraPanel();
       }
     });
     // 初次初始化

@@ -3,10 +3,6 @@ const EVENTS = {
   USER_ENTER: 'USER_ENTER',
   // 用户离开
   USER_LEAVE: 'USER_LEAVE',
-  // webrtc连接建立
-  USER_JOIN_MEETING: 'JOIN_MEETING',
-  // webrtc连接断开
-  USER_LEAVE_MEETING: 'LEAVE_MEETING',
   // 断开websocket连接
   DISCONNECT_SOCKET: 'DISCONNECT_SOCKET',
   // 初始化websocket连接
@@ -39,8 +35,6 @@ const EVENTS = {
   LOGOUT: 'LOGOUT',
   // 成为host
   BE_HOST: 'BE_HOST',
-  //加载vera panel
-  LOAD_VERA: 'LOAD_VERA',
   // 更新follow mode
   FOLLOW_MODE: 'FOLLOW_MODE',
   // 更新floater 数据

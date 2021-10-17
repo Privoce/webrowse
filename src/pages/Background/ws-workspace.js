@@ -244,10 +244,6 @@ const notifyActiveTab = ({ windowId = 0, action = EVENTS.UPDATE_TABS, payload = 
         sendMessageToContentScript(tab?.id, { users: DATA_HUB[windowId].users }, MessageLocation.Background, EVENTS.UPDATE_USERS)
       }
         break;
-      case EVENTS.LOAD_VERA: {
-        sendMessageToContentScript(tab?.id, {}, MessageLocation.Background, EVENTS.LOAD_VERA)
-      }
-        break;
       case EVENTS.UPDATE_FLOATER: {
         console.log("current DATA_HUB data", DATA_HUB[windowId]);
         chrome.tabs.query({ windowId }, (tabs) => {
@@ -412,11 +408,6 @@ onMessageFromContentScript(MessageLocation.Background, {
           console.log('io enter event', user);
           if (user.id === socket.id) return;
           sendMessageToTab(currTabId, { user }, EVENTS.USER_ENTER)
-        });
-        socket.on(EVENTS.USER_JOIN_MEETING, (user) => {
-          console.log('io join event', user);
-          if (user.id === socket.id) return;
-          sendMessageToTab(currTabId, { user }, EVENTS.USER_JOIN_MEETING)
         });
         // 更新floater
         DATA_HUB[windowId].title = title;

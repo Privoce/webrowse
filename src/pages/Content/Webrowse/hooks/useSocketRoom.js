@@ -1,19 +1,8 @@
 import { useEffect, useState } from 'react';
 
-import emitter, { VeraEvents } from './useEmitter';
 import { EVENTS } from '../../../../common'
 import { sendMessageToBackground, onMessageFromBackground, MessageLocation } from '@wbet/message-api'
 
-import { Howl } from 'howler';
-let joined = false;
-var SoundEnterRoom = new Howl({
-  src: [`chrome-extension://${chrome.runtime.id}/assets/sounds/enter.room.mp3`],
-  volume: 1,
-});
-var SoundLeaveRoom = new Howl({
-  src: [`chrome-extension://${chrome.runtime.id}/assets/sounds/leave.room.mp3`],
-  volume: 1,
-});
 const useSocketRoom = () => {
   const [temp, setTemp] = useState(false);
   const [roomId, setRoomId] = useState('');
@@ -57,23 +46,9 @@ const useSocketRoom = () => {
         const { user } = data;
         setUsers((users) => [...users, user]);
       },
-      [EVENTS.USER_JOIN_MEETING]: (data) => {
-        console.log("new user joined meeting", data);
-        const { user } = data;
-        // 过滤下
-        if (user.peerId && joined) {
-          emitter.emit(VeraEvents.NEW_PEER, user.peerId);
-          SoundEnterRoom.play();
-        }
-      },
       [EVENTS.UPDATE_USERS]: ({ users }) => {
         setUsers(users);
-      },
-      [EVENTS.USER_LEAVE]: (data) => {
-        const { user } = data;
-        setUsers((users) => users.filter((u) => u.id !== user.id));
-        SoundLeaveRoom.play();
-      },
+      }
     })
     // return () => {
     //   console.log("io disconnect");
@@ -82,7 +57,6 @@ const useSocketRoom = () => {
   }, [roomId, winId, user]);
   const sendSocketMessage = (data) => {
     sendMessageToBackground({ data }, MessageLocation.Content, EVENTS.SOCKET_MSG);
-    joined = true;
   };
   const initializeSocketRoom = ({ roomId, winId, user }) => {
     console.log("from index ids", roomId, winId);
