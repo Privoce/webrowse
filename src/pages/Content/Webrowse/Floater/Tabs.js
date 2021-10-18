@@ -5,6 +5,7 @@ import StyledBlock from './StyledBlock';
 import Avator from './Avator'
 import { EVENTS } from '../../../../common'
 const StyledWrapper = styled(StyledBlock)`
+    padding:12px 0;
     background:#FFF9EB;
     >.title{
       background-image: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/tab.svg`});
@@ -15,8 +16,9 @@ const StyledWrapper = styled(StyledBlock)`
       gap: 8px;
       max-height: 70vh;
       overflow: scroll;
-      width: 100%;
-      padding-left: 0;
+      width: -webkit-fill-available;
+      margin:0;
+      padding:16px;
       .tab{
         display: flex;
         align-items: center;

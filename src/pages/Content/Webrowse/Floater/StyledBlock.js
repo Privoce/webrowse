@@ -3,15 +3,14 @@ const StyledContainer = styled.div`
     position: absolute;
     bottom:120px;
     right:0;
-    background:  ${(bg = '#333') => bg};
+    background:  ${({ bg = '#333' }) => bg};
     border-radius: 15px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     padding: 12px 14px;
     transition: all .5s ease-in;
-    min-width: 384px;
-    max-width:400px;
+    width:400px;
     >.title{
       color: #000;
       line-height: 20px;
@@ -19,6 +18,7 @@ const StyledContainer = styled.div`
       text-align: left;
       margin-bottom: 12px;
       font-weight: bold;
+      margin-left: 16px;
       font-size: 16px;
       padding-left:26px;
       background-size: 18px;
