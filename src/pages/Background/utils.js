@@ -17,7 +17,7 @@ function getActiveTab() {
       chrome.tabs.query({
         currentWindow: true,
         active: true,
-      }, function (tabs) {
+      }).then((tabs) => {
         resolve(tabs[0]);
       })
     } catch (e) {

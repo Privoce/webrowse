@@ -51,7 +51,7 @@ const EVENTS = {
   UPDATE_WIN_TITLE: 'UPDATE_WIN_TITLE',
 }
 // const SOCKET_SERVER_DOMAIN = 'stage.vera.nicegoodthings.com';
-// const SOCKET_SERVER_DOMAIN = 'vera.nicegoodthings.com';
-const SOCKET_SERVER_DOMAIN = 'localhost:4000';
+const SOCKET_SERVER_DOMAIN = 'vera.nicegoodthings.com';
+// const SOCKET_SERVER_DOMAIN = 'localhost:4000';
 const DEFAULT_LANDING = 'https://webrow.se/#howto';
 export { EVENTS, SOCKET_SERVER_DOMAIN, DEFAULT_LANDING }

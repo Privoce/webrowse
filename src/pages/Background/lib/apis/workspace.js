@@ -70,7 +70,7 @@ var queryAllTabs = function (windowId) {
     return __generator(this, function (_a) {
       switch (_a.label) {
         case 0: return [4 /*yield*/, new Promise(function (resolve) {
-          chrome.tabs.query({ windowId: windowId }, resolve);
+          chrome.tabs.query({ windowId: windowId }).then(resolve);
         })];
         case 1: return [2 /*return*/, _a.sent()];
       }

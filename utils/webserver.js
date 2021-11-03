@@ -8,17 +8,6 @@ const WebpackDevServer = require('webpack-dev-server'),
   config = require('../webpack.config'),
   path = require('path');
 
-const options = config.chromeExtensionBoilerplate || {};
-const excludeEntriesToHotReload = options.notHotReload || [];
-
-for (var entryName in config.entry) {
-  if (excludeEntriesToHotReload.indexOf(entryName) === -1) {
-    config.entry[entryName] = [
-      'webpack-dev-server/client?http://localhost:' + PORT,
-      'webpack/hot/dev-server',
-    ].concat(config.entry[entryName]);
-  }
-}
 
 delete config.chromeExtensionBoilerplate;
 
@@ -29,7 +18,7 @@ const server = new WebpackDevServer({
     directory: path.join(__dirname, '../build'),
   },
   https: false,
-  hot: true,
+  hot: false,
   port: PORT,
   headers: {
     'Access-Control-Allow-Origin': '*',

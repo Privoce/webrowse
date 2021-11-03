@@ -1,8 +1,27 @@
 import { useEffect, useState } from 'react';
 
 import { EVENTS } from '../../../../common'
-import { sendMessageToBackground, onMessageFromBackground, MessageLocation } from '@wbet/message-api'
+import { sendMessageToBackground, onMessageFromBackground, MessageLocation } from '@wbet/message-api';
+import { Howl } from 'howler';
+const playSound = ({ type = 'enter' }) => {
+  switch (type) {
+    case 'leave':
+      new Howl({
+        src: [`chrome-extension://${chrome.runtime.id}/assets/sounds/leave.room.mp3`],
+        volume: 1,
+      }).play();
+      break;
+    case 'enter':
+      new Howl({
+        src: [`chrome-extension://${chrome.runtime.id}/assets/sounds/enter.room.mp3`],
+        volume: 1,
+      }).play();
+      break;
 
+    default:
+      break;
+  }
+}
 const useSocketRoom = () => {
   const [temp, setTemp] = useState(false);
   const [roomId, setRoomId] = useState('');
@@ -45,10 +64,16 @@ const useSocketRoom = () => {
         console.log("user enter room", data);
         const { user } = data;
         setUsers((users) => [...users, user]);
+        playSound()
       },
       [EVENTS.UPDATE_USERS]: ({ users }) => {
         setUsers(users);
-      }
+      },
+      [EVENTS.USER_LEAVE]: (data) => {
+        const { user } = data;
+        setUsers((users) => users.filter((u) => u.id !== user.id));
+        playSound({ type: 'leave' })
+      },
     })
     // return () => {
     //   console.log("io disconnect");

@@ -25,7 +25,7 @@ chrome.runtime.onInstalled.addListener(function (details) {
         });
         inactiveWindows.push(...winIds)
       })
-      chrome.tabs.query({ url: "*://*/transfer/wb/*" }, function (tabs) {
+      chrome.tabs.query({ url: "*://*/transfer/wb/*" }).then((tabs) => {
         console.log('query invite tabs', tabs);
         if (!tabs || tabs.length === 0) {
           chrome.tabs.create(
@@ -226,7 +226,7 @@ const initWorkspace = async ({ invited = false, windowId = null, roomId = "", wi
 }
 // update tabs
 const notifyActiveTab = ({ windowId = 0, action = EVENTS.UPDATE_TABS, payload = {} }) => {
-  chrome.tabs.query({ active: true, windowId }, ([tab]) => {
+  chrome.tabs.query({ active: true, windowId }).then(([tab]) => {
     console.log('notify active tab', { tab, action });
     if (!tab) return;
     switch (action) {
@@ -246,7 +246,7 @@ const notifyActiveTab = ({ windowId = 0, action = EVENTS.UPDATE_TABS, payload = 
         break;
       case EVENTS.UPDATE_FLOATER: {
         console.log("current DATA_HUB data", DATA_HUB[windowId]);
-        chrome.tabs.query({ windowId }, (tabs) => {
+        chrome.tabs.query({ windowId }).then((tabs) => {
           DATA_HUB[windowId].tabs = tabs;
           const { floaterTabVisible, tabs: floaterTabs, users, socketId, title } = DATA_HUB[windowId];
           sendMessageToContentScript(tab?.id, { floaterTabVisible, tabs: floaterTabs, users, userId: socketId, title }, MessageLocation.Background, EVENTS.UPDATE_FLOATER)
@@ -306,7 +306,7 @@ onMessageFromPopup(MessageLocation.Background, {
         // 如果是未激活的window 则刷新其它tab
         // eslint-disable-next-line no-undef
         if (inactiveWindows.includes(windowId)) {
-          chrome.tabs.query({ active: false, currentWindow: true }, (tabs = []) => {
+          chrome.tabs.query({ active: false, currentWindow: true }).then((tabs = []) => {
             tabs.forEach(tab => {
               chrome.tabs.reload(tab.id)
             })
@@ -367,7 +367,6 @@ onMessageFromContentScript(MessageLocation.Background, {
       jsonp: false,
       transports: ['websocket'],
       reconnectionAttempts: 8,
-      upgrade: false,
       query: { type: 'WEBROWSE', roomId, winId, temp, title: DATA_HUB.windowTitles[windowId] || "", invited: InvitedWindows[windowId], ...user }
     });
     console.log('invited', InvitedWindows[windowId]);
@@ -566,7 +565,7 @@ onMessageFromContentScript(MessageLocation.Background, {
   },
   [EVENTS.UPDATE_TABS]: (request, sender) => {
     const { windowId } = sender.tab;
-    chrome.tabs.query({ windowId }, (tabs) => {
+    chrome.tabs.query({ windowId }).then((tabs) => {
       DATA_HUB[windowId].tabs = tabs;
       notifyActiveTab({ windowId, action: EVENTS.UPDATE_FLOATER });
     });

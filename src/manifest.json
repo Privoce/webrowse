@@ -2,17 +2,21 @@
   "name": "__MSG_extName__",
   "description": "__MSG_extDescription__",
   "short_name": "Webrowse",
-  "version": "2021.10.13",
-  "manifest_version": 2,
+  "version": "2021.11.01",
+  "manifest_version": 3,
   "homepage_url": "https://webrow.se/",
   "permissions": [
-    "http://localhost/*",
-    "https://nicegoodthings.com/*",
+    "scripting",
     "tabs",
     "storage"
   ],
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'; img-src https: data: http: chrome:;",
-  "browser_action": {
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; img-src https: data: http: chrome:;"
+  },
+  "action": {
     "default_icon": {
       "16": "/assets/favicon-16x16.png",
       "32": "/assets/favicon-32x32.png",
@@ -30,25 +34,9 @@
   },
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0Hccyrh8JvE4RDyid6HE4YFP+EYJ6NOepYVf/+ZJ8r8yQetyjZ7lhiE21Yop79mskSea7O+zwvGkQWHES2B6njPwUqSK0cLf2oOcAt+sdm/GEjBfzePT8canm6E1+3bnNTLWF7xJGXU9Rg7pHJZJwUu65ERWXYn30Ea3o9bh3trnzQDj/WsSVwsnUOs16uxVUK/HFGVfCc/4pFWCfFdLcHPTpBK7Omj/slfdbmuwumWfYpozNTkdw9Xx1RqJALrULZiKM0ZAlnQYKmbrR0ap8F83lH5Yv71llDfXmYgYnl7vPG7Y6llyyG+j8tm2/MbzTdjFOzEyna7SG0057W7G8QIDAQAB",
   "background": {
-    "scripts": [
-      "./background.bundle.js"
-    ]
+    "service_worker": "bg.loader.js"
   },
   "content_scripts": [
-    {
-      "matches": [
-        "<all_urls>"
-      ],
-      "exclude_matches": [
-        "https://nicegoodthings.com/*",
-        "http://localhost/*"
-      ],
-      "js": [
-        "/assets/libs/rangy-core.js",
-        "/assets/libs/rangy-serializer.js"
-      ],
-      "run_at": "document_idle"
-    },
     {
       "matches": [
         "<all_urls>"
@@ -65,22 +53,21 @@
     },
     {
       "matches": [
-        "https://www.figma.com/*",
-        "https://*.notion.so/*"
-      ],
-      "js": [
-        "/assets/libs/allow-copy.js"
-      ],
-      "run_at": "document_idle"
-    },
-    {
-      "matches": [
         "<all_urls>"
       ],
       "js": [
         "/catchInviteId.bundle.js"
       ],
       "run_at": "document_start"
+    },
+    {
+      "matches": [
+        "https://www.figma.com/*"
+      ],
+      "js": [
+        "/assets/libs/allow-copy.js"
+      ],
+      "run_at": "document_idle"
     },
     {
       "matches": [
@@ -98,8 +85,14 @@
     }
   ],
   "web_accessible_resources": [
-    "*"
+    {
+      "resources": [
+        "/assets/*"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
   ],
-  "options_page": "./Options/index.html",
   "default_locale": "en"
 }

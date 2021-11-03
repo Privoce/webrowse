@@ -1,1 +1,1 @@
-module.exports = window
+module.exports = typeof window == 'undefined' ? this : window;

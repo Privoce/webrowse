@@ -7,7 +7,7 @@
     "react/prop-types": 0,
     "no-unused-vars": ["error", { "ignoreRestSiblings": true }],
     "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn",
+    "react-hooks/exhaustive-deps": "off",
     "max-lines": ["warn", { "max": 500 }],
     "react/display-name": 0,
     "react/jsx-no-target-blank":0

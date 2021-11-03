@@ -5,7 +5,7 @@ var webpack = require('webpack'),
   CopyWebpackPlugin = require('copy-webpack-plugin');
 // const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
-// const IS_DEV = env.NODE_ENV == 'development';
+const IS_DEV = env.NODE_ENV == 'development';
 const ASSET_PATH = process.env.ASSET_PATH || '/';
 
 var alias = {
@@ -147,26 +147,17 @@ var options = {
           from: 'src/manifest.json',
           to: path.join(__dirname, buildFolder),
           force: true,
-          // transform: function (content) {
-          //   // generates the manifest file using the package.json informations
-          //   const ori = JSON.parse(content.toString());
-          //   IS_DEV && ori['background']['scripts'].push('./hot-reload.bundle.js');
-          //   return Buffer.from(
-          //     JSON.stringify({
-          //       description: process.env.npm_package_description,
-          //       ...ori,
-          //     })
-          //   );
-          // },
-        },
-      ],
-    }),
-    new CopyWebpackPlugin({
-      patterns: [
-        {
-          from: 'src/pages/Background/bg.loader.js',
-          to: path.join(__dirname, buildFolder),
-          force: true,
+          transform: function (content) {
+            // generates the manifest file using the package.json informations
+            const ori = JSON.parse(content.toString());
+            IS_DEV && ori['background']['scripts'].push('./hot-reload.bundle.js');
+            return Buffer.from(
+              JSON.stringify({
+                description: process.env.npm_package_description,
+                ...ori,
+              })
+            );
+          },
         },
       ],
     }),
@@ -200,6 +191,15 @@ var options = {
     new CopyWebpackPlugin({
       patterns: [
         {
+          from: 'src/pages/Options',
+          to: path.join(__dirname, buildFolder, 'Options'),
+          force: true,
+        },
+      ],
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
           from: 'src/pages/Popup',
           to: path.join(__dirname, buildFolder, 'Popup'),
           force: true,
@@ -214,17 +214,17 @@ var options = {
 
 if (env.NODE_ENV === 'development') {
   options.devtool = 'inline-source-map';
-  // options.plugins.push(
-  //   new CopyWebpackPlugin({
-  //     patterns: [
-  //       {
-  //         from: 'src/pages/Background/hot-reload.js',
-  //         to: path.join(__dirname, buildFolder, 'hot-reload.bundle.js'),
-  //         force: true,
-  //       },
-  //     ],
-  //   })
-  // )
+  options.plugins.push(
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: 'src/pages/Background/hot-reload.js',
+          to: path.join(__dirname, buildFolder, 'hot-reload.bundle.js'),
+          force: true,
+        },
+      ],
+    })
+  )
 } else {
   options.optimization = {
     minimize: true,
