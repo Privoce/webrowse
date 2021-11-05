@@ -12,24 +12,24 @@ const StyledWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding:0 24px 16px 24px ;
+  padding:16px 16px 0 16px;
   >.title{
-    font-weight: bold;
-    font-size: 14px;
-    line-height: 22px;
-    color: #121212;
+    margin-top:24px ;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 16px;
+    color: #797D7E;
+    margin: 0;
   }
   >.block{
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     flex-direction: column;
-    width: 326px;
-    max-height: 240px;
     background:#fff;
     border-radius: 10px;
     padding:8px 0;
-    overflow: overlay;
+    width: 100%;
     &.empty{
       align-items: center;
       justify-content: center;
@@ -50,6 +50,8 @@ const StyledWrapper = styled.div`
       gap: 8px;
       padding:0;
       margin-bottom: 10px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 8px;
       .title{
         position: relative;
         display: flex;
@@ -58,17 +60,9 @@ const StyledWrapper = styled.div`
         color: #000;
         padding:10px 12px;
         margin: 0;
+        border-radius: 8px;
         .arrow{
           cursor: pointer;
-          width:20px;
-          height:20px;
-          border-radius: 50%;
-          background-color:#EAEAEA;
-          background-size: 16px;
-          background-image: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/arrow.down.svg`});
-          background-repeat: no-repeat;
-          background-position: center;
-          transform: rotate(-90deg);
         }
         .con{
           font-weight: 600;
@@ -76,11 +70,11 @@ const StyledWrapper = styled.div`
           line-height: 22px;
           color: inherit;
           white-space: nowrap;
-          width: 136px;
+          width: auto;
           text-overflow: ellipsis;
           overflow: hidden;
           background:none;
-          padding: 4px 8px;
+          padding: 4px 2px;
           border: 1px solid #056CF2;
           border-radius: 5px;
           text-align: left;
@@ -94,56 +88,85 @@ const StyledWrapper = styled.div`
 
         .num{
           padding:3px 6px;
-          border: 1px solid #757575;
+          border: 1px solid #78787c;
           border-radius: 15px;
           font-size: 10px;
-          line-height: 13px;
-          color: #757575;
+          line-height: 12px;
+          color: #78787c;
         }
         .live{
           position: absolute;
           top:50%;
           transform: translateY(-50%);
-          right:10px;
-          background: rgba(57, 255, 20, 0.1);
-          border-radius: 5px;
-          padding:4px 8px 4px 21px;
-          font-weight: bold;
-          font-size: 10px;
-          line-height: 13px;
-          color: #606368;
-          text-transform: uppercase;
-          &:before{
-            content: "";
-            position: absolute;
-            left: 8px;
-            top:50%;
-            transform: translateY(-50%);
-            width: 8px ;
-            height: 8px;
-            border-radius: 50%;
-            background-color: #39FF14;
-            animation: ${AniDot} 1s ease-in-out infinite alternate;
-          }
+          right:28px;
+          width: 8px ;
+          height: 8px;
+          border-radius: 50%;
+          background-color: #39FF14;
+          animation: ${AniDot} 1s ease-in-out infinite alternate;
         }
         .start{
           display: none;
           cursor: pointer;
           border: none;
-          padding:0 8px;
+          padding:4px 12px;
+          position: absolute;
+          top:50%;
+          transform: translateY(-50%);
+          right:28px;
+          color:#fff;
+          background: #52EDFF;
+          border-radius: 15px;
+          font-weight: bold;
+          font-size: 12px;
+          line-height: 16px;
+          text-align: center;
+        }
+        .opts{
+          display: none;
+          cursor: pointer;
+          position: absolute;
+          top:50%;
+          right:10px;
+          width: 10px;
+          align-items: center;
+          justify-content: center;
+          transform: translate3d(0, -50%, 0);
+          z-index: 9999;
+          .items{
+            display: none;
+            padding: 8px;
+            list-style: none;
+            box-shadow: 0px 10px 20px -15px rgba(22, 23, 24, 0.2), 0px 10px 38px -10px rgba(22, 23, 24, 0.35);
+            border-radius: 8px;
             position: absolute;
-            top:50%;
-            transform: translateY(-50%);
-            right:10px;
-            color:#fff;
-            background: #056CF2;
-            border-radius: 25px;
-            font-weight: bold;
-            font-size: 10px;
-            line-height: 22px;
-            text-align: center;
+            right: 0;
+            top: 5px;
+            white-space: nowrap;
+            background: #fff;
+            .item{
+              font-weight: 600;
+              font-size: 12px;
+              line-height: 16px;
+              color: rgba(0, 21, 41, 0.7);
+              padding: 8px 16px;
+              border-radius: 4px;
+              /* transition: all .5s ease-in-out; */
+              &:hover{
+                color: #fff;
+                background: #52EDFF;
+              }
+            }
           }
-
+          &.expand {
+            svg path{
+              fill:#C4C4C4;
+            }
+            .items{
+              display: block;
+            }
+          }
+        }
       }
       .tabs{
         margin: 0;
@@ -152,10 +175,9 @@ const StyledWrapper = styled.div`
         display: none;
         flex-direction: column;
         gap: 8px;
-        border-left: 2px solid #EAEAEA;
-        padding-left: 12px;
-        margin-left: 28px;
+        margin-left: 20px;
         margin-bottom: 10px;
+        overflow: scroll;
         .tab{
           position: relative;
           display: flex;
@@ -163,17 +185,18 @@ const StyledWrapper = styled.div`
           cursor: pointer;
           gap: 8px;
           img{
-            width:24px;
-            height:24px;
+            width:16px;
+            height:16px;
           }
           .con{
             text-overflow: ellipsis;
             white-space: nowrap;
-            max-width: 300px;
+            max-width: 280px;
             overflow: hidden;
-            font-size: 14px;
-            line-height: 18px;
-            color: #000;
+            font-weight: normal;
+            font-size: 12px;
+            line-height: 15px;
+            color: #78787c;
           }
 
         }
@@ -188,9 +211,12 @@ const StyledWrapper = styled.div`
       }
       &:hover{
         .title{
-          background: #E8F2FF;
+          background: #F0FBFC;
           .start{
             display: block;
+          }
+          .opts{
+            display: flex;
           }
         }
       }

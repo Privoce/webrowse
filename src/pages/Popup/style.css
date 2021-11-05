@@ -10,7 +10,7 @@ html {
   animation: redraw 1s linear infinite;
 }
 body {
-  overflow: hidden;
+  overflow: auto;
   padding: 0;
   margin: 0;
   caret-color:rgb(5, 108, 242) ;

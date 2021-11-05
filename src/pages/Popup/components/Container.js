@@ -3,17 +3,16 @@ import styled from 'styled-components';
 import { onMessageFromBackground, sendMessageToBackground, MessageLocation } from '@wbet/message-api'
 
 import Login from './Login';
-import UserInfo from './UserInfo'
-import NewWindow from './NewWindow'
+import TopInfo from './TopInfo'
 import WindowList from './WindowList';
 import { EVENTS } from '../../../common'
 
 const StyledContainer = styled.section`
   min-width: 380px;
-  height: 100%;
+  height:calc(100vh + 30px);
   display: flex;
   flex-direction: column;
-  background:#F8FBFF;
+  background:#fff;
 `;
 export default function Container() {
   const [titles, setTitles] = useState({})
@@ -39,8 +38,7 @@ export default function Container() {
   if (!user) return <Login />;
   return (
     <StyledContainer>
-      <UserInfo user={user} logout={logout} />
-      <NewWindow />
+      <TopInfo user={user} logout={logout} />
       <WindowList titles={titles} windows={wins} roomId={user.id} />
     </StyledContainer>
   )

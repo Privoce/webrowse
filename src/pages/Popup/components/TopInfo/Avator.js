@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import { stringToHexColor } from '../../../Content/Webrowse/hooks/utils'
 const StyledLetterHead = styled.div`
   border-radius: 50%;
-  width:36px;
-  height: 36px;
+  width:24px;
+  height: 24px;
   text-transform: uppercase;
   display: flex;
   align-items: center;
@@ -16,8 +16,8 @@ const StyledLetterHead = styled.div`
 `;
 const StyledHead = styled.img`
   border-radius: 50%;
-  width:36px;
-  height: 36px;
+  width:24px;
+  height: 24px;
 `;
 export default function Avator({ photo = "", username = "Guest", ...rest }) {
   const color = stringToHexColor(username);
