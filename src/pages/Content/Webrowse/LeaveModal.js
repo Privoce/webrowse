@@ -34,6 +34,7 @@ const StyledModal = styled.section`
       height: 12px;
     }
     .title{
+      color: #000;
       font-weight: bold;
       font-size: 20px;
       line-height: 25px;
