@@ -367,7 +367,6 @@ onMessageFromContentScript(MessageLocation.Background, {
       jsonp: false,
       transports: ['websocket'],
       reconnectionAttempts: 8,
-      upgrade: false,
       query: { type: 'WEBROWSE', roomId, winId, temp, title: DATA_HUB.windowTitles[windowId] || "", invited: InvitedWindows[windowId], ...user }
     });
     console.log('invited', InvitedWindows[windowId]);
