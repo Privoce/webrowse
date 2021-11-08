@@ -10,14 +10,14 @@ const AniPopup = keyframes`
 const StyledWidget = styled.aside`
   pointer-events: all;
   font-family: sans-serif;
-  background: rgba(255, 255, 255, 0.6);
+  background: var(--webrowse-widget-bg-color);
   border-radius: 15px;
   padding:16px 20px;
   display: flex;
   flex-direction: column;
-  &:hover{
+  /* &:hover{
     background:#fff;
-  }
+  } */
   .top{
     display: flex;
     justify-content: space-between;
@@ -74,7 +74,7 @@ const StyledWidget = styled.aside`
         padding: 4px 8px;
         border: 1px solid #056CF2;
         border-radius: 5px;
-        color:#000;
+        color:var(--font-color);
         overflow: hidden;
         text-overflow: ellipsis;
         width: 242px;

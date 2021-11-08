@@ -16,7 +16,7 @@ html {
   --option-item-bg-hover-color:#E8F2FF;
   --icon-color:#333;
 }
-@media (prefers-color-scheme: light) {
+@media (prefers-color-scheme: dark) {
   html{
     --popup-bg-color: #1C1C1E;
     --window-bg-color:#32302E;

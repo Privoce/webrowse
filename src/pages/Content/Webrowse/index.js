@@ -11,6 +11,20 @@ import { EVENTS } from '../../../common'
 import Floater from './Floater';
 import CobrowseStatus from './CobrowseStatus';
 const StyledWrapper = styled.section`
+  --webrowse-widget-bg-color: rgba(255,255,255,0.6);
+  --font-color:#1C1C1E;
+  --tab-status-bg-color:#FFF9EB;
+  --tab-bg-color:#fff;
+  --tab-hover-bg-color:#F1FDFF;
+  --follow-mode-bg-color:#F0FBFC;
+  @media (prefers-color-scheme: dark) {
+      --webrowse-widget-bg-color: #1C1C1E;
+      --font-color:#fff;
+      --tab-status-bg-color:#65615C;
+      --tab-bg-color:#32302E;
+      --tab-hover-bg-color:#1C1C1E;
+      --follow-mode-bg-color:#2F3A3C;
+  }
   position: fixed;
   top: 0;
   left: 0;
@@ -26,8 +40,10 @@ const StyledWrapper = styled.section`
   &.cobrowsing{
     box-shadow: inset 6px 6px 0 0 #77a5f1, inset 0 0 6px 6px #77a5f1;
   }
+
 `;
 const GlobalStyle = createGlobalStyle`
+
   input,textarea{
     caret-color:#056CF2;
   }
@@ -41,36 +57,7 @@ const GlobalStyle = createGlobalStyle`
   body::-webkit-scrollbar{
     display: none !important;
   }
-  :root {
-      --webrowse-widget-bg-color: #056CF2;
-      --webrowse-theme-color:#056CF2;
 
-      --webrowse-control-disable-color:#d2d2d2;
-      --webrowse-popup-bg-color:#fff;
-      --webrowse-panel-bg-color: radial-gradient( circle at top left, rgba(255,255,255,0.8) 20px, #ffffff90 100px ), radial-gradient( circle at top right, rgba(255,255,255,0.8) 20px, #ffffff90 104px ), radial-gradient( at bottom left, #a788f3 100px, transparent 411px ), radial-gradient( at bottom right, #8994f5 200px, transparent 400px );
-      --webrowse-panel-border-radius: 15px;
-      --webrowse-box-bg-color:#fff;
-      --webrowse-button-bg-color: #056CF2;
-      --webrowse-button-font-color: #fff;
-      --webrowse-layout-bg-color: #5D6063;
-      --webrowse-hr-bg-color:#DEE1E6;
-      --webrowse-font-color: #464646;
-      --webrowse-camera-bg-color: #fff;
-      --webrowse-border-radius: 20px;
-    }
-  .webrowse-dark-theme{
-    --webrowse-theme-color:#85d4db;
-    --webrowse-panel-bg-color: #000;
-    --webrowse-box-bg-color:#616161;
-
-    --webrowse-popup-bg-color:#DBE2EB;
-    --webrowse-button-bg-color: #68D6DD;
-    --webrowse-button-font-color: #000;
-    --webrowse-layout-bg-color: #fff;
-    --webrowse-hr-bg-color:#DEE1E6;
-    --webrowse-camera-bg-color: #5D6063;
-    --webrowse-font-color: #fff;
-  }
 
 `;
 export default function Webrowse() {

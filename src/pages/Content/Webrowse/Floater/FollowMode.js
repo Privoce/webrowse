@@ -5,11 +5,12 @@ import { EVENTS } from '../../../../common'
 import StyledBlock from './StyledBlock'
 import Avator from './Avator'
 const StyledWrapper = styled(StyledBlock)`
-  background:#F0FBFC;
+  background:var(--follow-mode-bg-color);
   .block{
     font-size: 16px;
     width: 100%;
     .pf{
+      color:var(--font-color);
       line-height: 20px;
       font-weight: bold;
       padding-left:27px;
@@ -57,7 +58,7 @@ const StyledWrapper = styled(StyledBlock)`
         }
         >.tip{
           font-size:12px;
-          color:#000;
+          color:#78787C;
           line-height: 15px;
           text-align: left;
         }

@@ -153,7 +153,6 @@ const StyledWrapper = styled.div`
               border-radius: 4px;
               /* transition: all .5s ease-in-out; */
               &:hover{
-                color: #fff;
                 background: var(--option-item-bg-color);
               }
             }

@@ -12,7 +12,7 @@ const StyledContainer = styled.div`
     transition: all .5s ease-in;
     width:400px;
     >.title{
-      color: #000;
+      color: var(--font-color);
       line-height: 20px;
       padding:0;
       text-align: left;

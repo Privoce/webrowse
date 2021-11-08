@@ -6,7 +6,7 @@ import Avator from './Avator'
 import { EVENTS } from '../../../../common'
 const StyledWrapper = styled(StyledBlock)`
     padding:12px 0;
-    background:#FFF9EB;
+    background:var(--tab-status-bg-color);
     >.title{
       background-image: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/tab.svg`});
     }
@@ -25,10 +25,10 @@ const StyledWrapper = styled(StyledBlock)`
         justify-content: space-between;
         padding:11px 12px;
         border-radius: 5px;
-        background-color: #fff;
+        background-color: var(--tab-bg-color);
         cursor:pointer;
         &:hover{
-          background-color: #F1FDFF;
+          background-color: var(--tab-hover-bg-color);
         }
         &.host{
           position:relative;
@@ -60,7 +60,7 @@ const StyledWrapper = styled(StyledBlock)`
           width: -webkit-fill-available;
           text-align: left;
           font-size: 14px;
-          color:#000;
+          color:var(--font-color);
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
