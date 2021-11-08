@@ -26,7 +26,6 @@ const StyledWrapper = styled.div`
     justify-content: space-between;
     align-items: flex-start;
     flex-direction: column;
-    background:#fff;
     border-radius: 10px;
     padding:8px 0;
     width: 100%;
@@ -52,12 +51,13 @@ const StyledWrapper = styled.div`
       margin-bottom: 10px;
       border: 1px solid rgba(0, 0, 0, 0.08);
       border-radius: 8px;
+      background-color: var(--window-bg-color);
       .title{
         position: relative;
         display: flex;
         align-items: center;
         gap: 8px;
-        color: #000;
+        color: var(--window-title-color);
         padding:10px 12px;
         margin: 0;
         border-radius: 8px;
@@ -143,18 +143,18 @@ const StyledWrapper = styled.div`
             right: 0;
             top: 5px;
             white-space: nowrap;
-            background: #fff;
+            background-color:var(--window-bg-color);
             .item{
               font-weight: 600;
               font-size: 12px;
               line-height: 16px;
-              color: rgba(0, 21, 41, 0.7);
+              color: var(--option-item-color);
               padding: 8px 16px;
               border-radius: 4px;
               /* transition: all .5s ease-in-out; */
               &:hover{
                 color: #fff;
-                background: #52EDFF;
+                background: var(--option-item-bg-color);
               }
             }
           }
@@ -196,7 +196,7 @@ const StyledWrapper = styled.div`
             font-weight: normal;
             font-size: 12px;
             line-height: 15px;
-            color: #78787c;
+            color: var(--tab-title-color);
           }
 
         }
@@ -211,7 +211,7 @@ const StyledWrapper = styled.div`
       }
       &:hover{
         .title{
-          background: #F0FBFC;
+          background: var(--option-item-bg-hover-color);
           .start{
             display: block;
           }

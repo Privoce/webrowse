@@ -12,7 +12,7 @@ const StyledContainer = styled.section`
   height:calc(100vh + 30px);
   display: flex;
   flex-direction: column;
-  background:#fff;
+  background:var(--popup-bg-color);
 `;
 export default function Container() {
   const [titles, setTitles] = useState({})

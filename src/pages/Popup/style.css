@@ -8,8 +8,27 @@
 }
 html {
   animation: redraw 1s linear infinite;
+  --popup-bg-color: #fff;
+  --window-bg-color:#fff;
+  --window-title-color:#000;
+  --tab-title-color:#78787C;
+  --option-item-color:#001529B2;
+  --option-item-bg-hover-color:#E8F2FF;
+  --icon-color:#333;
+}
+@media (prefers-color-scheme: light) {
+  html{
+    --popup-bg-color: #1C1C1E;
+    --window-bg-color:#32302E;
+    --window-title-color:#fff;
+    --tab-title-color:rgba(255, 255, 255, 0.5);
+    --option-item-color:#fff;
+    --option-item-bg-hover-color:none;
+    --icon-color:#eee;
+  }
 }
 body {
+  background: var(--popup-bg-color);
   overflow: auto;
   padding: 0;
   margin: 0;

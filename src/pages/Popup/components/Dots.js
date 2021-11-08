@@ -8,7 +8,7 @@ const StyledDots = styled.div`
     height: 10px;
     transition: all .5s ease;
 `;
-export default function Dots({ color = "#333" }) {
+export default function Dots({ color = "var(--icon-color)" }) {
   return (
     <StyledDots className={`dots`}>
       <svg width="2" height="10" viewBox="0 0 2 10" fill="none" >

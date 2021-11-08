@@ -1,7 +1,9 @@
 import { useState, useRef, useEffect } from 'react'
 import styled from 'styled-components';
 import Avator from './Avator';
-import { MdOutlineLogout, MdInfoOutline, MdQuestionAnswer } from 'react-icons/md'
+import { MdInfoOutline } from 'react-icons/md'
+import { AiOutlineQuestionCircle } from 'react-icons/ai'
+import { HiOutlineLogout } from 'react-icons/hi'
 import NewWindow from './NewWindow'
 import Triangle from '../Triangle'
 const StyledWrapper = styled.div`
@@ -32,7 +34,7 @@ const StyledWrapper = styled.div`
       position: absolute;
       left: 0;
       top:26px;
-      background: #FFFFFF;
+      background-color:var(--window-bg-color);
       box-shadow: 0px 10px 20px -15px rgba(22, 23, 24, 0.2), 0px 10px 38px -10px rgba(22, 23, 24, 0.35);
       border-radius: 8px;
       padding: 8px;
@@ -41,7 +43,7 @@ const StyledWrapper = styled.div`
         align-items: center;
         gap:5px;
         padding: 8px 17px;
-        color:#001529B2;
+        color:var(--option-item-color);
         border-radius: 5px;
         white-space: nowrap;
         transition: all .5s ease-in-out;
@@ -51,7 +53,7 @@ const StyledWrapper = styled.div`
         }
         &:hover{
           color:#fff;
-          background-color: #52EDFF;
+          background-color:var(--option-item-bg-hover-color);
         }
       }
     }
@@ -98,11 +100,11 @@ export default function UserInfo({ user, logout }) {
             <a href="http://webrow.se" target="_blank" rel="noopener noreferrer">About</a>
           </li>
           <li className="item">
-            <MdQuestionAnswer size={14} />
+            <AiOutlineQuestionCircle size={14} />
             <a href="http://webrow.se" target="_blank" rel="noopener noreferrer">FAQ</a>
           </li>
           <li className="item" onClick={handleLogout}>
-            <MdOutlineLogout size={14} />
+            <HiOutlineLogout size={14} />
             <span>Sign Out</span>
           </li>
         </ul>}
