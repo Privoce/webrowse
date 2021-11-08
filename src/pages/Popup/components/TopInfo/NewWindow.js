@@ -34,7 +34,7 @@ const StyledWrapper = styled.div`
       top: 0;
       left: 50%;
       transform: translateX(-50%);
-      background: #FFFFFF;
+      background: var(--window-bg-color);
       box-shadow: 0px 10px 20px -15px rgba(22, 23, 24, 0.2), 0px 10px 38px -10px rgba(22, 23, 24, 0.35);
       border-radius: 8px;
       padding:10px 0;
@@ -43,7 +43,7 @@ const StyledWrapper = styled.div`
       flex-direction: column;
       align-items: flex-start;
       .opt{
-        color: #001529B2;
+        color: var(--option-item-color);
         box-sizing: border-box;
         cursor: pointer;
         width: 226px;
@@ -61,7 +61,7 @@ const StyledWrapper = styled.div`
           background-image: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/copy.svg`});
         }
         &:hover{
-          background-color:#E8F2FF ;
+          background-color:var(--option-item-bg-hover-color);
         }
       }
     }
