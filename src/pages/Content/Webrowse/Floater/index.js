@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { onMessageFromBackground, sendMessageToBackground, MessageLocation } from '@wbet/message-api'
 import { motion } from 'framer-motion'
-// import { MdModeEditOutline, MdCancel } from 'react-icons/md'
-// import { AiFillCheckCircle } from 'react-icons/ai'
+import { IoLinkOutline } from 'react-icons/io5'
+import { RiUserReceived2Fill, RiUserStarFill } from 'react-icons/ri'
 import { EVENTS } from '../../../../common'
 import StyledWidget from './styled';
 import Tabs from './Tabs';
 import FollowModeTipModal from './FollowModeTipModal'
-import FollowMode from './FollowMode';
+// import FollowMode from './FollowMode';
 import useCopy from '../hooks/useCopy';
 // const mock_data = [{ id: 1, host: true, username: "杨二", photo: "https://files.authing.co/user-contents/photos/9be86bd9-5f18-419b-befa-2356dd889fe6.png" }, { id: 2, username: "杨二", photo: "https://files.authing.co/user-contents/photos/9be86bd9-5f18-419b-befa-2356dd889fe6.png" }]
 let followModalClosed = false;
@@ -21,7 +21,7 @@ export default function Floater({ showLeaveModal, dragContainerRef = null }) {
   const [activeTabId, setActiveTabId] = useState(null)
   const [currUser, setCurrUser] = useState(undefined);
   const [host, setHost] = useState(undefined)
-  const [visible, setVisible] = useState({ tab: false, follow: true, audio: false });
+  const [visible, setVisible] = useState({ tab: true, follow: false, audio: false });
   const [inviteLink, setInviteLink] = useState('');
   const [popup, setPopup] = useState(false)
   const { copied, copy } = useCopy();
@@ -109,7 +109,21 @@ export default function Floater({ showLeaveModal, dragContainerRef = null }) {
       evt.target.blur();
     }
   }
-  const { tab, follow } = visible;
+  const handleBeHost = () => {
+
+    let enable = (host && host.id == currUser?.id) ? false : true;
+    // 成为host
+    sendMessageToBackground({
+      data: {
+        cmd: EVENTS.BE_HOST,
+        payload: {
+          enable
+        }
+      }
+    }, MessageLocation.Content, EVENTS.SOCKET_MSG)
+  }
+  const { tab } = visible;
+  const isHost = host && host.id == currUser?.id;
   console.log({ users, host, currUser });
   return (
     <>
@@ -138,15 +152,22 @@ export default function Floater({ showLeaveModal, dragContainerRef = null }) {
           <div className="opts">
             <div className="btns">
               <button title="Tab Status" className={`btn tab ${tab ? 'curr' : ''}`} data-type='tab' onClick={toggleVisible}></button>
-              <button title="Follow Mode" className={`btn follow ${follow ? 'curr' : ''}`} data-type='follow' onClick={toggleVisible}></button>
+              {/* <button title="Follow Mode" className={`btn follow ${follow ? 'curr' : ''}`} data-type='follow' onClick={toggleVisible}></button> */}
               {/* <button title="Audio Channel" className={`btn audio ${audio ? 'curr' : ''}`} data-type='audio' onClick={showVeraPanel}></button> */}
             </div>
-            {inviteLink && <div className="copy">
-              <button className={`btn ${copied ? 'copied' : ''}`} onClick={handleCopyLink}>{copied ? `Link Copied` : `Copy Link to Invite`}</button>
+            {inviteLink && <div className="cmds">
+              <div className="cmd host">
+                {isHost ? <RiUserStarFill size={16} color="#68D6DD" /> : <RiUserReceived2Fill className="icon" size={16} />}
+                <button className={`btn`} onClick={handleBeHost}>{isHost ? `Stop Hosting` : `Become Host`}</button>
+              </div>
+              <div className="cmd copy">
+                <IoLinkOutline className="icon" size={16} />
+                <button className={`btn ${copied ? 'copied' : ''}`} onClick={handleCopyLink}>{copied ? `Copied` : `Copy Link`}</button>
+              </div>
             </div>}
           </div>
           {tab && <Tabs tabs={tabs} users={users} closeBlock={closeBlock} />}
-          {follow && <FollowMode host={host} currUser={currUser} closeBlock={closeBlock} />}
+          {/* {follow && <FollowMode host={host} currUser={currUser} closeBlock={closeBlock} />} */}
         </StyledWidget>
       </motion.div>
       {followTipModalVisible && !followModalClosed && <FollowModeTipModal closeModal={() => {

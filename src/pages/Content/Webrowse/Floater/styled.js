@@ -15,9 +15,6 @@ const StyledWidget = styled.aside`
   padding:16px 20px;
   display: flex;
   flex-direction: column;
-  /* &:hover{
-    background:#fff;
-  } */
   .top{
     display: flex;
     justify-content: space-between;
@@ -103,9 +100,9 @@ const StyledWidget = styled.aside`
       .btn{
         position: relative;
         border-radius:50%;
-        width: 36px;
-        height: 36px;
-        background-size: 18px;
+        width: 24px;
+        height: 24px;
+        background-size: 12px;
         background-position: center;
         background-repeat: no-repeat;
         padding: 0;
@@ -115,16 +112,16 @@ const StyledWidget = styled.aside`
           background-color:#FFF9EB;
           background-image: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/tab.svg`});
           &.curr{
-            border:2px solid #FFBD2E;
-            }
+            border:1px solid #FFBD2E;
+          }
         }
-        &.follow{
+        /* &.follow{
           background-color:#F0FBFC;
           background-image: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/follow.svg`});
           &.curr{
             border:2px solid #68D6DD;
             }
-        }
+        } */
         &.audio{
           background-color:#EEE8F7;
           background-image: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/mic.svg`});
@@ -134,36 +131,41 @@ const StyledWidget = styled.aside`
         }
       }
     }
-    .copy{
+    .cmds{
       display: flex;
       align-items: center;
-      padding-left:16px;
-      /* border-left:1px solid #E6E9EF; */
-      .btn{
-        min-width: 156px;
-        position: relative;
-        font-weight: bold;
-        color:#056CF2;
-        padding:5px 12px;
-        border:2px solid #056CF2;
-        border-radius:20px;
-        &:hover{
-          background:  rgba(5, 108, 242, 0.1);;
+      .cmd{
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        padding:4px 6px;
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 16px;
+        .icon,.btn{
+          color:#001529B2;
         }
-        &.copied{
-          padding-left: 30px;
-          color: #fff;
-          background: #056CF2;
-          &:before{
-            content: "ヘ";
-            transform: rotateX(180deg);
-            position: absolute;
-            left: 16px;
-            top: 15%;
-        }}
+        .btn{
+          border:none;
+          background: none;
+        }
+        &.copy{
+          min-width: 90px;
+          border-radius: 4px;
+          &:hover{
+            background:  #F0FBFC;
+          }
+        }
+        @media (prefers-color-scheme: dark) {
+          .icon,.btn{
+            color:#eee;
+          }
+          &.copy:hover{
+            background:  none;
+          }
+        }
       }
     }
-
   }
 `;
 

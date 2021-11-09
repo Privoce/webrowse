@@ -11,7 +11,7 @@ import { EVENTS } from '../../../common'
 import Floater from './Floater';
 import CobrowseStatus from './CobrowseStatus';
 const StyledWrapper = styled.section`
-  --webrowse-widget-bg-color: rgba(255,255,255,0.6);
+  --webrowse-widget-bg-color: rgba(255,255,255);
   --font-color:#1C1C1E;
   --tab-status-bg-color:#FFF9EB;
   --tab-bg-color:#fff;
