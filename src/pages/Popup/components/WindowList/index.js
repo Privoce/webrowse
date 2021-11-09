@@ -167,7 +167,7 @@ export default function WindowList({ titles = {}, windows = null, roomId = "" })
       },
       body: JSON.stringify({
         room: roomId,
-        id: winId ? winId : '', title, tabs: tabs.map(t => {
+        id: winId ? (winId.endsWith('_temp') ? '' : winId) : '', title, tabs: tabs.map(t => {
           const { url, favIconUrl, title } = t;
           return {
             url, icon: favIconUrl, title,
