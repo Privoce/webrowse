@@ -14,7 +14,7 @@ export default function WindowList({ titles = {}, windows = null, roomId = "" })
   const { copy } = useCopy();
   const [savedWindows, setSavedWindows] = useState(null);
   const [currentWindows, setCurrentWindows] = useState([])
-  const { data, } = useSWR(`${prefix}//${SOCKET_SERVER_DOMAIN}/webrowse/window/list/${roomId}`, fetcher)
+  const { data, } = useSWR(`${prefix}//${SOCKET_SERVER_DOMAIN}/webrowse/window/list/${roomId}`, fetcher, { refreshInterval: 500 })
   const handleJumpTab = ({ currentTarget }) => {
     const { tabId, windowId, url } = currentTarget.dataset;
     if (url) {
