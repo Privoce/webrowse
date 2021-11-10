@@ -141,7 +141,7 @@ const StyledWrapper = styled.div`
             border-radius: 8px;
             position: absolute;
             right: 0;
-            top: 5px;
+            bottom: 0;
             white-space: nowrap;
             background-color:var(--window-bg-color);
             .item{
