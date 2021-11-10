@@ -40,10 +40,7 @@ const StyledWrapper = styled.section`
   &.cobrowsing{
     box-shadow: inset 6px 6px 0 0 #77a5f1, inset 0 0 6px 6px #77a5f1;
   }
-
-`;
-const GlobalStyle = createGlobalStyle`
-
+  /* 通用设置 */
   input,textarea{
     caret-color:#056CF2;
   }
@@ -53,12 +50,12 @@ const GlobalStyle = createGlobalStyle`
     outline: none;
     background: none;
   }
-/* 隐藏掉页面的滚动条 */
+`;
+const GlobalStyle = createGlobalStyle`
+  /* 隐藏掉页面的滚动条 */
   body::-webkit-scrollbar{
     display: none !important;
   }
-
-
 `;
 export default function Webrowse() {
   const containerRef = useRef(null)
