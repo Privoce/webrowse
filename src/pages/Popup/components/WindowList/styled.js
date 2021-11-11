@@ -53,6 +53,7 @@ const StyledWrapper = styled.div`
       border-radius: 8px;
       background-color: var(--window-bg-color);
       .title{
+        cursor: pointer;
         position: relative;
         display: flex;
         align-items: center;
@@ -197,7 +198,9 @@ const StyledWrapper = styled.div`
             line-height: 15px;
             color: var(--tab-title-color);
           }
-
+          &:hover .con{
+            color: #32302E;
+          }
         }
       }
       &.expand{

@@ -16,7 +16,7 @@ export default function WindowList({ titles = {}, windows = null, roomId = "" })
   const [currentWindows, setCurrentWindows] = useState([])
   const { data, } = useSWR(`${prefix}//${SOCKET_SERVER_DOMAIN}/webrowse/window/list/${roomId}`, fetcher, { refreshInterval: 500 })
   const handleJumpTab = ({ currentTarget }) => {
-    const { tabId, windowId, url } = currentTarget.dataset;
+    const { tabId = "", windowId, url } = currentTarget.dataset;
     if (url) {
       chrome.tabs.create({ url, active: false })
       return
@@ -24,11 +24,15 @@ export default function WindowList({ titles = {}, windows = null, roomId = "" })
     if (!windowId) return;
     sendMessageToBackground({ tabId, windowId }, MessageLocation.Popup, EVENTS.JUMP_TAB)
   }
-  const toggleExpand = ({ currentTarget }) => {
+  const toggleExpand = (evt) => {
+    evt.stopPropagation();
+    const { currentTarget } = evt;
     currentTarget.querySelector('.triangle')?.classList.toggle('down')
     currentTarget.parentElement.parentElement.classList.toggle('expand')
   }
-  const toggleOptsVisible = ({ currentTarget }) => {
+  const toggleOptsVisible = (evt) => {
+    evt.stopPropagation();
+    const { currentTarget } = evt;
     currentTarget.classList.toggle('expand')
   }
   const handleItemsMouseLeave = ({ currentTarget }) => {
@@ -96,6 +100,7 @@ export default function WindowList({ titles = {}, windows = null, roomId = "" })
     })
   }, [windows, titles]);
   const handleTitleClick = (evt) => {
+    evt.stopPropagation();
     const { target } = evt;
     if (!target.readOnly) return;
     tempTitle = target.value;
@@ -219,7 +224,7 @@ export default function WindowList({ titles = {}, windows = null, roomId = "" })
         <div className={`block`}>
           {currentWindows.map(({ title, id, winId, tabs, live }) => {
             return <div key={id} className="window">
-              <h3 className="title" key={title} >
+              <h3 className="title" key={title} data-window-id={id} onClick={handleJumpTab} >
                 <div className="arrow" onClick={toggleExpand}>
                   <Triangle />
                 </div>
