@@ -88,7 +88,7 @@ const StyledWidget = styled.aside`
       }
     }
   }
-  .opts{
+  >.opts{
     display: flex;
     align-items: center;
     justify-content:space-between ;

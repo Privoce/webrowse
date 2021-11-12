@@ -6,6 +6,7 @@ import { RiUserReceived2Fill, RiUserStarFill } from 'react-icons/ri'
 import { EVENTS } from '../../../../common'
 import StyledWidget from './styled';
 import Tabs from './Tabs';
+import BehostPop from './BehostPop'
 import FollowModeTipModal from './FollowModeTipModal'
 // import FollowMode from './FollowMode';
 import useCopy from '../hooks/useCopy';
@@ -14,7 +15,8 @@ let followModalClosed = false;
 let tempTitle = '';
 export default function Floater({ showLeaveModal, dragContainerRef = null }) {
   const [editable, setEditable] = useState(false);
-  const [followTipModalVisible, setFollowTipModalVisible] = useState(false)
+  const [followTipModalVisible, setFollowTipModalVisible] = useState(false);
+  const [behostPopoverVisible, setBehostPopoverVisible] = useState(false)
   const [users, setUsers] = useState([]);
   const [tabs, setTabs] = useState([]);
   const [title, setTitle] = useState("")
@@ -109,18 +111,28 @@ export default function Floater({ showLeaveModal, dragContainerRef = null }) {
       evt.target.blur();
     }
   }
-  const handleBeHost = () => {
+  const handleCancelHostPop = () => {
+    setBehostPopoverVisible(false)
+  }
 
-    let enable = (host && host.id == currUser?.id) ? false : true;
-    // 成为host
-    sendMessageToBackground({
-      data: {
-        cmd: EVENTS.BE_HOST,
-        payload: {
-          enable
-        }
+  const handleBeHost = () => {
+    chrome.storage.sync.get(['BECOME_HOST_ASK'], (res) => {
+      let enable = (host && host.id == currUser?.id) ? false : true;
+      if (!res.BECOME_HOST_ASK && enable) {
+        setBehostPopoverVisible(true);
+        return;
+      } else {
+        // 成为host
+        sendMessageToBackground({
+          data: {
+            cmd: EVENTS.BE_HOST,
+            payload: {
+              enable
+            }
+          }
+        }, MessageLocation.Content, EVENTS.SOCKET_MSG)
       }
-    }, MessageLocation.Content, EVENTS.SOCKET_MSG)
+    });
   }
   const { tab } = visible;
   const isHost = host && host.id == currUser?.id;
@@ -168,6 +180,7 @@ export default function Floater({ showLeaveModal, dragContainerRef = null }) {
           </div>
           {tab && <Tabs tabs={tabs} users={users} closeBlock={closeBlock} />}
           {/* {follow && <FollowMode host={host} currUser={currUser} closeBlock={closeBlock} />} */}
+          {behostPopoverVisible && <BehostPop handleCancelHostPop={handleCancelHostPop} />}
         </StyledWidget>
       </motion.div>
       {followTipModalVisible && !followModalClosed && <FollowModeTipModal closeModal={() => {
