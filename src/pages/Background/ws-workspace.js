@@ -133,7 +133,7 @@ const initWorkspace = async ({ invited = false, windowId = null, roomId = "", wi
             wid = rawParams.highlightInfo.windowId;
           }
           let activeTab = await getActiveTab();
-          if (activeTab.url && !activeTab.url.startsWith('chrome')) {
+          if (activeTab.url && !activeTab.url.startsWith('chrome') && !activeTab.url.startsWith('edge')) {
             currSocket = DATA_HUB[wid].socket;
             console.log('tab active/highlight event', activeTab, currSocket);
           }
