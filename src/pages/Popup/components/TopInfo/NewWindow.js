@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components';
+import { IoAddOutline } from 'react-icons/io5'
+import { FiCopy } from 'react-icons/fi'
 // import StyledBlock from './StyledBlock'
 import { sendMessageToBackground, MessageLocation } from '@wbet/message-api'
 import { EVENTS } from '../../../../common'
@@ -31,35 +33,30 @@ const StyledWrapper = styled.div`
     .opts{
       margin: 0;
       position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
+      top: 40px;
+      right: 0;
       background: var(--window-bg-color);
       box-shadow: 0px 10px 20px -15px rgba(22, 23, 24, 0.2), 0px 10px 38px -10px rgba(22, 23, 24, 0.35);
       border-radius: 8px;
-      padding:10px 0;
+      padding:8px;
       display: flex;
       list-style: none;
       flex-direction: column;
       align-items: flex-start;
       .opt{
+        width: 100%;
+        user-select: none;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        gap: 5px;
         color: var(--option-item-color);
         box-sizing: border-box;
         cursor: pointer;
-        width: 226px;
         font-weight: 600;
-        font-size: 14px;
-        line-height: 22px;
-        padding:8px 0 8px 48px;
-        background-repeat: no-repeat;
-        background-size: 20px;
-        background-position: 14px 8px;
-        &.new{
-          background-image: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/add.svg`});
-        }
-        &.cur{
-          background-image: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/copy.svg`});
-        }
+        font-size: 12px;
+        line-height: 16px;
+        padding:8px;
         &:hover{
           background-color:var(--option-item-bg-hover-color);
         }
@@ -110,8 +107,13 @@ export default function NewWindow() {
       <div className="block" ref={node}>
         <button onClick={showSubMenu} className="start">New Cobrowsing Session</button>
         {subMenuVisible && <ul className="opts" >
-          <li className="opt new" data-type="new" onClick={handleNewBrowsing}>New Window</li>
-          <li className="opt cur" data-type="current" onClick={handleNewBrowsing}>Current Window</li>
+          <li className="opt new" data-type="new" onClick={handleNewBrowsing}>
+            <IoAddOutline size={20} />
+            New Window
+          </li>
+          <li className="opt cur" data-type="current" onClick={handleNewBrowsing}>
+            <FiCopy size={16} />
+            New Current Window</li>
         </ul>}
       </div>
     </StyledWrapper>

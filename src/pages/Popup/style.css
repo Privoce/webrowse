@@ -11,9 +11,10 @@ html {
   --popup-bg-color: #fff;
   --window-bg-color:#fff;
   --window-title-color:#000;
+  --window-title-hover-bg-color:#F0FBFC;
   --tab-title-color:#78787C;
   --option-item-color:#001529B2;
-  --option-item-bg-hover-color:#E8F2FF;
+  --option-item-bg-hover-color:#52EDFF;
   --icon-color:#333;
 }
 @media (prefers-color-scheme: dark) {
@@ -21,6 +22,7 @@ html {
     --popup-bg-color: #1C1C1E;
     --window-bg-color:#32302E;
     --window-title-color:#fff;
+    --window-title-hover-bg-color:none;
     --tab-title-color:rgba(255, 255, 255, 0.5);
     --option-item-color:#fff;
     --option-item-bg-hover-color:none;

@@ -4,30 +4,26 @@ const StyledContainer = styled.div`
     bottom:120px;
     right:0;
     background:  ${({ bg = '#333' }) => bg};
-    border-radius: 15px;
+    border-radius: 8px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     padding: 12px 14px;
     transition: all .5s ease-in;
-    width:400px;
+    width: 360px;
     >.title{
       color: var(--font-color);
-      line-height: 20px;
       padding:0;
       text-align: left;
       margin-bottom: 12px;
-      font-weight: bold;
-      margin-left: 16px;
-      font-size: 16px;
-      padding-left:26px;
-      background-size: 18px;
-      background-position: left center;
-      background-repeat: no-repeat;
+      margin-left: 20px;
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 20px;
     }
     >.close{
       position: absolute;
-      right:10px;
+      right:15px;
       top:10px;
       cursor: pointer;
       width: 24px;

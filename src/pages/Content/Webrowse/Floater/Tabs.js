@@ -7,9 +7,6 @@ import { EVENTS } from '../../../../common'
 const StyledWrapper = styled(StyledBlock)`
     padding:12px 0;
     background:var(--tab-status-bg-color);
-    >.title{
-      background-image: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/tab.svg`});
-    }
     .tabs{
       display: flex;
       flex-direction: column;

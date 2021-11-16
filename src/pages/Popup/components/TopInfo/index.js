@@ -52,7 +52,6 @@ const StyledWrapper = styled.div`
           color: inherit;
         }
         &:hover{
-          color:#fff;
           background-color:var(--option-item-bg-hover-color);
         }
       }

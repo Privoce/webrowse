@@ -213,7 +213,7 @@ const StyledWrapper = styled.div`
       }
       &:hover{
         .title{
-          background: var(--option-item-bg-hover-color);
+          background: var(--window-title-hover-bg-color);
           .start{
             display: block;
           }

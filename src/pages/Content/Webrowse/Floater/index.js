@@ -6,6 +6,7 @@ import { RiUserReceived2Fill, RiUserStarFill } from 'react-icons/ri'
 import { EVENTS } from '../../../../common'
 import StyledWidget from './styled';
 import Tabs from './Tabs';
+import Dots from './Dots'
 import BehostPop from './BehostPop'
 import FollowModeTipModal from './FollowModeTipModal'
 // import FollowMode from './FollowMode';
@@ -134,6 +135,14 @@ export default function Floater({ showLeaveModal, dragContainerRef = null }) {
       }
     });
   }
+  const toggleOptsVisible = (evt) => {
+    evt.stopPropagation();
+    const { currentTarget } = evt;
+    currentTarget.classList.toggle('expand')
+  }
+  const handleItemsMouseLeave = ({ currentTarget }) => {
+    currentTarget.parentElement.classList.remove('expand')
+  }
   const { tab } = visible;
   const isHost = host && host.id == currUser?.id;
   console.log({ users, host, currUser });
@@ -144,12 +153,12 @@ export default function Floater({ showLeaveModal, dragContainerRef = null }) {
         dragMomentum={false}
         dragConstraints={dragContainerRef}
         whileDrag={{ scale: 1.12 }}
-        style={{ position: 'absolute', right: '10px', bottom: '60px' }}
+        style={{ position: 'absolute', right: '24px', bottom: '24px' }}
       >
         <StyledWidget >
           <div className="top">
             <div className={`title`}>
-              <input onKeyDown={handleEnterKey} onBlur={handleTitleBlur} onClick={handleTitleClick} readOnly={!editable} value={title || 'Temperary Window'} onChange={handleTitleChange} />
+              <input onKeyDown={handleEnterKey} onBlur={handleTitleBlur} onClick={handleTitleClick} readOnly={!editable} value={title || 'Temporary Window'} onChange={handleTitleChange} />
             </div>
             <div className="quit">
               {popup && <div className="selects">
@@ -175,6 +184,14 @@ export default function Floater({ showLeaveModal, dragContainerRef = null }) {
               <div className="cmd copy">
                 <IoLinkOutline className="icon" size={16} />
                 <button className={`btn ${copied ? 'copied' : ''}`} onClick={handleCopyLink}>{copied ? `Copied` : `Copy Link`}</button>
+              </div>
+              <div className="others" onClick={toggleOptsVisible}>
+                <Dots />
+                <ul className="items" onMouseLeave={handleItemsMouseLeave}>
+                  <li className="item" onClick={handleCopyLink}>Copy Link</li>
+                  {/* <li className="item" onClick={null}>Save Window</li> */}
+                  <li className="item" onClick={handleLeave}>Leave</li>
+                </ul>
               </div>
             </div>}
           </div>

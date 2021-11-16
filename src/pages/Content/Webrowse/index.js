@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import styled, { createGlobalStyle } from 'styled-components';
+import styled from 'styled-components';
 import { sendMessageToBackground, onMessageFromBackground, MessageLocation } from '@wbet/message-api'
 
 import { getUser } from './hooks/utils';
@@ -17,6 +17,12 @@ const StyledWrapper = styled.section`
   --tab-bg-color:#fff;
   --tab-hover-bg-color:#F1FDFF;
   --follow-mode-bg-color:#F0FBFC;
+  --window-bg-color:#fff;
+  --window-title-color:#000;
+  --tab-title-color:#78787C;
+  --option-item-color:#001529B2;
+  --option-item-bg-hover-color:#52EDFF;
+  --icon-color:#333;
   @media (prefers-color-scheme: dark) {
       --webrowse-widget-bg-color: #1C1C1E;
       --font-color:#fff;
@@ -24,6 +30,12 @@ const StyledWrapper = styled.section`
       --tab-bg-color:#32302E;
       --tab-hover-bg-color:#1C1C1E;
       --follow-mode-bg-color:#2F3A3C;
+      --window-bg-color:#32302E;
+      --window-title-color:#fff;
+      --tab-title-color:rgba(255, 255, 255, 0.5);
+      --option-item-color:#fff;
+      --option-item-bg-hover-color:none;
+      --icon-color:#eee;
   }
   position: fixed;
   top: 0;
@@ -49,12 +61,6 @@ const StyledWrapper = styled.section`
     border:none;
     outline: none;
     background: none;
-  }
-`;
-const GlobalStyle = createGlobalStyle`
-  /* 隐藏掉页面的滚动条 */
-  body::-webkit-scrollbar{
-    display: none !important;
   }
 `;
 export default function Webrowse() {
@@ -135,11 +141,18 @@ export default function Webrowse() {
       initializeSocketRoom({ roomId, winId, user: currUser });
     }
   }, [roomId, winId, currUser]);
+  useEffect(() => {
+    if (floaterVisible) {
+      // 隐藏掉滚动条
+      const injectStyle = document.createElement("style");
+      injectStyle.innerHTML = "body::-webkit-scrollbar{display:none !important}";
+      document.head.appendChild(injectStyle)
+    }
+  }, [floaterVisible])
   if (loading) return null;
   console.log({ currUser, nameModalVisible, floaterVisible });
   return (
     <StyledWrapper ref={containerRef} id="WEBROWSE_FULLSCREEN_CONTAINER" className={floaterVisible ? 'cobrowsing' : ''}>
-      <GlobalStyle />
       {floaterVisible && <CobrowseStatus />}
       {floaterVisible && <Floater dragContainerRef={containerRef} showLeaveModal={toggleLeaveModalVisible} />}
       {/* 不存在或者未设置用户名的话，先设置 */}
