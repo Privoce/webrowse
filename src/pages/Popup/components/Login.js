@@ -15,7 +15,7 @@ const StyledWrapper = styled.div`
     font-weight: bold;
     font-size: 20px;
     line-height: 25px;
-    color: #000;
+    color: var(--window-title-color);
     padding-left: 40px;
     background-image: url('https://static.nicegoodthings.com/works/vera/webrowse.logo.png');
     background-size: 32px 30px;
