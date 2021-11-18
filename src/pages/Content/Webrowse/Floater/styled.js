@@ -69,6 +69,7 @@ const StyledWidget = styled.aside`
       align-items: center;
       gap: 8px;
       input{
+        outline: none;
         background:none;
         padding: 4px 8px;
         border: 1px solid #056CF2;
@@ -86,6 +87,9 @@ const StyledWidget = styled.aside`
         }
         &:hover{
           border-color: #ccc;
+        }
+        &:focus{
+          border-color: #1FE1F9;
         }
       }
     }
@@ -144,6 +148,10 @@ const StyledWidget = styled.aside`
         font-weight: 600;
         font-size: 12px;
         line-height: 16px;
+        border-radius: 4px;
+        &:hover{
+          background:  #F0FBFC;
+        }
         .icon,.btn{
           color:#001529B2;
         }
@@ -153,16 +161,12 @@ const StyledWidget = styled.aside`
         }
         &.copy{
           min-width: 90px;
-          border-radius: 4px;
-          &:hover{
-            background:  #F0FBFC;
-          }
         }
         @media (prefers-color-scheme: dark) {
           .icon,.btn{
             color:#eee;
           }
-          &.copy:hover{
+          &:hover{
             background:  none;
           }
         }

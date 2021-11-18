@@ -21,7 +21,7 @@ const StyledWrapper = styled(StyledBlock)`
         align-items: center;
         justify-content: space-between;
         padding:11px 12px;
-        border-radius: 5px;
+        border-radius: 8px;
         background-color: var(--tab-bg-color);
         cursor:pointer;
         &:hover{
@@ -29,7 +29,7 @@ const StyledWrapper = styled(StyledBlock)`
         }
         &.host{
           position:relative;
-          border: 2px solid #68D6DD;
+          box-shadow: inset 0 0 0px 2px #68d6dd;
           &:after{
             content:attr(data-host);
             font-size:8px;
@@ -39,6 +39,7 @@ const StyledWrapper = styled(StyledBlock)`
             position:absolute;
             top:0;
             right:0;
+            border-top-right-radius: 8px;
           }
         }
         .ico{
