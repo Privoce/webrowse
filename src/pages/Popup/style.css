@@ -7,7 +7,7 @@
   }
 }
 html {
-  animation: redraw 1s linear infinite;
+  animation: redraw 1000s linear infinite;
   --popup-bg-color: #fff;
   --window-bg-color:#fff;
   --window-title-color:#000;
