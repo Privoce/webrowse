@@ -14,7 +14,7 @@ const StyledWrapper = styled.div`
     position: absolute;
     right: 0;
     top: 0;
-    width: 360px;
+    width: 380px;
     background: #FFFFFF;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
     border-radius: 16px;
