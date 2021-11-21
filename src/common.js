@@ -47,10 +47,14 @@ const EVENTS = {
   POP_UP_DATA: 'POP_UP_DATA',
   //local window titles
   WINDOW_TITLES: 'WINDOW_TITLES',
+  // 获取window title
+  WIN_TITLE: 'WIN_TITLE',
   // 更新window标题
   UPDATE_WIN_TITLE: 'UPDATE_WIN_TITLE',
   // 新开标签集
   OPEN_TABS: 'OPEN_TABS',
+  // 根据win id 拿tabs
+  GET_TABS_BY_WINDOW: 'GET_TABS_BY_WINDOW'
 }
 // const SOCKET_SERVER_DOMAIN = 'stage.vera.nicegoodthings.com';
 const SOCKET_SERVER_DOMAIN = 'vera.nicegoodthings.com';
