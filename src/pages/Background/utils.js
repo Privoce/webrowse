@@ -1,15 +1,3 @@
-function debounce(callback, wait = 2000, immediate = false) {
-  let timeout = null
-  return function () {
-    const callNow = immediate && !timeout
-    const next = () => callback.apply(this, arguments)
-    clearTimeout(timeout)
-    timeout = setTimeout(next, wait)
-    if (callNow) {
-      next()
-    }
-  }
-}
 
 function getActiveTab() {
   return new Promise((resolve, reject) => {
@@ -26,4 +14,4 @@ function getActiveTab() {
   })
 }
 
-export { debounce, getActiveTab }
+export { getActiveTab }
