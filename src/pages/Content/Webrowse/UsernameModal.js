@@ -101,14 +101,10 @@ export default function UsernameModal({ roomId, startCoBrowse, closeModal }) {
       startCoBrowse(input)
     })
   }
-  const handleClose = () => {
-    // to do
-    closeModal()
-  }
   return (
     <StyledModal>
       <div className="modal">
-        <div className="close" onClick={handleClose}>
+        <div className="close" onClick={closeModal}>
           <IconClose color="#000" />
         </div>
         <input type="text" onChange={handleInput} value={input} className="input" placeholder={'Enter Your Name to Join'} />
