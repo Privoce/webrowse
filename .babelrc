@@ -14,12 +14,6 @@
     "@babel/preset-react"
   ],
   "plugins": [
-    [
-      "babel-plugin-styled-components",
-      {
-        "namespace": "webrowse"
-      }
-    ],
     "@babel/plugin-syntax-dynamic-import",
     "@babel/plugin-proposal-class-properties",
     "@babel/plugin-proposal-nullish-coalescing-operator"

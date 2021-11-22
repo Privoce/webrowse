@@ -53,7 +53,6 @@
     "@hot-loader/react-dom": "^17.0.1",
     "babel-loader": "^8.2.3",
     "babel-plugin-named-asset-import": "^0.3.7",
-    "babel-plugin-styled-components": "^1.13.3",
     "babel-preset-react-app": "^10.0.0",
     "copy-webpack-plugin": "^10.0.0",
     "css-loader": "^6.5.1",
