@@ -4,8 +4,9 @@ const StyledDots = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 2px;
-    height: 10px;
+    width: 20px;
+    height: 20px;
+    padding: 5px;
     transition: all .5s ease;
 `;
 export default function Dots({ color = "var(--icon-color)" }) {

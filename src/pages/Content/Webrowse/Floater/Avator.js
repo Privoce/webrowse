@@ -17,8 +17,8 @@ const StyledLetterHead = styled.div`
 `;
 const StyledHead = styled.img`
   border-radius: 50%;
-  width:24px;
-  height: 24px;
+  width:20px;
+  height: 20px;
 `;
 export default function Avator({ photo = "", username = "Guest", ...rest }) {
   const color = stringToHexColor(username);

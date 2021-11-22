@@ -67,6 +67,7 @@ const StyledWrapper = styled(StyledBlock)`
           display: flex;
           gap: 4px;
           .head{
+            display: flex;
             position: relative;
             .username{
               color: #fff;
