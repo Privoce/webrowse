@@ -28,6 +28,11 @@ const StyledWrapper = styled.div`
       &:hover{
         background: rgba(0, 0, 0, 0.08);
       }
+      @media (prefers-color-scheme: dark) {
+        &:hover{
+          background: rgba(255, 255, 255, 0.08);
+        }
+      }
     }
     .droplist{
       list-style: none;

@@ -4,7 +4,7 @@ const StyledContainer = styled.div`
     bottom:120px;
     right:0;
     background:  ${({ bg = '#333' }) => bg};
-    border-radius: 8px;
+    border-radius: 16px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;

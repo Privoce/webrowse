@@ -11,8 +11,7 @@ const getWindowTabs = ({ windowId = null, origin = false, from = 'content' } = {
     onMessageFromBackground(Locations[from], {
       [EVENTS.GET_TABS_BY_WINDOW]: ({ tabs }) => {
         console.log({ tabs });
-        let returns = tabs.filter(t => t.url.startsWith('http')
-        ).map(t => {
+        let returns = tabs.filter(t => t.url.startsWith('http')).map(t => {
           const { title, favIconUrl, url } = t;
           return { title, url, favIconUrl }
         });

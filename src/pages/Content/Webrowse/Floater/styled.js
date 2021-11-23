@@ -62,6 +62,7 @@ const StyledWidget = styled.aside`
             color: var(--option-item-color);
             padding: 8px 16px;
             border-radius: 4px;
+            text-align: left;
             /* transition: all .5s ease-in-out; */
             &:hover{
               background: var(--option-item-bg-hover-color);
@@ -123,38 +124,38 @@ const StyledWidget = styled.aside`
         border-radius:50%;
         width: 24px;
         height: 24px;
-        background-size: 12px;
+        background-size: 14px;
         background-position: center;
         background-repeat: no-repeat;
         padding: 0;
         margin: 0;
         line-height: 1;
         &.tab{
-          background-color:#FFF9EB;
           background-image: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/tab.svg`});
-          &.curr{
+          &:hover{
             border:1px solid #FFBD2E;
           }
+          &.curr{
+            background-size: contain;
+            background-image: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/tab.fill.svg`});
+          }
         }
-        /* &.follow{
-          background-color:#F0FBFC;
-          background-image: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/follow.svg`});
-          &.curr{
-            border:2px solid #68D6DD;
-            }
-        } */
         &.audio{
-          background-color:#EEE8F7;
           background-image: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/mic.svg`});
+          &:hover{
+            border:1px solid #9B51E0;
+          }
           &.curr{
-            border:2px solid #9B51E0;
-            }
+            background-size: contain;
+            background-image: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/mic.svg`});
+          }
         }
       }
     }
     .cmds{
       display: flex;
       align-items: center;
+      gap: 4px;
       .cmd{
         display: flex;
         align-items: center;
@@ -171,6 +172,8 @@ const StyledWidget = styled.aside`
           color:#001529B2;
         }
         .btn{
+          padding-right: 0;
+          cursor: pointer;
           white-space: nowrap;
           border:none;
           background: none;
@@ -180,10 +183,13 @@ const StyledWidget = styled.aside`
         }
         @media (prefers-color-scheme: dark) {
           .icon,.btn{
-            color:#eee;
+            color:rgba(255,255,255,.5);
           }
           &:hover{
-            background:  none;
+            .icon,.btn{
+              color:#fff;
+            }
+            background:  rgba(255,255,255,.08);
           }
         }
       }

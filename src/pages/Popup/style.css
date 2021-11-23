@@ -27,7 +27,7 @@ html {
     --tab-title-color:rgba(255, 255, 255, 0.5);
     --tab-title-hover-color:#fff;
     --option-item-color:#fff;
-    --option-item-bg-hover-color:none;
+    --option-item-bg-hover-color:#52EDFF;
     --icon-color:#eee;
   }
 }

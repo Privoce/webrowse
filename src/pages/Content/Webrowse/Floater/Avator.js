@@ -9,7 +9,6 @@ const StyledLetterHead = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding:2px;
   color:#fff;
   background: ${({ color }) => color};
   font-size: 12px;
