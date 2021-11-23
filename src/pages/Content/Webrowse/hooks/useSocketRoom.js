@@ -19,7 +19,7 @@ const useSocketRoom = () => {
     let finalRoomId = roomId;
     let temp = false;
     let link = '';
-    if (roomId.endsWith('_temp')) {
+    if (`${roomId}`.endsWith('_temp')) {
       setTemp(true)
       temp = true;
       link = location.href;
