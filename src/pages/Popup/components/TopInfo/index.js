@@ -108,7 +108,7 @@ export default function UserInfo({ user, logout }) {
           </li>
         </ul>}
       </div>
-      <NewWindow />
+      <NewWindow uid={user.uid} />
     </StyledWrapper>
   )
 }

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { IoAddOutline } from 'react-icons/io5'
 import { FiCopy } from 'react-icons/fi'
 // import StyledBlock from './StyledBlock'
+import { generateUUID } from '../../../common/utils'
 import { sendMessageToBackground, MessageLocation } from '@wbet/message-api'
 import { EVENTS } from '../../../../common'
 
@@ -57,6 +58,7 @@ const StyledWrapper = styled.div`
         font-size: 12px;
         line-height: 16px;
         padding:8px;
+        border-radius: 4px;
         &:hover{
           background-color:var(--option-item-bg-hover-color);
         }
@@ -64,7 +66,7 @@ const StyledWrapper = styled.div`
     }
   }
 `;
-export default function NewWindow() {
+export default function NewWindow({ uid = "" }) {
   const [subMenuVisible, setSubMenuVisible] = useState(false);
   const node = useRef(null)
   const showSubMenu = () => {
@@ -72,19 +74,8 @@ export default function NewWindow() {
   }
   const handleNewBrowsing = (evt) => {
     const { type } = evt.currentTarget.dataset;
-    switch (type) {
-      case 'new':
-        sendMessageToBackground({ currentWindow: false }, MessageLocation.Popup, EVENTS.NEW_WINDOW)
-        break;
-
-      case 'current':
-        sendMessageToBackground({ currentWindow: true }, MessageLocation.Popup, EVENTS.NEW_WINDOW)
-        break;
-
-      default:
-        break;
-    }
-
+    const winId = generateUUID();
+    sendMessageToBackground({ currentWindow: type == 'current', roomId: uid, winId }, MessageLocation.Popup, EVENTS.NEW_WINDOW)
   }
   const handleClickOutside = e => {
     console.log("clicking anywhere");
