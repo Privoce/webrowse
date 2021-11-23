@@ -17,26 +17,29 @@ const StyledWrapper = styled.div`
     line-height: 25px;
     color: var(--window-title-color);
     padding-left: 40px;
-    background-image: url('https://static.nicegoodthings.com/works/vera/webrowse.logo.png');
-    background-size: 32px 30px;
+    background-image: url('https://static.nicegoodthings.com/project/ext/webrowse.logo.png');
+    background-size: contain;
     background-repeat: no-repeat;
     background-position: 0;
   }
+
   .desc{
-    font-size: 16px;
-    line-height: 22px;
+    text-align: center;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
     color:#616161;
-    max-width: 268px;
+    max-width: 237px;
   }
   .login{
     cursor: pointer;
     color:#fff;
     border:none;
-    background: #056CF2;
-    border-radius: 10px;
-    padding:8px 16px;
-    font-size: 16px;
-    line-height: 22px;
+    background: #52EDFF;
+    border-radius: 15px;
+    padding:4px 12px;
+    font-size: 12px;
+    line-height: 16px;
   }
 `;
 export default function Login() {
