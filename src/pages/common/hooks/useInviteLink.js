@@ -31,11 +31,19 @@ export default function useInviteLink({ roomId, winId }) {
       const [{ id, rand, update_at }] = data.insert_portal_invite.returning;
       console.log({ id, rand, update_at });
       if (rand) {
-        setInviteLink(`https://webrow.se/i?r=${rand}`)
+        setInviteLink(`https://webrow.se/i#${rand}`)
       }
     }
-  }, [data, loading])
+  }, [data, loading]);
+  const getInviteLink = async (data = null) => {
+    if (!data) return "";
+    const { roomId, winId } = data;
+    const resp = await upsertInvite({ variables: { objects: { data: `${roomId}|${winId}`, rand: Math.random().toString(36).substring(7) } } })
+    const [obj] = resp.data.insert_portal_invite.returning;
+    return `https://webrow.se/i#${obj.rand}`
+  }
   return {
+    getInviteLink,
     link: inviteLink
   }
 }

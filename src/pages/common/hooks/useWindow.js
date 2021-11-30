@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { sendMessageToBackground, MessageLocation } from '@wbet/message-api';
+import { EVENTS } from '../../../common'
 import { getWindowTabs, getWindowTitle } from '../utils'
 import {
   useLazyQuery,
@@ -11,6 +13,7 @@ mutation RmoveWindow($where: portal_window_user_bool_exp = {} ) {
     affected_rows
     returning {
       id
+      window_id
     }
   }
 }
@@ -104,7 +107,7 @@ const SAVED_WINDOWS = gql`
   }
 `;
 const useWindow = (uid) => {
-  const [fav, setFav] = useState(false)
+  // const [fav, setFav] = useState(false)
   const [saving, setSaving] = useState(false);
   const [updating, setUpdating] = useState(false);
   const [windows, setWindows] = useState([])
@@ -168,11 +171,11 @@ const useWindow = (uid) => {
   useEffect(() => {
     if (data) {
       const formated = data?.portal_window_user?.map(({ id: rid, window }) => {
-        const { id, title, room } = window;
+        const { id, title, room, active } = window;
         const tabs = window.tabs.map(({ url, icon, title, id }) => {
           return { id, url, icon, title, windowId: window.id }
         });
-        return { relation_id: rid, id, title, room, tabs }
+        return { relation_id: rid, id, title, room, tabs, active }
       })
       setWindows(formated);
       chrome.storage.sync.set({ [`local_windows`]: formated })
@@ -186,8 +189,10 @@ const useWindow = (uid) => {
     }
   }, [data]);
   const removeWindow = (data = {}) => {
+    if (!data.rid) return;
+    const where = { id: { _eq: data.rid } }
     remove({
-      variables: { where: { id: { _eq: data.rid } } },
+      variables: { where },
       onQueryUpdated: () => {
         return reloadWindows();
       }
@@ -198,10 +203,10 @@ const useWindow = (uid) => {
       loadWindowUser({ variables: { wid, uid } })
     }
   }
-  const toggleFavorite = async (wid) => {
+  const toggleFavorite = async ({ wid, fav = false }) => {
     if (!wid) return;
     const where = { _and: { window_id: { _eq: wid }, user_id: { _eq: uid } } };
-    if (fav) {
+    if (!fav) {
       remove({
         variables: { where },
         onQueryUpdated: () => {
@@ -224,7 +229,8 @@ const useWindow = (uid) => {
   useEffect(() => {
     if (!winUserLoading && windowUserData) {
       const isFav = !!windowUserData.portal_window_user?.length;
-      setFav(isFav)
+      // 同步给background
+      sendMessageToBackground({ fav: isFav }, MessageLocation.Content, EVENTS.TOGGLE_FAV)
     }
   }, [winUserLoading, windowUserData])
   return {
@@ -236,13 +242,11 @@ const useWindow = (uid) => {
     updateWindowTitle,
     checkFavorite,
     toggleFavorite,
-    favorite: fav,
+    // favorite: fav,
     loading,
     updating,
     removing: removeLoading,
     saving
   }
 }
-
-
 export default useWindow
