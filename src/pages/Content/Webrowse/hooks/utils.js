@@ -97,19 +97,6 @@ function getTranslateValues(element) {
     };
   }
 }
-const stringToHexColor = (str = '') => {
-  if (!str) return null;
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = str.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  let color = '#';
-  for (let i = 0; i < 3; i++) {
-    let value = (hash >> (i * 8)) & 0xff;
-    color += ('00' + value.toString(16)).substr(-2);
-  }
-  return color;
-};
 function getVideoPlayer() {
   let videos = Array.from(document.querySelectorAll('video')).filter((v) => !!v.src);
   let largestVideoSize = 0;
@@ -173,7 +160,6 @@ function createUUID() {
 }
 export {
   getVideoPlayer,
-  stringToHexColor,
   throttle,
   selectText,
   getUser,

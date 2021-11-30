@@ -71,7 +71,7 @@ const StyledWrapper = styled.div`
           border: 1px solid #68CC58;
         }
       .title{
-        cursor: pointer;
+        cursor: alias;
         position: relative;
         display: flex;
         align-items: center;
@@ -81,7 +81,6 @@ const StyledWrapper = styled.div`
         padding-left: 0;
         margin: 0;
         border-radius: 8px;
-
         .arrow{
           cursor: pointer;
           height: 100%;
@@ -125,8 +124,13 @@ const StyledWrapper = styled.div`
             transform: translate3d(100%,-50%,0);
           }
       }
+      .members{
+        position: absolute;
+        right: 40px;
+        visibility: visible;
+      }
         .live{
-          margin-left: 26px;
+          margin-left: 34px;
           border: 1px solid #68CC58;
           box-sizing: border-box;
           border-radius: 16px;
@@ -201,6 +205,7 @@ const StyledWrapper = styled.div`
           }
         }
       }
+
       .tabs{
         margin: 0;
         padding: 0 12px;
@@ -211,6 +216,9 @@ const StyledWrapper = styled.div`
         margin-left: 20px;
         margin-bottom: 10px;
         overflow: scroll;
+        &.empty{
+          display: none !important;
+        }
         .tab{
           position: relative;
           display: flex;
@@ -249,6 +257,9 @@ const StyledWrapper = styled.div`
           background: var(--window-title-hover-bg-color);
           .start{
             display: block;
+          }
+          .members{
+            visibility: hidden;
           }
         }
       }

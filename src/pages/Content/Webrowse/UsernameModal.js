@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import styled from 'styled-components';
 import useSWR from 'swr'
-import Avator from './Floater/Avator';
+import Avatar from '../../common/Avatar';
 import IconClose from './icons/Close'
 import { SOCKET_SERVER_DOMAIN } from '../../../common'
 
@@ -114,7 +114,7 @@ export default function UsernameModal({ roomId, startCoBrowse, closeModal }) {
               data.users.map(u => {
                 const { id, photo, username } = u;
                 return <li key={id} className="item">
-                  <Avator username={username} photo={photo} />
+                  <Avatar username={username} photo={photo} />
                   <span className="name">{username}</span>
                 </li>
               })
