@@ -40,7 +40,7 @@ var options = {
   mode: env.NODE_ENV || 'development',
   entry: {
     // newtab: path.join(__dirname, 'src', 'pages', 'Newtab', 'index.jsx'),
-    // options: path.join(__dirname, 'src', 'pages', 'Options', 'index.js'),
+    options: path.join(__dirname, 'src', 'pages', 'Options', 'index.js'),
     popup: path.join(__dirname, 'src', 'pages', 'Popup', 'index.js'),
     background: path.join(__dirname, 'src', 'pages', 'Background', 'index.js'),
     contentScript: path.join(__dirname, 'src', 'pages', 'Content', 'index.js'),
