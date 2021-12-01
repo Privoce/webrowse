@@ -91,7 +91,7 @@ const StyledWrapper = styled.div`
       }
 `;
 
-export default function AvatarList({ users = null, limit = 1 }) {
+export default function AvatarList({ users = null, limit = 3 }) {
   const handleMoreMouseOver = (evt) => {
     evt.currentTarget.classList.add('pop')
   }

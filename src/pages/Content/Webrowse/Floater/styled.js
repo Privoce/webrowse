@@ -7,6 +7,14 @@ const AniPopup = keyframes`
     transform: translateY(-110%);
   }
 `;
+const AniRotate = keyframes`
+  from{
+    transform:rotate(0deg);
+  }
+  to{
+    transform:rotate(365deg);
+  }
+`;
 const StyledWidget = styled.aside`
   pointer-events: all;
   font-family: sans-serif;
@@ -29,7 +37,10 @@ const StyledWidget = styled.aside`
       gap: 10px;
       .star{
         cursor: pointer;
-        /* star */
+        .tip{
+          transform-origin: center;
+          animation: ${AniRotate} 1s infinite;
+        }
       }
       .others{
         z-index: 9;

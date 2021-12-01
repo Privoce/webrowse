@@ -2,8 +2,8 @@ import { useEffect } from 'react'
 import styled from 'styled-components';
 import { sendMessageToBackground, MessageLocation } from '@wbet/message-api'
 import StyledBlock from './StyledBlock';
-import Avator from './Avator'
-import { EVENTS } from '../../../../common'
+import { EVENTS } from '../../../../common';
+import AvatarList from '../../../common/AvatarList'
 const StyledWrapper = styled(StyledBlock)`
     padding:12px 0;
     background:var(--tab-status-bg-color);
@@ -63,32 +63,7 @@ const StyledWrapper = styled(StyledBlock)`
           overflow: hidden;
           text-overflow: ellipsis;
         }
-        .members{
-          display: flex;
-          gap: 4px;
-          .head{
-            display: flex;
-            position: relative;
-            .username{
-              color: #fff;
-              display: none;
-              position: absolute;
-              left:50%;
-              bottom:-20px;
-              transform: translateX(-50%);
-              padding:2px 4px;
-              background: #000;
-              box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-              border-radius: 5px;
-              font-weight: 600;
-              font-size: 10px;
-              line-height: 13px;
-            }
-            &:hover .username{
-              display: inline-block;
-            }
-          }
-        }
+
       }
   }
 `;
@@ -116,15 +91,8 @@ export default function Tabs({ tabs, users, closeBlock }) {
               <img src={favIconUrl || `chrome-extension://${chrome.runtime.id}/assets/icon/tab.svg`} alt="favicon" />
             </div>
             <span className="title">{title}</span>
-            <div className="members">
-              {activeUsers.map(u => {
-                const { username = '', photo = '', id } = u;
-                return <div className="head" key={id}>
-                  <Avator photo={photo} username={username} alt="member head" />
-                  <span className="username">{username}</span>
-                </div>
-              })}
-            </div>
+            {/* members */}
+            <AvatarList users={activeUsers} />
           </li>
         })}
       </ul>
