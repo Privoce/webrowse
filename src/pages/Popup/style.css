@@ -7,8 +7,12 @@
   }
 }
 html {
-  animation: redraw 1000s linear infinite;
+  animation: redraw 10s linear infinite alternate;
   --popup-bg-color: #fff;
+  --dropdown-bg-color:#FAFAFA;
+  --dropdown-shadow:0px 8px 24px rgba(182, 183, 183, 1);
+  --box-border:1px solid #EBEBEC;
+  --box-hover-bg:#fff;
   --window-bg-color:#fff;
   --window-title-color:#000;
   --window-title-hover-bg-color:#F0FBFC;
@@ -20,8 +24,12 @@ html {
 }
 @media (prefers-color-scheme: dark) {
   html{
-    --popup-bg-color: #1C1C1E;
-    --window-bg-color:#32302E;
+    --popup-bg-color: #010409;
+    --dropdown-bg-color:#161B22;
+    --dropdown-shadow:0px 8px 24px rgba(1, 4, 9, 1);
+    --box-border:1px solid #30363D;
+    --box-hover-bg:#1A222E;
+    --window-bg-color:#0D1117;
     --window-title-color:#fff;
     --window-title-hover-bg-color:none;
     --tab-title-color:rgba(255, 255, 255, 0.5);

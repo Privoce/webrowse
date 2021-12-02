@@ -30,6 +30,7 @@ const StyledWrapper = styled.div`
       .more{
         position: relative;
         .tip{
+          box-sizing: border-box;
           display: flex;
           justify-content: center;
           align-items: center;

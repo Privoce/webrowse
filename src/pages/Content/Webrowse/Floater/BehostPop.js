@@ -11,6 +11,7 @@ const AniPopup = keyframes`
   }
 `;
 const StyledWrapper = styled.div`
+    z-index: 10;
     position: absolute;
     right: 0;
     top: 0;
@@ -20,10 +21,12 @@ const StyledWrapper = styled.div`
     border-radius: 16px;
     padding:12px 16px;
     animation:${AniPopup} .5s forwards;
+    background: var(--webrowse-widget-bg-color);
     .desc{
       font-weight: 600;
       font-size: 14px;
       line-height: 20px;
+      color:var(--font-color)
     }
     >.opts{
       display: flex;
@@ -31,7 +34,7 @@ const StyledWrapper = styled.div`
       font-weight: normal;
       font-size: 12px;
       line-height: 15px;
-      color: #000000CC;
+      color: var(--font-color);
       label {
         color: inherit;
         cursor: pointer;

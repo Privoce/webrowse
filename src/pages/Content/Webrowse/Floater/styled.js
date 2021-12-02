@@ -20,7 +20,7 @@ const StyledWidget = styled.aside`
   font-family: sans-serif;
   background: var(--webrowse-widget-bg-color);
   border-radius: 16px;
-  padding:16px 20px;
+  padding:12px 16px;
   display: flex;
   flex-direction: column;
   width: 380px;
@@ -37,9 +37,18 @@ const StyledWidget = styled.aside`
       gap: 10px;
       .star{
         cursor: pointer;
+        width: 21px;
+        height: 21px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
         .tip{
           transform-origin: center;
           animation: ${AniRotate} 1s infinite;
+        }
+        &:hover{
+          background: var(--icon-hover-bg);
         }
       }
       .others{
@@ -53,7 +62,7 @@ const StyledWidget = styled.aside`
         justify-content: center;
         align-items: center;
         &:hover{
-          background: #eff1f2;
+          background: var(--icon-hover-bg);
         }
         .items{
           display: none;
@@ -65,7 +74,7 @@ const StyledWidget = styled.aside`
           right: 0;
           bottom: 0;
           white-space: nowrap;
-          background-color:var(--window-bg-color);
+          background-color:var(--list-bg-color);
           .item{
             font-weight: 600;
             font-size: 12px;
@@ -129,7 +138,6 @@ const StyledWidget = styled.aside`
       display: flex;
       align-items: center;
       gap:8px;
-      padding-right:16px;
       .btn{
         position: relative;
         border-radius:50%;
@@ -180,7 +188,7 @@ const StyledWidget = styled.aside`
           background:  #F0FBFC;
         }
         .icon,.btn{
-          color:#001529B2;
+          color:#44494F;
         }
         .btn{
           padding-right: 0;

@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import styled from 'styled-components';
-import Avator from './Avator';
+import Avatar from '../../../common/Avatar';
 import { MdInfoOutline } from 'react-icons/md'
 import { AiOutlineQuestionCircle } from 'react-icons/ai'
 import { HiOutlineLogout } from 'react-icons/hi'
@@ -39,25 +39,51 @@ const StyledWrapper = styled.div`
       position: absolute;
       left: 0;
       top:26px;
-      background-color:var(--window-bg-color);
-      box-shadow: 0px 10px 20px -15px rgba(22, 23, 24, 0.2), 0px 10px 38px -10px rgba(22, 23, 24, 0.35);
+      background-color:var(--dropdown-bg-color);
+      box-shadow: var(--dropdown-shadow);
+      border:var(--box-border);
       border-radius: 8px;
-      padding: 8px;
+      padding: 0 0 8px 0;
+      .info{
+        display: flex;
+        justify-content: space-between;
+        padding:8px 14px;
+        border-bottom: var(--box-border);
+        .username{
+          font-weight: 500;
+          font-size: 14px;
+          line-height: 20px;
+          color: var(--option-item-color);
+        }
+        .pro{
+          padding:3px 4px;
+          font-weight: bold;
+          font-size: 8px;
+          line-height: 6px;
+          color: #52E9FB;
+          border: 1px solid #52E9FB;
+          border-radius: 20px;
+        }
+      }
       .item{
+        min-width: 130px;
         display: flex;
         align-items: center;
         gap:5px;
-        padding: 8px 17px;
+        margin: 0 8px;
+        padding: 8px 11px;
         color:var(--option-item-color);
         border-radius: 5px;
         white-space: nowrap;
-        transition: all .5s ease-in-out;
         a{
           text-decoration: none;
           color: inherit;
         }
         &:hover{
           background-color:var(--option-item-bg-hover-color);
+        }
+        &.first{
+          margin-top: 5px;
         }
       }
     }
@@ -90,16 +116,20 @@ export default function UserInfo({ user, logout }) {
     }
   }, [droplistVisible]);
   if (!user) return null;
-  const { id, username, photo } = user;
+  const { id, username, photo, level = 0 } = user;
   return (
     <StyledWrapper>
       <div className="info" ref={node} data-id={id} onClick={toggleDropListVisible}>
         <div className="avator">
-          <Avator photo={photo} username={username} alt="user avator" />
+          <Avatar photo={photo} username={username} alt="user avator" border="none" />
           <Triangle direction="down" />
         </div>
         {droplistVisible && <ul className="droplist">
-          <li className="item">
+          <li className="info">
+            <span className="username">{username}</span>
+            {level == 1 && <span className="pro">PRO</span>}
+          </li>
+          <li className="item first">
             <MdInfoOutline size={14} />
             <a href="http://webrow.se" target="_blank" rel="noopener noreferrer">About</a>
           </li>

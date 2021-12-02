@@ -64,7 +64,7 @@ const StyledWrapper = styled.div`
       gap: 8px;
       padding:0;
       margin-bottom: 10px;
-      border: 1px solid rgba(0, 0, 0, 0.08);
+      border: var(--box-border);
       border-radius: 8px;
       background-color: var(--window-bg-color);
       &.live{
@@ -109,7 +109,7 @@ const StyledWrapper = styled.div`
             &:read-only{
               border-color: rgba(1,1,1,0);
             }
-            &.editable:hover{
+            &:hover{
               border-color: #ccc;
             }
             &:focus{
@@ -175,10 +175,11 @@ const StyledWrapper = styled.div`
             display: none;
             padding: 8px;
             list-style: none;
-            box-shadow: 0px 10px 20px -15px rgba(22, 23, 24, 0.2), 0px 10px 38px -10px rgba(22, 23, 24, 0.35);
+            border:var(--box-border);
+            box-shadow: 0px 8px 24px -8px var(--popup-bg-color);
             border-radius: 8px;
             position: absolute;
-            right: 0;
+            right: 5px;
             bottom: 0;
             white-space: nowrap;
             background-color:var(--window-bg-color);
@@ -253,8 +254,9 @@ const StyledWrapper = styled.div`
         }
       }
       &:hover{
+        background-color:var(--box-hover-bg) ;
         .title{
-          background: var(--window-title-hover-bg-color);
+          /* background: var(--window-title-hover-bg-color); */
           .start{
             display: block;
           }

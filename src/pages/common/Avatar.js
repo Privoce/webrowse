@@ -21,7 +21,8 @@ const StyledLetterHead = styled.div`
 const StyledHead = styled.img`
   border: 1px solid #EBEBEC;
   border-radius: 50%;
-  width:20px;
+  box-sizing: border-box;
+  width: 20px;
   height: 20px;
   &[data-border='none']{
     border:none

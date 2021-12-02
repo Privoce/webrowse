@@ -10,25 +10,17 @@ const StyledWrapper = styled.div`
   align-items: center;
   justify-content: center;
   gap: 12px;
-  padding:16px;
-  .title{
-    font-weight: bold;
-    font-size: 20px;
-    line-height: 25px;
-    color: var(--window-title-color);
-    padding-left: 40px;
-    background-image: url('https://static.nicegoodthings.com/project/ext/webrowse.logo.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: 0;
+  padding:32px;
+  .logo{
+    width: 32px;
+    height: 32px;
   }
-
   .desc{
     text-align: center;
     font-weight: 500;
     font-size: 14px;
     line-height: 20px;
-    color:#616161;
+    color:var(--window-title-color);
     max-width: 237px;
   }
   .login{
@@ -48,9 +40,9 @@ export default function Login() {
   }
   return (
     <StyledWrapper>
-      <h2 className="title">Webrowse</h2>
+      <img className="logo" src="https://static.nicegoodthings.com/project/ext/webrowse.logo.png" />
       <p className="desc">Log in to Webrowse to cobrowse any websites with your teammates!</p>
-      <button onClick={handleLogin} className="login">Log in</button>
+      <button onClick={handleLogin} className="login">Sign In</button>
     </StyledWrapper>
   )
 }
