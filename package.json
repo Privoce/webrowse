@@ -41,7 +41,8 @@
     "socket.io-client": "^4.4.0",
     "styled": "^1.0.0",
     "styled-components": "^5.3.3",
-    "swr": "^1.1.0"
+    "swr": "^1.1.0",
+    "timeago-react": "^3.0.4"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",

@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react'
 import styled from 'styled-components';
-import { onMessageFromBackground, sendMessageToBackground, MessageLocation } from '@wbet/message-api'
-
+import { onMessageFromBackground, sendMessageToBackground, MessageLocation } from '@wbet/message-api';
 import Login from './Login';
 import TopInfo from './TopInfo'
 import WindowList from './WindowList';
 import { EVENTS } from '../../../common'
-
+import { useUser } from '../../common/hooks'
 const StyledContainer = styled.section`
   min-width: 380px;
   height:calc(100vh + 30px);
@@ -14,7 +13,9 @@ const StyledContainer = styled.section`
   flex-direction: column;
   background:var(--popup-bg-color);
 `;
+
 export default function Container() {
+  const { uid, initialUser } = useUser()
   const [titles, setTitles] = useState({})
   const [wins, setWins] = useState(null)
   const [user, setUser] = useState(null);
@@ -31,6 +32,12 @@ export default function Container() {
     });
     sendMessageToBackground({}, MessageLocation.Popup, EVENTS.POP_UP_DATA)
   }, []);
+  useEffect(() => {
+    if (user) {
+      // 初始化数据库中的user
+      initialUser(user)
+    }
+  }, [user])
   const logout = () => {
     setUser(null);
     sendMessageToBackground({}, MessageLocation.Popup, EVENTS.LOGOUT);
@@ -38,8 +45,8 @@ export default function Container() {
   if (!user) return <Login />;
   return (
     <StyledContainer>
-      <TopInfo user={user} logout={logout} />
-      <WindowList titles={titles} windows={wins} roomId={user.id} />
+      <TopInfo user={user ? { ...user, uid } : null} logout={logout} />
+      <WindowList titles={titles} windows={wins} uid={uid} />
     </StyledContainer>
   )
 }
