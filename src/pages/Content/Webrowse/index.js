@@ -7,35 +7,39 @@ import UsernameModal from './UsernameModal';
 import LeaveModal from './LeaveModal';
 import useSocketRoom from './hooks/useSocketRoom';
 // import useUsername from './hooks/useUsername'
-import { EVENTS } from '../../../common'
+import { EVENTS } from '../../../common';
+import { useUser } from '../../common/hooks'
 import Floater from './Floater';
 import CobrowseStatus from './CobrowseStatus';
+
 const StyledWrapper = styled.section`
-  --webrowse-widget-bg-color: rgba(255,255,255);
-  --font-color:#1C1C1E;
-  --tab-status-bg-color:#FFF9EB;
+  --webrowse-widget-bg-color: #fff;
+  --font-color:#010409;
+  --tab-status-bg-color:#FFF8E8;
   --tab-bg-color:#fff;
-  --tab-hover-bg-color:#F1FDFF;
-  --follow-mode-bg-color:#F0FBFC;
-  --window-bg-color:#fff;
-  --window-title-color:#000;
+  --tab-hover-bg-color:rgba(0, 0, 0, 0.08);
+  /* --follow-mode-bg-color:#F0FBFC; */
+  --list-bg-color:#fafafa;
   --tab-title-color:#78787C;
   --option-item-color:#001529B2;
   --option-item-bg-hover-color:#52EDFF;
   --icon-color:#333;
+  --icon-hover-bg:#EBEBEC;
+  --tab-icon-selected-bg:#FFBD2E;
   @media (prefers-color-scheme: dark) {
-      --webrowse-widget-bg-color: #1C1C1E;
+      --webrowse-widget-bg-color: #010409;
       --font-color:#fff;
-      --tab-status-bg-color:#65615C;
-      --tab-bg-color:#32302E;
-      --tab-hover-bg-color:#1C1C1E;
-      --follow-mode-bg-color:#2F3A3C;
-      --window-bg-color:#32302E;
-      --window-title-color:#fff;
+      --tab-status-bg-color:#413E3A;
+      --tab-bg-color:#0D1117;
+      --tab-hover-bg-color:#1A222E;
+      /* --follow-mode-bg-color:#2F3A3C; */
+      --list-bg-color:#161B22;
       --tab-title-color:rgba(255, 255, 255, 0.5);
       --option-item-color:#fff;
-      --option-item-bg-hover-color:none;
+      --option-item-bg-hover-color:#52EDFF;
       --icon-color:#eee;
+      --icon-hover-bg:#1A222E;
+      --tab-icon-selected-bg:#413E3A;
   }
   position: fixed;
   top: 0;
@@ -50,7 +54,7 @@ const StyledWrapper = styled.section`
   justify-content: flex-end;
   line-height: 1;
   &.cobrowsing{
-    box-shadow: inset 6px 6px 0 0 #77a5f1, inset 0 0 6px 6px #77a5f1;
+    box-shadow: inset 0 0 0 6px #77a5f1;
   }
   /* 通用设置 */
   input,textarea{
@@ -63,7 +67,10 @@ const StyledWrapper = styled.section`
     background: none;
   }
 `;
+
+
 export default function Webrowse() {
+  const { initialUser, uid } = useUser()
   const containerRef = useRef(null)
   const [floaterVisible, setFloaterVisible] = useState(false)
   const [nameModalVisible, setNameModalVisible] = useState(false)
@@ -87,11 +94,19 @@ export default function Webrowse() {
   const initUser = async () => {
     let curr = await getUser();
     if (curr) {
-      let { id = "", username, photo = "" } = curr;
-      setCurrUser({ uid: id, username, photo });
+      let { id = "", username, photo = "", nickname } = curr;
+      // 初始化数据库中的user
+      initialUser({ id, username, photo, nickname })
+      setCurrUser({ aid: id, username, photo });
     }
   };
-
+  useEffect(() => {
+    if (uid) {
+      setCurrUser(prev => {
+        return { ...prev, uid }
+      })
+    }
+  }, [uid])
   useEffect(() => {
     if (!leaveModalVisible) {
       // 相当于每关掉一次leave modal 就检查一下
@@ -121,17 +136,6 @@ export default function Webrowse() {
     initUser();
     sendMessageToBackground({}, MessageLocation.Content, EVENTS.CHECK_CONNECTION);
     sendMessageToBackground({}, MessageLocation.Content, EVENTS.ROOM_WINDOW)
-    const handleVisibleChange = () => {
-      if (!document.hidden) {
-        sendMessageToBackground({}, MessageLocation.Content, EVENTS.CHECK_CONNECTION);
-        // 再次初始化用户信息
-        // initUser();
-      }
-    }
-    document.addEventListener('visibilitychange', handleVisibleChange, false);
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibleChange, false)
-    }
   }, []);
   useEffect(() => {
     // 只要roomId 和 winId 都没有，则不显示name录入弹窗
@@ -152,13 +156,15 @@ export default function Webrowse() {
   if (loading) return null;
   console.log({ currUser, nameModalVisible, floaterVisible });
   return (
+
     <StyledWrapper ref={containerRef} id="WEBROWSE_FULLSCREEN_CONTAINER" className={floaterVisible ? 'cobrowsing' : ''}>
       {floaterVisible && <CobrowseStatus />}
-      {floaterVisible && <Floater dragContainerRef={containerRef} showLeaveModal={toggleLeaveModalVisible} />}
+      {floaterVisible && <Floater roomId={roomId} winId={winId} uid={currUser?.uid} dragContainerRef={containerRef} showLeaveModal={toggleLeaveModalVisible} />}
       {/* 不存在或者未设置用户名的话，先设置 */}
       {!currUser && nameModalVisible && <UsernameModal roomId={roomId} closeModal={toggleNameModalVisible} startCoBrowse={startWithCustomName} />}
-      {leaveModalVisible && <LeaveModal endAll={endAll} user={currUser} closeModal={toggleLeaveModalVisible} />}
+      {leaveModalVisible && <LeaveModal winId={winId} endAll={endAll} user={currUser} closeModal={toggleLeaveModalVisible} />}
     </StyledWrapper>
+
   );
 }
 

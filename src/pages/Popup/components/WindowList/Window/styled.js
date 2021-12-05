@@ -77,23 +77,24 @@ const StyledWindow = styled.div`
         left:0;
         top: 22px;
       }
-  }
-  .start{
-    cursor: pointer;
-    border: none;
-    padding:4px 12px;
-    position: absolute;
-    top:50%;
-    transform: translateY(-50%);
-    right:34px;
-    color:#fff;
-    background: #52EDFF;
-    border-radius: 15px;
-    font-weight: bold;
-    font-size: 12px;
-    line-height: 16px;
-    text-align: center;
-  }
+    }
+    .start{
+      visibility: hidden;
+      cursor: pointer;
+      border: none;
+      padding:4px 12px;
+      position: absolute;
+      top:50%;
+      transform: translateY(-50%);
+      right:34px;
+      color:#fff;
+      background: #52EDFF;
+      border-radius: 15px;
+      font-weight: bold;
+      font-size: 12px;
+      line-height: 16px;
+      text-align: center;
+    }
 }
 &.expand{
   .tabs{
@@ -137,7 +138,10 @@ const StyledWindow = styled.div`
 
 }
 &:hover{
-  background-color:var(--box-hover-bg) ;
+  background-color:var(--box-hover-bg);
+  .title .start{
+    visibility: visible;
+  }
 }
 `;
 

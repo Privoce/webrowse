@@ -60,7 +60,7 @@ const CLEAR_TABS = gql`
 `;
 const INSERT_WIN_USER = gql`
   mutation InsertWindowUser($obj: [portal_window_user_insert_input!]!) {
-    insert_portal_window_user(objects: $obj, on_conflict: {constraint: window_user_window_id_user_id_key, update_columns: window_id}) {
+    insert_portal_window_user(objects: $obj, on_conflict: {constraint: window_user_user_id_window_id_attr_key, update_columns: window_id}) {
       affected_rows
       returning {
         id
@@ -73,6 +73,7 @@ const WINDOW_USER = gql`
     query WindowUser($wid: uuid = "", $uid: bigint = "") {
       portal_window_user(where: {_and: {user_id: {_eq: $uid}, window_id: {_eq: $wid}}}) {
         id
+        attr
         user_id
         window_id
       }
@@ -119,9 +120,11 @@ const useWindow = (uid) => {
   const [insertWinUser] = useMutation(INSERT_WIN_USER, { refetchQueries: [{ query: WINDOW_USER }] });
   const [clearTabs] = useMutation(CLEAR_TABS);
   const [insertTabs] = useMutation(INSERT_TABS, { refetchQueries: [{ query: SAVED_WINDOWS }] });
-  const continueNexts = async ({ winId, uid, tabs, hasTabs }) => {
+  const continueNexts = async ({ winId, uid, tabs, hasTabs, attr = 'save', onlySave }) => {
     try {
-      await insertWinUser({ variables: { obj: { window_id: winId, user_id: uid } } });
+      if (!onlySave) {
+        await insertWinUser({ variables: { obj: { window_id: winId, user_id: uid, attr } } });
+      }
       if (hasTabs) {
         await clearTabs({ variables: { winId } });
       }
@@ -144,13 +147,13 @@ const useWindow = (uid) => {
 
   const saveWindow = async (data = {}) => {
     setSaving(true);
-    const { tabs = [], ...obj } = data;
-    const { data: gData } = await upsertWindow({ variables: { obj } });
+    const { onlySave = false, tabs = [], attr = "save", ...obj } = data;
+    const { data: gData } = await upsertWindow({ variables: { obj: { ...obj, owner: uid } } });
     const newObj = gData.insert_portal_window.returning[0] || {};
     const { id: win_id, tabs: savedTabs } = newObj;
     if (win_id) {
       console.log("uid in hooks", uid);
-      await continueNexts({ winId: win_id, uid, tabs, hasTabs: !!savedTabs.length })
+      await continueNexts({ winId: win_id, uid, tabs, hasTabs: !!savedTabs.length, attr, onlySave })
     }
     setSaving(false)
     return newObj
@@ -170,12 +173,23 @@ const useWindow = (uid) => {
   }, [uid]);
   useEffect(() => {
     if (data) {
-      const formated = data?.portal_window_user?.map(({ id: rid, window }) => {
-        const { id, title, room, active } = window;
+      const favs = [];
+      let formated = data?.portal_window_user?.map(({ id: rid, window, attr }) => {
+        if (attr == 'fav') {
+          favs.push(window.id);
+          return null;
+        }
+        const { id, title, room, active, updated_at } = window;
         const tabs = window.tabs.map(({ url, icon, title, id }) => {
           return { id, url, icon, title, windowId: window.id }
         });
-        return { relation_id: rid, id, title, room, tabs, active }
+        return { relation_id: rid, id, title, room, tabs, active, updated_at }
+      })
+      formated = formated?.filter(w => !!w).map(w => {
+        if (favs.includes(w.id)) {
+          w.fav = true;
+        }
+        return w;
       })
       setWindows(formated);
       chrome.storage.sync.set({ [`local_windows`]: formated })
@@ -205,7 +219,7 @@ const useWindow = (uid) => {
   }
   const toggleFavorite = async ({ wid, fav = false }) => {
     if (!wid) return;
-    const where = { _and: { window_id: { _eq: wid }, user_id: { _eq: uid } } };
+    const where = { _and: { window_id: { _eq: wid }, user_id: { _eq: uid }, attr: { _eq: 'fav' } } };
     if (!fav) {
       remove({
         variables: { where },
@@ -217,9 +231,9 @@ const useWindow = (uid) => {
       // update title to ensure window exsit
       const title = await getWindowTitle() || 'Temporary Window';
       const tabs = await getWindowTabs();
-      await saveWindow({ id: wid, title, tabs })
+      await saveWindow({ id: wid, title, tabs, attr: 'fav' })
       insertWinUser({
-        variables: { obj: { window_id: wid, user_id: uid } },
+        variables: { obj: { window_id: wid, user_id: uid, attr: "fav" } },
         onQueryUpdated: () => {
           return reloadWindowUser()
         }
@@ -228,7 +242,8 @@ const useWindow = (uid) => {
   }
   useEffect(() => {
     if (!winUserLoading && windowUserData) {
-      const isFav = !!windowUserData.portal_window_user?.length;
+      const filtered = windowUserData.portal_window_user?.filter(({ attr }) => attr == 'fav');
+      const isFav = !!filtered?.length;
       // 同步给background
       sendMessageToBackground({ fav: isFav }, MessageLocation.Content, EVENTS.TOGGLE_FAV)
     }

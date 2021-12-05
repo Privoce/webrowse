@@ -2,16 +2,17 @@
 import { io } from "socket.io-client";
 // import Workspace, { ITabEvent as TabEvent } from 'workspace-api-for-chrome'
 import Workspace, { TabEvent } from './lib/main';
-import { sendMessageToContentScript, onMessageFromPopup, sendMessageToPopup, onMessageFromContentScript, MessageLocation } from '@wbet/message-api'
+import { onMessageAnywhere, sendMessageToContentScript, onMessageFromPopup, sendMessageToPopup, onMessageFromContentScript, MessageLocation } from '@wbet/message-api'
 import { EVENTS, SOCKET_SERVER_DOMAIN, DEFAULT_LANDING } from '../../common';
-import { getActiveTab, debounce } from './utils';
+import { getActiveTab } from './utils';
+import { debounce } from '../common/utils';
 const protocolPrefix = SOCKET_SERVER_DOMAIN.indexOf('localhost') > -1 ? 'http://' : 'wss://';
 const SOCKET_SERVER_URL = `${protocolPrefix}${SOCKET_SERVER_DOMAIN}`;
 const DATA_HUB = { windowTitles: {}, loginUser: null };
 const Tabs = {};
 const InvitedWindows = {};
 const inactiveWindows = [];
-const tabOperations = []
+const tabOperations = [];
 // 安装扩展触发的事件
 chrome.runtime.onInstalled.addListener(function (details) {
   const { reason } = details;
@@ -104,7 +105,7 @@ const getNewWindow = (params) => {
 }
 // 初始化workspace
 const initWorkspace = async ({ invited = false, windowId = null, roomId = "", winId = "", urls = [], tabId = undefined }) => {
-  console.log('init workspace', { windowId, urls, tabId });
+  console.log('init workspace', { windowId, urls, tabId, winId });
   let finalWindowId = windowId;
   if (!finalWindowId) {
     const newWindow = await getNewWindow({ url: urls, tabId });
@@ -114,7 +115,7 @@ const initWorkspace = async ({ invited = false, windowId = null, roomId = "", wi
   InvitedWindows[finalWindowId] = invited;
   const currWorkspace = new Workspace(finalWindowId, true);
   // 初始化datahub
-  DATA_HUB[finalWindowId] = { socket: null, workspace: currWorkspace, roomId, winId, title: "", floaterTabVisible: { tab: true, follow: false, audio: false }, tabs: [], createTabs: [], users: [], socketId: "" }
+  DATA_HUB[finalWindowId] = { socket: null, workspace: currWorkspace, roomId, winId, fav: false, title: "", floaterTabVisible: { tab: true, follow: false, audio: false }, tabs: [], createTabs: [], users: [], socketId: "" }
   currWorkspace.addEventHandler(async ({ event, rawParams }) => {
     const currUser = DATA_HUB[finalWindowId].users.find(u => u.id == DATA_HUB[finalWindowId].socketId)
     // 捕捉并处理对应的tab事件
@@ -248,14 +249,45 @@ const notifyActiveTab = ({ windowId = 0, action = EVENTS.UPDATE_TABS, payload = 
         console.log("current DATA_HUB data", DATA_HUB[windowId]);
         chrome.tabs.query({ windowId }, (tabs) => {
           DATA_HUB[windowId].tabs = tabs;
-          const { floaterTabVisible, tabs: floaterTabs, users, socketId, title } = DATA_HUB[windowId];
-          sendMessageToContentScript(tab?.id, { floaterTabVisible, tabs: floaterTabs, users, userId: socketId, title }, MessageLocation.Background, EVENTS.UPDATE_FLOATER)
+          const { floaterTabVisible, tabs: floaterTabs, users, socketId, title, fav } = DATA_HUB[windowId];
+          sendMessageToContentScript(tab?.id, { floaterTabVisible, tabs: floaterTabs, users, userId: socketId, title, fav }, MessageLocation.Background, EVENTS.UPDATE_FLOATER)
         });
       }
         break;
     }
   })
 }
+// 监听来自非bg的事件
+onMessageAnywhere({
+  [EVENTS.GET_TABS_BY_WINDOW]: (req) => {
+    console.log("req from some where", req);
+    const { windowId, from } = req;
+    const sendResponse = (window) => {
+      switch (from) {
+        case 'content': {
+          let activeTab = window.tabs.find(t => t.active)
+          sendMessageToContentScript(activeTab.id, { tabs: window.tabs }, MessageLocation.Background, EVENTS.GET_TABS_BY_WINDOW)
+        }
+          break;
+        case 'popup':
+          sendMessageToPopup({ tabs: window.tabs }, MessageLocation.Background, EVENTS.GET_TABS_BY_WINDOW)
+          break;
+
+        default:
+          break;
+      }
+    }
+    if (windowId) {
+      chrome.windows.get(windowId, { populate: true }, (w) => {
+        sendResponse(w)
+      })
+    } else {
+      chrome.windows.getCurrent({ populate: true }, (w) => {
+        sendResponse(w)
+      })
+    }
+  }
+})
 // 监听来自popup的触发事件
 onMessageFromPopup(MessageLocation.Background, {
   [EVENTS.LOGOUT]: () => {
@@ -526,20 +558,9 @@ onMessageFromContentScript(MessageLocation.Background, {
   },
   // socket 断开
   [EVENTS.DISCONNECT_SOCKET]: async (request = {}, sender) => {
-    const { keepTabs = false, endAll = false } = request;
-    console.log("disconnect args", { keepTabs, endAll });
+    const { endAll = false } = request;
+    console.log("disconnect args", { endAll });
     const { windowId } = sender.tab;
-    if (keepTabs) {
-      let { tabs } = await DATA_HUB[windowId].workspace.readRaw();
-      tabs = tabs.map(t => {
-        const { url, favIconUrl, title } = t;
-        return {
-          url, icon: favIconUrl, title,
-        }
-      });
-      console.log({ tabs });
-      DATA_HUB[windowId].socket.send({ cmd: "KEEP_TABS", payload: { tabs } })
-    }
     // 关闭所有socket连接，包括自己
     if (endAll) {
       DATA_HUB[windowId].socket.send({ cmd: "END_ALL" });
@@ -555,13 +576,6 @@ onMessageFromContentScript(MessageLocation.Background, {
     const { id, windowId } = sender.tab;
     let connected = !!DATA_HUB[windowId]?.workspace;
     sendMessageToTab(id, connected, EVENTS.CHECK_CONNECTION)
-  },
-  [EVENTS.GET_INVITE_LINK]: (request, sender) => {
-    const { id, windowId } = sender.tab;
-    const { roomId, winId } = DATA_HUB[windowId] || {};
-    let inviteLink = roomId ? `https://nicegoodthings.com/transfer/wb/${roomId}?wid=${winId}&extid=${chrome.runtime.id
-      }` : ''
-    sendMessageToTab(id, inviteLink, EVENTS.GET_INVITE_LINK)
   },
   [EVENTS.UPDATE_TABS]: (request, sender) => {
     const { windowId } = sender.tab;
@@ -583,6 +597,20 @@ onMessageFromContentScript(MessageLocation.Background, {
     tmp[tab] = visible;
     DATA_HUB[windowId].floaterTabVisible = tmp;
     notifyActiveTab({ windowId, action: EVENTS.UPDATE_FLOATER })
+  },
+  [EVENTS.TOGGLE_FAV]: (request, sender) => {
+    const { fav } = request;
+    const { windowId } = sender.tab;
+    const datahub = DATA_HUB[windowId];
+    if (!datahub) return;
+    DATA_HUB[windowId].fav = fav;
+    notifyActiveTab({ windowId, action: EVENTS.UPDATE_FLOATER })
+  },
+
+  [EVENTS.WIN_TITLE]: (req, sender) => {
+    const { windowId, id } = sender.tab;
+    const title = DATA_HUB[windowId]?.title;
+    sendMessageToContentScript(id, { title }, MessageLocation.Background, EVENTS.WIN_TITLE)
   },
   [EVENTS.UPDATE_WIN_TITLE]: (request, sender) => {
     const { title = "" } = request;
@@ -612,4 +640,8 @@ chrome.tabs.onRemoved.addListener((tabId, { windowId, isWindowClosing }) => {
   console.log('tab remove event', windowId, tabOperations, !currWorkspace);
   if (!currWorkspace || isWindowClosing || tabOperations.length == 0) return;
   notifyActiveTab({ windowId, action: EVENTS.TAB_EVENT, payload: tabOperations.pop() })
+})
+// tab标签切换的处理事件
+chrome.tabs.onActivated.addListener(({ windowId }) => {
+  notifyActiveTab({ windowId, action: EVENTS.CHECK_CONNECTION });
 })

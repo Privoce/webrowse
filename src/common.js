@@ -41,8 +41,6 @@ const EVENTS = {
   UPDATE_FLOATER: 'UPDATE_FLOATER',
   // 切换floater tab
   CHANGE_FLOATER_TAB: 'CHANGE_FLOATER_TAB',
-  // 获取邀请连接
-  GET_INVITE_LINK: 'GET_INVITE_LINK',
   // pop up 数据集合
   POP_UP_DATA: 'POP_UP_DATA',
   //local window titles
@@ -51,6 +49,8 @@ const EVENTS = {
   WIN_TITLE: 'WIN_TITLE',
   // 更新window标题
   UPDATE_WIN_TITLE: 'UPDATE_WIN_TITLE',
+  // 更新favorite
+  TOGGLE_FAV: 'TOGGLE_FAV',
   // 新开标签集
   OPEN_TABS: 'OPEN_TABS',
   // 根据win id 拿tabs

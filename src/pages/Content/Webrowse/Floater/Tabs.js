@@ -20,9 +20,11 @@ const StyledWrapper = styled(StyledBlock)`
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding:11px 12px;
+        padding:10px 8px 10px 12px;
         border-radius: 8px;
         background-color: var(--tab-bg-color);
+        height:40px;
+        box-sizing: border-box;
         cursor:pointer;
         &:hover{
           background-color: var(--tab-hover-bg-color);
@@ -44,10 +46,9 @@ const StyledWrapper = styled(StyledBlock)`
         }
         .ico{
           display: flex;
-          width: -webkit-fill-available;
-          max-width: 24px;
-          height: 24px;
-          border-radius: 5px;
+          min-width: 16px;
+          height: 16px;
+          border-radius: 4px;
           margin-right: 8px;
           img{
             width: 100%;
@@ -57,7 +58,8 @@ const StyledWrapper = styled(StyledBlock)`
         .title{
           width: -webkit-fill-available;
           text-align: left;
-          font-size: 14px;
+          font-size: 12px;
+          line-height: 20px;
           color:var(--font-color);
           white-space: nowrap;
           overflow: hidden;

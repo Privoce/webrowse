@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import styled from 'styled-components';
 import { sendMessageToBackground, MessageLocation } from '@wbet/message-api'
-import { EVENTS } from '../../../common'
-
+import { EVENTS } from '../../../common';
 import IconClose from './icons/Close';
+import { useWindow } from '../../common/hooks';
+import { getWindowTabs, getWindowTitle } from '../../common/utils'
 const StyledModal = styled.section`
   position: absolute;
   top:0;
@@ -14,7 +15,7 @@ const StyledModal = styled.section`
   display: flex;
   align-items: center;
   justify-content: center;
-  .modal{
+  .modal {
     position: relative;
     margin-top: -30px;
     background: #FFFFFF;
@@ -101,32 +102,37 @@ const Content = {
     </ul>
   </>
 }
-export default function LeaveModal({ endAll = false, user = null, closeModal }) {
+export default function LeaveModal({ winId = "", endAll = false, user, closeModal }) {
+  const { saveWindow, saving } = useWindow(user?.uid)
   const [modalType, setModalType] = useState(null);
   useEffect(() => {
+    console.log({ user });
     if (user?.uid) {
-      setModalType('logined')
+      setModalType('logined');
     } else {
-      setModalType('guest')
+      setModalType('guest');
     }
   }, [user])
   const handleSignup = () => {
-    sendMessageToBackground({ scene: 'register' }, MessageLocation.Content, EVENTS.LOGIN)
+    sendMessageToBackground({ scene: 'register' }, MessageLocation.Content, EVENTS.LOGIN);
   }
-  const handleQuit = (keepTabs) => {
+  const handleQuit = async (keepTabs) => {
     console.log("click quit", { keepTabs, endAll });
-    sendMessageToBackground({ keepTabs, endAll }, MessageLocation.Content, EVENTS.DISCONNECT_SOCKET);
-    closeModal()
-  }
-  const handleClose = () => {
-    // to do
-    closeModal()
+    if (keepTabs) {
+      const tabs = await getWindowTabs();
+      const title = await getWindowTitle() || 'Temporary Window';
+      console.log("tab list", tabs);
+      await saveWindow({ id: winId, title, tabs })
+    }
+    sendMessageToBackground({ endAll }, MessageLocation.Content, EVENTS.DISCONNECT_SOCKET);
+    closeModal();
   }
   if (!modalType) return null;
+  console.log({ winId, user });
   return (
     <StyledModal>
       <div className="modal">
-        <div className="close" onClick={handleClose}>
+        <div className="close" onClick={closeModal}>
           <IconClose color="#333" />
         </div>
         <h3 className="title">{Title[modalType]}</h3>
@@ -134,7 +140,7 @@ export default function LeaveModal({ endAll = false, user = null, closeModal }) 
           {Content[modalType]}
         </div>
         <div className="btns">
-          {modalType == 'logined' ? <button onClick={handleQuit.bind(null, true)} className="btn">Save</button> : <button onClick={handleSignup} className="btn">Sign Up</button>}
+          {modalType == 'logined' ? <button disabled={saving} onClick={handleQuit.bind(null, true)} className="btn">{saving ? `Saving` : `Save`}</button> : <button onClick={handleSignup} className="btn">Sign Up</button>}
           <button onClick={handleQuit.bind(null, false)} className="btn ghost">Quit</button>
         </div>
       </div>
