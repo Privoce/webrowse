@@ -134,7 +134,7 @@ export default function WindowList({ titles = {}, windows = null, uid = null }) 
   return (
     <>
       {currentWindows && currentWindows.length !== 0 && <StyledWrapper>
-        <h2 className="title">{`Current Window${currentWindows.length == 1 ? '' : 's'}`}</h2>
+        <h2 className="title">{chrome.i18n.getMessage('current_window_title')}</h2>
         <div className={`block`}>
           {currentWindows.map(({ title, id, winId, room, tabs, live }) => {
             return <Window
@@ -149,7 +149,7 @@ export default function WindowList({ titles = {}, windows = null, uid = null }) 
         </div>
       </StyledWrapper>}
       {savedWindows && <StyledWrapper>
-        <h2 className="title">Saved Windows {loading && <MdOutlineRefresh className="tip" />}</h2>
+        <h2 className="title">{chrome.i18n.getMessage('saved_window_title')} {loading && <MdOutlineRefresh className="tip" />}</h2>
         <div className={`block ${savedWindows.length == 0 ? 'empty' : ''}`}>
           {savedWindows.length == 0 && <div className="tip">You haven’t saved any windows yet. Start cobrowsing and save any window that you would like to share again!</div>}
           {savedWindows.map(({ relation_id, title, id, room, tabs, active, updated_at }) => {

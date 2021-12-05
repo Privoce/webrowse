@@ -2,7 +2,7 @@
   "name": "__MSG_extName__",
   "description": "__MSG_extDescription__",
   "short_name": "Webrowse",
-  "version": "2021.12.03",
+  "version": "2021.12.05",
   "manifest_version": 2,
   "homepage_url": "https://webrow.se/",
   "permissions": [
@@ -102,5 +102,5 @@
     "*"
   ],
   "options_page": "./Options/index.html",
-  "default_locale": "en"
+  "default_locale": "zh_CN"
 }

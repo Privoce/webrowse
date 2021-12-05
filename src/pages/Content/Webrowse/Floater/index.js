@@ -185,39 +185,39 @@ export default function Floater({ roomId, uid, winId, showLeaveModal, dragContai
               <div className="others" onClick={toggleOptsVisible}>
                 <Dots />
                 <ul className="items" onMouseLeave={handleItemsMouseLeave}>
-                  <li className="item" onClick={handleCopyLink}>Copy Link</li>
-                  <li className="item" onClick={handleSaveWindow.bind(null, winId)}>Save Window</li>
-                  <li className="item" onClick={handleLeave}>End Meeting</li>
+                  <li className="item" onClick={handleCopyLink}>{chrome.i18n.getMessage('copy_link')}</li>
+                  <li className="item" onClick={handleSaveWindow.bind(null, winId)}>{chrome.i18n.getMessage('save_window')}</li>
+                  <li className="item" onClick={handleLeave}>{chrome.i18n.getMessage('end_meeting')}</li>
                 </ul>
               </div>
             </div>
           </div>
           <div className="opts">
             <div className="btns">
-              <button data-tooltip="Tab Status" className={`btn tab tooltip ${tab ? 'curr' : ''}`} data-type='tab' onClick={toggleVisible}></button>
+              <button data-tooltip={chrome.i18n.getMessage('tab_status')} className={`btn tab tooltip ${tab ? 'curr' : ''}`} data-type='tab' onClick={toggleVisible}></button>
               {/* <button title="Follow Mode" className={`btn follow ${follow ? 'curr' : ''}`} data-type='follow' onClick={toggleVisible}></button> */}
-              <button data-tooltip="Voice channel coming soon" className={`btn audio tooltip`} data-type='audio' onClick={null}></button>
+              <button data-tooltip={chrome.i18n.getMessage('voice_coming_soon')} className={`btn audio tooltip`} data-type='audio' onClick={null}></button>
             </div>
             {link && <div className="cmds">
-              <div className="cmd host tooltip" data-tooltip="Take over as host" onClick={handleBeHost}>
+              <div className="cmd host tooltip" data-tooltip={chrome.i18n.getMessage('host_tip')} onClick={handleBeHost}>
                 {isHost ? <RiUserStarFill size={16} color="#68D6DD" /> : <RiUserReceived2Fill className="icon" size={16} />}
-                <button className={`btn`} >{isHost ? `Stop Hosting` : `Become Host`}</button>
+                <button className={`btn`} >{isHost ? chrome.i18n.getMessage('stop_hosting') : chrome.i18n.getMessage('be_host')}</button>
               </div>
-              <div className="cmd copy tooltip" data-tooltip="Copy link to invite others" onClick={handleCopyLink}>
+              <div className="cmd copy tooltip" data-tooltip={chrome.i18n.getMessage('copy_link_tip')} onClick={handleCopyLink}>
                 <IoLinkOutline className="icon" size={16} />
-                <button className={`btn ${copied ? 'copied' : ''}`}>{copied ? `Copied` : `Copy Link`}</button>
+                <button className={`btn ${copied ? 'copied' : ''}`}>{copied ? chrome.i18n.getMessage('copiid') : chrome.i18n.getMessage('copy_link')}</button>
               </div>
 
               <button onClick={currUser?.host ? togglePopup : handleLeave} className="btn">
-                {popup ? 'Cancel' : 'Leave'}
+                {popup ? chrome.i18n.getMessage('cancel') : chrome.i18n.getMessage('leave')}
               </button>
 
             </div>}
           </div>
           {tab && <Tabs tabs={tabs} users={users} closeBlock={closeBlock} />}
           {popup && <div className="leave_pop">
-            {currUser?.creator && <button className="select" onClick={handleAllLeave}>End Session For All</button>}
-            <button className="select" onClick={handleLeave}>Leave Session</button>
+            {currUser?.creator && <button className="select" onClick={handleAllLeave}>{chrome.i18n.getMessage('end_for_all')}</button>}
+            <button className="select" onClick={handleLeave}>{chrome.i18n.getMessage('leave_session')}</button>
           </div>}
           {/* {follow && <FollowMode host={host} currUser={currUser} closeBlock={closeBlock} />} */}
           {behostPopoverVisible && <BehostPop handleCancelHostPop={handleCancelHostPop} />}

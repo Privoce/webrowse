@@ -174,7 +174,7 @@ export default function CobrowseStatus() {
       <div className="tip operation" onAnimationEnd={resetHtmlTip} dangerouslySetInnerHTML={{ __html: htmlTip }}></div>
       :
       <div className="tip">
-        You are cobrowsing this window
+        {chrome.i18n.getMessage('cobrowsing_tip')}
       </div>
     }</StyledStatus>;
   const hostMyself = host.id == currUser.id;
@@ -185,9 +185,9 @@ export default function CobrowseStatus() {
         {hostMyself ? <span><strong className="host">You</strong> are now the host</span> : <span><strong className="host">{host.username}</strong> is now the host</span>}
       </div>
       {hostMyself ?
-        <button className={`status_btn host warning`} onClick={stopBeHost}>Stop Hosting</button>
+        <button className={`status_btn host warning`} onClick={stopBeHost}>{chrome.i18n.getMessage('stop_hosting')}</button>
         :
-        <button className={`status_btn follow ${currUser.follow ? 'warning' : ''}`} onClick={toggleFollow}>{currUser.follow ? 'Stop Following' : 'Follow Host'}</button>}
+        <button className={`status_btn follow ${currUser.follow ? 'warning' : ''}`} onClick={toggleFollow}>{currUser.follow ? chrome.i18n.getMessage('stop_following') : chrome.i18n.getMessage('follow_host')}</button>}
     </StyledStatus>
   )
 }

@@ -85,11 +85,11 @@ const StyledModal = styled.section`
   }
 `;
 const Title = {
-  logined: 'Save It for Later',
+  logined: chrome.i18n.getMessage('save_later'),
   guest: "Want to save this window?"
 };
 const Content = {
-  logined: 'Would you like to save this window so you can cobrowse it again?',
+  logined: chrome.i18n.getMessage('save_later_tip'),
   guest: <>
     <div>By signing up, you can:</div>
     <ul>
@@ -140,8 +140,8 @@ export default function LeaveModal({ winId = "", endAll = false, user, closeModa
           {Content[modalType]}
         </div>
         <div className="btns">
-          {modalType == 'logined' ? <button disabled={saving} onClick={handleQuit.bind(null, true)} className="btn">{saving ? `Saving` : `Save`}</button> : <button onClick={handleSignup} className="btn">Sign Up</button>}
-          <button onClick={handleQuit.bind(null, false)} className="btn ghost">Quit</button>
+          {modalType == 'logined' ? <button disabled={saving} onClick={handleQuit.bind(null, true)} className="btn">{saving ? `Saving` : chrome.i18n.getMessage('save')}</button> : <button onClick={handleSignup} className="btn">{chrome.i18n.getMessage('signup')}</button>}
+          <button onClick={handleQuit.bind(null, false)} className="btn ghost">{chrome.i18n.getMessage('quit')}</button>
         </div>
       </div>
     </StyledModal>

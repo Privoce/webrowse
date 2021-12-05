@@ -84,12 +84,12 @@ export default function BehostPop({ handleCancelHostPop }) {
   }
   return (
     <StyledWrapper className="host_pop">
-      <p className="desc">You will take over as host, people will follow your browser windows, continue?</p>
+      <p className="desc">{chrome.i18n.getMessage('be_host_desc')}</p>
       <div className="opts">
-        <label htmlFor="naa"><input onChange={handleAskChange} value={askChecked} type="checkbox" name="naa" id="naa" />Never ask again</label>
+        <label htmlFor="naa"><input onChange={handleAskChange} value={askChecked} type="checkbox" name="naa" id="naa" />{chrome.i18n.getMessage('never_ask_again')}</label>
         <div className="btns">
-          <button onClick={handleCancelHostPop} className="btn cancel">Cancel</button>
-          <button onClick={handleBecomeHost} className="btn yes">Yes</button>
+          <button onClick={handleCancelHostPop} className="btn cancel">{chrome.i18n.getMessage('cancel')}</button>
+          <button onClick={handleBecomeHost} className="btn yes">{chrome.i18n.getMessage('yes')}</button>
         </div>
       </div>
     </StyledWrapper>

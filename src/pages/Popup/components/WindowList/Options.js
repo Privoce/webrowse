@@ -12,7 +12,6 @@ const StyledOptions = styled.div`
     align-items: center;
     justify-content: center;
     transform: translate3d(0, -50%, 0);
-    z-index: 9999;
     .items{
       display: none;
       padding: 8px;

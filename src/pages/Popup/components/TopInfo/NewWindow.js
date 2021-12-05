@@ -59,6 +59,10 @@ const StyledWrapper = styled.div`
         line-height: 16px;
         padding:8px;
         border-radius: 4px;
+        .icon{
+          width: 20px;
+          height: 20px;
+        }
         &:hover{
           background-color:var(--option-item-bg-hover-color);
         }
@@ -96,15 +100,24 @@ export default function NewWindow({ uid = "" }) {
   return (
     <StyledWrapper>
       <div className="block" ref={node}>
-        <button onClick={showSubMenu} className="start">New Cobrowsing Session</button>
+        <button onClick={showSubMenu} className="start">{chrome.i18n.getMessage('new_cobrowsing')}</button>
         {subMenuVisible && <ul className="opts" >
           <li className="opt new" data-type="new" onClick={handleNewBrowsing}>
-            <IoAddOutline size={20} />
-            New Window
+            <div className="icon">
+              <IoAddOutline size={20} />
+            </div>
+            <span>
+              {chrome.i18n.getMessage('new_window')}
+            </span>
           </li>
           <li className="opt cur" data-type="current" onClick={handleNewBrowsing}>
-            <FiCopy size={16} />
-            New Current Window</li>
+            <div className="icon">
+              <FiCopy size={16} />
+            </div>
+            <span>
+              {chrome.i18n.getMessage('current_window')}
+            </span>
+          </li>
         </ul>}
       </div>
     </StyledWrapper>

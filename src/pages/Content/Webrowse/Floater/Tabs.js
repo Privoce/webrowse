@@ -82,7 +82,7 @@ export default function Tabs({ tabs, users, closeBlock }) {
   return (
     <StyledWrapper >
       <div className="close" data-type='tab' onClick={closeBlock}></div>
-      <div className="title">Tab Status</div>
+      <div className="title">{chrome.i18n.getMessage('tab_status')}</div>
       <ul className="tabs">
         {tabs.filter(t => t.url.startsWith('http')).map(tab => {
           const { id, title, favIconUrl, index } = tab;

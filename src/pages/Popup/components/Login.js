@@ -41,8 +41,8 @@ export default function Login() {
   return (
     <StyledWrapper>
       <img className="logo" src="https://static.nicegoodthings.com/project/ext/webrowse.logo.png" />
-      <p className="desc">Log in to Webrowse to cobrowse any websites with your teammates!</p>
-      <button onClick={handleLogin} className="login">Sign In</button>
+      <p className="desc">{chrome.i18n.getMessage('login_desc')}</p>
+      <button onClick={handleLogin} className="login">{chrome.i18n.getMessage('login')}</button>
     </StyledWrapper>
   )
 }

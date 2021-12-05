@@ -7,91 +7,118 @@
     "message": "Cobrowse any website with your teammates!",
     "description": "Portal description"
   },
-  "getPermissionTitle": {
-    "message": "Allow Webrowse to use your camera and microphone"
+  "new_cobrowsing": {
+    "message": "New Cobrowsing Session"
   },
-  "getPermissionContent": {
-    "message": "Webrowse needs access to your camera and microphone so that other participants can see and hear you. Webrowse will ask you to confirm this decision on each browser and computer you use."
+  "new_window": {
+    "message": "New Window"
   },
-  "blockPermissionTitle": {
-    "message": "Camera and microphone are blocked"
+  "current_window": {
+    "message": "New Current Window"
   },
-  "blockPermissionContent": {
-    "message": "Webrowse requires access to your camera and microphone. Click the camera blocked icon  <img src='https://www.gstatic.com/meet/ic_blocked_camera_dark_f401bc8ec538ede48315b75286c1511b.svg' /> in your browser&apos;s address bar."
+  "current_window_title": {
+    "message": "Current Windows"
   },
-  "mode": {
-    "message": "Mode"
+  "saved_window_title": {
+    "message": "Saved Windows"
   },
-  "login": {
-    "message": "Login"
-  },
-  "logout": {
-    "message": "Logout"
-  },
-  "reg": {
-    "message": "Sign Up"
-  },
-  "joinAsGuest": {
-    "message": "Join as Guest"
-  },
-  "tipLogin": {
-    "message": "To store history, please:"
-  },
-  "tipLoading": {
-    "message": "Loading"
-  },
-  "tipDisableVideo": {
-    "message": "disable camera"
-  },
-  "tipDisableAudio": {
-    "message": "disable audio"
-  },
-  "tipRemoveBg": {
-    "message": "remove background"
-  },
-  "tipPin": {
-    "message": "pin"
-  },
-  "tipSendFeedback": {
-    "message": "Send us your feedback"
-  },
-  "tipFeedback": {
-    "message": "feedback"
-  },
-  "tipProcessing": {
-    "message": "processing"
-  },
-  "tipNext": {
-    "message": "Next View"
-  },
-  "tipPrev": {
-    "message": "Prev View"
-  },
-  "copy": {
-    "message": "Copy link"
-  },
-  "copied": {
-    "message": "Copied"
-  },
-  "invite": {
-    "message": "Invite"
-  },
-  "inviting": {
-    "message": "Inviting"
-  },
-  "fail": {
-    "message": "Fail"
-  },
-  "success": {
-    "message": "Success"
-  },
-  "invited": {
-    "message": "Invited"
+  "start": {
+    "message": "Start"
   },
   "join": {
     "message": "Join"
   },
-  "quitConfirm": {
-    "message": "are you sure to quit?"
+  "tabs": {
+    "message": "Tabs"
+  },
+  "signout": {
+    "message": "Sign Out"
+  },
+  "login": {
+    "message": "Login"
+  },
+  "login_desc": {
+    "message": "Log in to Webrowse to cobrowse any websites with your teammates!"
+  },
+  "remove": {
+    "message": "Remove"
+  },
+  "copy_link": {
+    "message": "Copy Link"
+  },
+  "copied": {
+    "message": "Copied"
+  },
+  "open_privately": {
+    "message": "Open Privately"
+  },
+  "tab_status": {
+    "message": "Tab Status"
+  },
+  "stop_hosting": {
+    "message": "Stop Hosting"
+  },
+  "stop_following": {
+    "message": "Stop Following"
+  },
+  "follow_host": {
+    "message": "Follow Host"
+  },
+  "cobrowsing_tip": {
+    "message": "You are cobrowsing this window"
+  },
+  "be_host": {
+    "message": "Become Host"
+  },
+  "host_tip": {
+    "message": "Take over as host"
+  },
+  "copy_link_tip": {
+    "message": "Copy link to invite others"
+  },
+  "save_window": {
+    "message": "Save Window"
+  },
+  "leave": {
+    "message": "Leave"
+  },
+  "cancel": {
+    "message": "Cancel"
+  },
+  "end_meeting": {
+    "message": "End Meeting"
+  },
+  "save": {
+    "message": "Save"
+  },
+  "quit": {
+    "message": "Quit"
+  },
+  "save_later": {
+    "message": "Save It for Later"
+  },
+  "save_later_tip": {
+    "message": "Would you like to save the window so you can cobrowse it again?"
+  },
+  "leave_session": {
+    "message": "Leave Session"
+  },
+  "end_for_all": {
+    "message": "End Session For All"
+  },
+  "about": {
+    "message": "About"
+  },
+  "voice_coming_soon": {
+    "message": "Voice Channel coming soon!"
+  },
+  "never_ask_again": {
+    "message": "Never ask again"
+  },
+  "yes": {
+    "message": "Yes"
+  },
+  "be_host_desc": {
+    "message": "You will take over as host, people will follow your browser windows, continue?"
   }
 }

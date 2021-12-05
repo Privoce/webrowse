@@ -131,7 +131,7 @@ export default function UserInfo({ user, logout }) {
           </li>
           <li className="item first">
             <MdInfoOutline size={14} />
-            <a href="http://webrow.se" target="_blank" rel="noopener noreferrer">About</a>
+            <a href="http://webrow.se" target="_blank" rel="noopener noreferrer">{chrome.i18n.getMessage('about')}</a>
           </li>
           <li className="item">
             <AiOutlineQuestionCircle size={14} />
@@ -139,7 +139,7 @@ export default function UserInfo({ user, logout }) {
           </li>
           <li className="item" onClick={handleLogout}>
             <HiOutlineLogout size={14} />
-            <span>Sign Out</span>
+            <span>{chrome.i18n.getMessage('signout')}</span>
           </li>
         </ul>}
       </div>

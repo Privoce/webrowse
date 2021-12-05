@@ -1,100 +1,127 @@
 {
   "extName": {
-    "message": "来啦 一起看吧",
+    "message": "Webrowse - 和他人协同分享浏览器窗口",
     "description": "Portal name"
   },
   "extDescription": {
-    "message": "和队友一起讨论文档，写作业，看视频！",
+    "message": "与他人快速高效地分享任何窗口",
     "description": "Portal description"
   },
-  "getPermissionTitle": {
-    "message": "允许Vera使用您的摄像头与麦克风"
+  "new_cobrowsing": {
+    "message": "开启新会话"
   },
-  "getPermissionContent": {
-    "message": "Vera需要获取您的摄像头与麦克风的授权，以便流畅体验接下来的产品使用场景"
+  "new_window": {
+    "message": "新窗口打开"
   },
-  "blockPermissionTitle": {
-    "message": "摄像头与麦克风被禁掉啦"
+  "current_window": {
+    "message": "当前窗口打开"
   },
-  "blockPermissionContent": {
-    "message": "Vera需要获得使用摄像头与麦克风的授权。点击地址栏  <img src='https://www.gstatic.com/meet/ic_blocked_camera_dark_f401bc8ec538ede48315b75286c1511b.svg' /> 的图标，重新获得授权。"
+  "current_window_title": {
+    "message": "本地窗口"
   },
-  "mode": {
-    "message": "模式"
+  "saved_window_title": {
+    "message": "已保存窗口"
   },
-  "login": {
-    "message": "登录"
-  },
-  "logout": {
-    "message": "退出"
-  },
-  "reg": {
-    "message": "注册"
-  },
-  "joinAsGuest": {
-    "message": "游客身份加入"
-  },
-  "tipLogin": {
-    "message": "请登录/注册"
-  },
-  "tipLoading": {
-    "message": "加载中"
-  },
-  "tipDisableVideo": {
-    "message": "禁用视频"
-  },
-  "tipDisableAudio": {
-    "message": "禁用音频"
-  },
-  "tipRemoveBg": {
-    "message": "去背景"
-  },
-  "tipPin": {
-    "message": "画中画"
-  },
-  "tipSendFeedback": {
-    "message": "发送反馈"
-  },
-  "tipFeedback": {
-    "message": "反馈"
-  },
-  "tipProcessing": {
-    "message": "处理中"
-  },
-  "tipNext": {
-    "message": "下一个"
-  },
-  "tipPrev": {
-    "message": "上一个"
-  },
-  "copy": {
-    "message": "复制"
-  },
-  "copied": {
-    "message": "已复制"
-  },
-  "invite": {
-    "message": "邀请"
-  },
-  "inviting": {
-    "message": "邀请中"
-  },
-  "fail": {
-    "message": "失败"
-  },
-  "success": {
-    "message": "成功"
-  },
-  "invited": {
-    "message": "已邀请"
+  "start": {
+    "message": "开始"
   },
   "join": {
     "message": "加入"
   },
-  "prepare": {
-    "message": "准备中"
+  "tabs": {
+    "message": "标签"
   },
-  "quitConfirm": {
-    "message": "确定退出？"
+  "signup": {
+    "message": "注册"
+  },
+  "signout": {
+    "message": "退出"
+  },
+  "login": {
+    "message": "登录"
+  },
+  "login_desc": {
+    "message": "请登录，以便更方便地与他人协作分享窗口！"
+  },
+  "remove": {
+    "message": "删除"
+  },
+  "copy_link": {
+    "message": "复制邀请连接"
+  },
+  "copied": {
+    "message": "已复制"
+  },
+  "open_privately": {
+    "message": "本地打开窗口"
+  },
+  "tab_status": {
+    "message": "标签列表"
+  },
+  "stop_hosting": {
+    "message": "取消主持"
+  },
+  "stop_following": {
+    "message": "停止跟随"
+  },
+  "follow_host": {
+    "message": "开启跟随"
+  },
+  "cobrowsing_tip": {
+    "message": "你正在共享该窗口"
+  },
+  "be_host": {
+    "message": "成为主持"
+  },
+  "host_tip": {
+    "message": "成为或取消主持"
+  },
+  "copy_link_tip": {
+    "message": "复制连接去邀请"
+  },
+  "save_window": {
+    "message": "保存窗口"
+  },
+  "leave": {
+    "message": "离开"
+  },
+  "cancel": {
+    "message": "取消"
+  },
+  "end_meeting": {
+    "message": "结束会话"
+  },
+  "save": {
+    "message": "保存"
+  },
+  "quit": {
+    "message": "直接退出"
+  },
+  "save_later": {
+    "message": "保存窗口"
+  },
+  "save_later_tip": {
+    "message": "您如果想以后再次进入该窗口，请保存。"
+  },
+  "leave_session": {
+    "message": "仅自己"
+  },
+  "end_for_all": {
+    "message": "结束本次会话"
+  },
+  "about": {
+    "message": "关于"
+  },
+  "voice_coming_soon": {
+    "message": "即将推出，敬请期待"
+  },
+  "never_ask_again": {
+    "message": "不再提示"
+  },
+  "yes": {
+    "message": "好的"
+  },
+  "be_host_desc": {
+    "message": "您将成为主持，与其他人共享的该浏览器窗口将跟随您的实时改变，继续？"
   }
 }

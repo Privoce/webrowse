@@ -168,7 +168,7 @@ export default function FollowMode({ host = null, currUser = {}, closeBlock }) {
             <div className="name">{username}</div>
           </div>
         </div>
-        <button className="btn takeover" data-be-host="yes" onClick={handleBeHost}>Take Over as Host</button>
+        <button className="btn takeover" data-be-host="yes" onClick={handleBeHost}>{chrome.i18n.getMessage('be_host')}</button>
       </div>}
       <div className="block toggle" onClick={hostMyself ? null : toggleCheck}>
         <div className="up">
