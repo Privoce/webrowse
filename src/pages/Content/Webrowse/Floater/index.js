@@ -20,7 +20,8 @@ let followModalClosed = false;
 let tempTitle = '';
 export default function Floater({ roomId, uid, winId, showLeaveModal, dragContainerRef = null }) {
   const { link } = useInviteLink({ roomId, winId })
-  const { updateWindowTitle, checkFavorite, toggleFavorite, saveWindow, saving, updating, removing } = useWindow(uid)
+  const { updateWindowTitle, checkFavorite, toggleFavorite, saveWindow } = useWindow(uid);
+  const [faving, setFaving] = useState(false);
   const [editable, setEditable] = useState(false);
   const [followTipModalVisible, setFollowTipModalVisible] = useState(false);
   const [behostPopoverVisible, setBehostPopoverVisible] = useState(false);
@@ -155,6 +156,11 @@ export default function Floater({ roomId, uid, winId, showLeaveModal, dragContai
     const tabs = await getWindowTabs();
     saveWindow({ id: winId, title, tabs })
   }
+  const toggleFav = async () => {
+    setFaving(true)
+    await toggleFavorite({ wid: winId, fav: !fav })
+    setFaving(false)
+  }
   useEffect(() => {
     if (winId && uid) {
       checkFavorite(winId)
@@ -163,7 +169,6 @@ export default function Floater({ roomId, uid, winId, showLeaveModal, dragContai
   const { tab } = visible;
   const isHost = host && host.id == currUser?.id;
   console.log({ users, host, currUser });
-  const faving = saving || updating || removing;
   return (
     <>
       <motion.div
@@ -179,7 +184,7 @@ export default function Floater({ roomId, uid, winId, showLeaveModal, dragContai
               <input onKeyDown={handleEnterKey} onBlur={handleTitleBlur} onClick={handleTitleClick} readOnly={!editable} value={title || 'Temporary Window'} onChange={handleTitleChange} />
             </div>
             <div className="right">
-              <div className="star" onClick={toggleFavorite.bind(null, { wid: winId, fav: !fav })}>
+              <div className="star" onClick={toggleFav}>
                 {faving ? <MdOutlineRefresh className="tip" /> : (fav ? <ImStarFull size="13" color="#FFD400" /> : <ImStarEmpty size="13" color="#78787C" />)}
               </div>
               <div className="others" onClick={toggleOptsVisible}>
@@ -201,11 +206,15 @@ export default function Floater({ roomId, uid, winId, showLeaveModal, dragContai
             {link && <div className="cmds">
               <div className="cmd host tooltip" data-tooltip={chrome.i18n.getMessage('host_tip')} onClick={handleBeHost}>
                 {isHost ? <RiUserStarFill size={16} color="#68D6DD" /> : <RiUserReceived2Fill className="icon" size={16} />}
-                <button className={`btn`} >{isHost ? chrome.i18n.getMessage('stop_hosting') : chrome.i18n.getMessage('be_host')}</button>
+                <button className={`btn`} >
+                  {isHost ? chrome.i18n.getMessage('stop_hosting') : chrome.i18n.getMessage('be_host')}
+                </button>
               </div>
               <div className="cmd copy tooltip" data-tooltip={chrome.i18n.getMessage('copy_link_tip')} onClick={handleCopyLink}>
                 <IoLinkOutline className="icon" size={16} />
-                <button className={`btn ${copied ? 'copied' : ''}`}>{copied ? chrome.i18n.getMessage('copiid') : chrome.i18n.getMessage('copy_link')}</button>
+                <button className={`btn ${copied ? 'copied' : ''}`}>
+                  {copied ? chrome.i18n.getMessage('copied') : chrome.i18n.getMessage('copy_link')}
+                </button>
               </div>
 
               <button onClick={currUser?.host ? togglePopup : handleLeave} className="btn">

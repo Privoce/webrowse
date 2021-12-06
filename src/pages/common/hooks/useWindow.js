@@ -221,7 +221,7 @@ const useWindow = (uid) => {
     if (!wid) return;
     const where = { _and: { window_id: { _eq: wid }, user_id: { _eq: uid }, attr: { _eq: 'fav' } } };
     if (!fav) {
-      remove({
+      await remove({
         variables: { where },
         onQueryUpdated: () => {
           return reloadWindowUser();
@@ -232,7 +232,7 @@ const useWindow = (uid) => {
       const title = await getWindowTitle() || 'Temporary Window';
       const tabs = await getWindowTabs();
       await saveWindow({ id: wid, title, tabs, attr: 'fav' })
-      insertWinUser({
+      await insertWinUser({
         variables: { obj: { window_id: wid, user_id: uid, attr: "fav" } },
         onQueryUpdated: () => {
           return reloadWindowUser()
