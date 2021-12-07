@@ -1,15 +1,9 @@
 import { useState } from 'react'
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import { sendMessageToBackground, MessageLocation } from '@wbet/message-api'
-import { EVENTS } from '../../../../common'
-const AniPopup = keyframes`
-  from{
-    transform: translateY(0);
-  }
-  to{
-    transform: translateY(-110%);
-  }
-`;
+import { EVENTS } from '../../../../common';
+import { AniSlideUp } from '../../../common/animates'
+
 const StyledWrapper = styled.div`
     z-index: 10;
     position: absolute;
@@ -20,7 +14,7 @@ const StyledWrapper = styled.div`
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
     border-radius: 16px;
     padding:12px 16px;
-    animation:${AniPopup} .5s forwards;
+    animation:${AniSlideUp} .5s forwards;
     background: var(--webrowse-widget-bg-color);
     .desc{
       font-weight: 600;

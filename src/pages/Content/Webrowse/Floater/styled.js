@@ -1,20 +1,6 @@
-import styled, { keyframes } from 'styled-components';
-const AniPopup = keyframes`
-  from{
-    transform: translateY(0);
-  }
-  to{
-    transform: translateY(-110%);
-  }
-`;
-const AniRotate = keyframes`
-  from{
-    transform:rotate(0deg);
-  }
-  to{
-    transform:rotate(365deg);
-  }
-`;
+import styled from 'styled-components';
+import { AniRotate, AniSlideUp } from '../../../common/animates'
+
 const StyledWidget = styled.aside`
   pointer-events: all;
   font-family: sans-serif;
@@ -231,7 +217,7 @@ const StyledWidget = styled.aside`
       position: absolute;
       top: 0;
       right: 0;
-      animation:${AniPopup} .5s forwards;
+      animation:${AniSlideUp} .5s forwards;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -256,7 +242,6 @@ const StyledWidget = styled.aside`
   .tooltip{
     position: relative;
     &:after{
-      /* animation:${AniPopup} .5s forwards; */
       visibility: hidden;
       content: attr(data-tooltip);
       position: absolute;

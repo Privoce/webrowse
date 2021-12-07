@@ -1,12 +1,6 @@
-import styled, { keyframes } from 'styled-components';
-const AniRotate = keyframes`
-  from{
-    transform:rotate(0deg);
-  }
-  to{
-    transform:rotate(365deg);
-  }
-`;
+import styled from 'styled-components';
+import { AniRotate } from '../../../common/animates'
+
 const StyledWrapper = styled.div`
   display: flex;
   flex-direction: column;
