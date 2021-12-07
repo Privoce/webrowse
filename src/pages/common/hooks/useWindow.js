@@ -8,7 +8,18 @@ import {
   gql
 } from "@apollo/client";
 const REMOVE_WINDOW = gql`
-mutation RmoveWindow($where: portal_window_user_bool_exp = {} ) {
+mutation RemoveWindow($wid: uuid!) {
+  delete_portal_window(where: {id: {_eq: $wid}}) {
+    affected_rows
+    returning {
+      id
+      title
+    }
+  }
+}
+`;
+const REMOVE_WINDOW_RELATION = gql`
+mutation RmoveWindowRelation($where: portal_window_user_bool_exp = {} ) {
   delete_portal_window_user(where: $where){
     affected_rows
     returning {
@@ -28,6 +39,10 @@ const UPSERT_WINDOW = gql`
         title
         tabs {
           id
+        }
+        owner
+        user{
+          username
         }
       }
     }
@@ -79,6 +94,16 @@ const WINDOW_USER = gql`
       }
     }
 `;
+const WINDOW_USER_BY_WID = gql`
+    query WindowUser($wid: uuid = "") {
+      portal_window_user(where: { window_id: {_eq: $wid}}) {
+        id
+        attr
+        user_id
+        window_id
+      }
+    }
+`;
 
 const SAVED_WINDOWS = gql`
   query WindowList($uid: bigint ) {
@@ -113,8 +138,10 @@ const useWindow = (uid) => {
   const [updating, setUpdating] = useState(false);
   const [windows, setWindows] = useState([])
   const [loadWindows, { loading, data, refetch: reloadWindows }] = useLazyQuery(SAVED_WINDOWS);
+  const [relationWithWid] = useLazyQuery(WINDOW_USER_BY_WID);
   const [loadWindowUser, { loading: winUserLoading, data: windowUserData, refetch: reloadWindowUser }] = useLazyQuery(WINDOW_USER);
-  const [remove, { loading: removeLoading }] = useMutation(REMOVE_WINDOW, { refetchQueries: [{ query: SAVED_WINDOWS }, { query: WINDOW_USER }] });
+  const [removeWindowFromDB] = useMutation(REMOVE_WINDOW);
+  const [removeRelation, { loading: removeRelationLoading }] = useMutation(REMOVE_WINDOW_RELATION, { refetchQueries: [{ query: SAVED_WINDOWS }, { query: WINDOW_USER }] });
 
   const [upsertWindow] = useMutation(UPSERT_WINDOW);
   const [insertWinUser] = useMutation(INSERT_WIN_USER, { refetchQueries: [{ query: WINDOW_USER }] });
@@ -202,15 +229,33 @@ const useWindow = (uid) => {
       })
     }
   }, [data]);
-  const removeWindow = (data = {}) => {
+  const tryClearWindowData = async (wid) => {
+    if (!wid) return;
+    try {
+      const { data } = await relationWithWid({ variables: { wid } });
+      console.log("relation with wid", data);
+      if (data?.portal_window_user?.length === 0) {
+        // 尝试清除window数据
+        await removeWindowFromDB({ variables: { wid } })
+      }
+    } catch (error) {
+      console.log("clear window data error", error);
+    }
+  }
+  const removeWindow = async (data = {}) => {
     if (!data.rid) return;
     const where = { id: { _eq: data.rid } }
-    remove({
+    const { data: removeData } = await removeRelation({
       variables: { where },
       onQueryUpdated: () => {
         return reloadWindows();
       }
-    })
+    });
+    const winId = removeData.delete_portal_window_user.returning[0]?.window_id;
+    if (winId) {
+      await tryClearWindowData(winId)
+    }
+    console.log("remove data", removeData);
   }
   const checkFavorite = (wid) => {
     if (wid) {
@@ -221,12 +266,13 @@ const useWindow = (uid) => {
     if (!wid) return;
     const where = { _and: { window_id: { _eq: wid }, user_id: { _eq: uid }, attr: { _eq: 'fav' } } };
     if (!fav) {
-      await remove({
+      await removeRelation({
         variables: { where },
         onQueryUpdated: () => {
           return reloadWindowUser();
         }
-      })
+      });
+      await tryClearWindowData(wid)
     } else {
       // update title to ensure window exsit
       const title = await getWindowTitle() || 'Temporary Window';
@@ -260,7 +306,7 @@ const useWindow = (uid) => {
     // favorite: fav,
     loading,
     updating,
-    removing: removeLoading,
+    removing: removeRelationLoading,
     saving
   }
 }
