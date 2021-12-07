@@ -72,6 +72,7 @@ const StyledWrapper = styled.div`
     margin-bottom: 20px;
   }
   .details{
+    color: #333;
     display: flex;
     flex-direction: column;
     gap:25px;
@@ -93,6 +94,7 @@ const StyledWrapper = styled.div`
       margin:0;
     }
     input,label{
+      color: #333;
       user-select: none;
       cursor: pointer;
     }

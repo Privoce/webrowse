@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { sendMessageToBackground, MessageLocation } from '@wbet/message-api'
 import { EVENTS } from '../../../common';
 import IconClose from './icons/Close';
+import { TiWarningOutline } from 'react-icons/ti'
 import { useWindow } from '../../common/hooks';
 import { getWindowTabs, getWindowTitle } from '../../common/utils'
 const StyledModal = styled.section`
@@ -16,12 +17,13 @@ const StyledModal = styled.section`
   align-items: center;
   justify-content: center;
   .modal {
+    width: 392px;
     position: relative;
     margin-top: -30px;
     background: #FFFFFF;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 10px;
-    padding:52px 40px 32px 40px;
+    box-shadow: 0px 8px 24px -8px #B6B7B7;
+    border-radius: 12px;
+    padding:24px 16px;
     pointer-events: all;
     display: flex;
     flex-direction: column;
@@ -34,17 +36,28 @@ const StyledModal = styled.section`
       width: 12px;
       height: 12px;
     }
+    .icon{
+      margin-bottom: 24px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #FEF0C7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
     .title{
-      color: #000;
-      font-weight: bold;
-      font-size: 20px;
-      line-height: 25px;
+      margin: 0;
+      color:#44494f;
+      font-weight: 600;
+      font-size: 18px;
+      line-height: 28px;
     }
     .content{
-      margin: 12px 0 24px 0;
-      font-size: 16px;
-      line-height: 28px;
-      color: #121212;
+      margin: 8px 0 35px 0;
+      font-size: 14px;
+      line-height: 20px;
+      color: #707478;
       text-align: left;
       &.guest ul{
         list-style: none;
@@ -64,21 +77,22 @@ const StyledModal = styled.section`
       }
     }
     .btns{
+      width: 100%;
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      gap: 20px;
       .btn{
-        background: #056CF2;
-        border-radius: 10px;
+        background: #52E9FB;
+        border-radius: 20px;
         font-weight: bold;
-        font-size: 16px;
-        line-height: 20px;
+        font-size: 12px;
+        line-height: 18px;
         color: #FFFFFF;
-        padding:8px 20px;
+        padding:4px 12px;
         &.ghost{
           background: none;
-          color:#056CF2;
-          border:2px solid #056CF2;
+          color:#667085;
+          border:none;
         }
       }
     }
@@ -135,13 +149,22 @@ export default function LeaveModal({ winId = "", endAll = false, user, closeModa
         <div className="close" onClick={closeModal}>
           <IconClose color="#333" />
         </div>
+        <div className="icon">
+          <TiWarningOutline color="#DC6803" size={21} />
+        </div>
         <h3 className="title">{Title[modalType]}</h3>
         <div className={`content ${modalType}`}>
           {Content[modalType]}
         </div>
         <div className="btns">
-          {modalType == 'logined' ? <button disabled={saving} onClick={handleQuit.bind(null, true)} className="btn">{saving ? `Saving` : chrome.i18n.getMessage('save')}</button> : <button onClick={handleSignup} className="btn">{chrome.i18n.getMessage('signup')}</button>}
           <button onClick={handleQuit.bind(null, false)} className="btn ghost">{chrome.i18n.getMessage('quit')}</button>
+          {modalType == 'logined' ?
+            <button disabled={saving} onClick={handleQuit.bind(null, true)} className="btn">
+              {saving ? `Saving` : chrome.i18n.getMessage('save')}
+            </button> :
+            <button onClick={handleSignup} className="btn">
+              {chrome.i18n.getMessage('signup')}
+            </button>}
         </div>
       </div>
     </StyledModal>
