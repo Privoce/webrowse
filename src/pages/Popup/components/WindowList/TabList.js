@@ -8,7 +8,8 @@ const StyledList = styled.ul`
   flex-direction: column;
   gap: 6px;
   margin-left: 16px;
-  overflow: scroll;
+  overflow-x: hidden;
+  overflow-y: overlay;
   &.empty{
     display: none !important;
   }

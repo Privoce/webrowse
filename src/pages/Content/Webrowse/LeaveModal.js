@@ -20,8 +20,8 @@ const StyledModal = styled.section`
     width: 392px;
     position: relative;
     margin-top: -30px;
-    background: #FFFFFF;
-    box-shadow: 0px 8px 24px -8px #B6B7B7;
+    background: var(--list-bg-color);
+    box-shadow: 0px 8px 24px -8px var(--shadow-color);
     border-radius: 12px;
     padding:24px 16px;
     pointer-events: all;
@@ -48,7 +48,7 @@ const StyledModal = styled.section`
     }
     .title{
       margin: 0;
-      color:#44494f;
+      color:var(--modal-title-color);
       font-weight: 600;
       font-size: 18px;
       line-height: 28px;
@@ -57,7 +57,7 @@ const StyledModal = styled.section`
       margin: 8px 0 35px 0;
       font-size: 14px;
       line-height: 20px;
-      color: #707478;
+      color: var(--modal-content-color);
       text-align: left;
       &.guest ul{
         list-style: none;

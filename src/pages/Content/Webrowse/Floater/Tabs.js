@@ -12,7 +12,8 @@ const StyledWrapper = styled(StyledBlock)`
       flex-direction: column;
       gap: 8px;
       max-height: 70vh;
-      overflow: scroll;
+      overflow-x: hidden;
+      overflow-y: overlay;
       width: -webkit-fill-available;
       margin:0;
       padding:16px;
