@@ -26,7 +26,7 @@ chrome.runtime.onInstalled.addListener(function (details) {
         });
         inactiveWindows.push(...winIds)
       })
-      chrome.tabs.query({ url: "*://*/transfer/wb/*" }, function (tabs) {
+      chrome.tabs.query({ url: "*://webrow.se/i/*" }, function (tabs) {
         console.log('query invite tabs', tabs);
         if (!tabs || tabs.length === 0) {
           chrome.tabs.create(
@@ -39,11 +39,8 @@ chrome.runtime.onInstalled.addListener(function (details) {
           for (let i = 0; i < tabs.length; i++) {
             const tab = tabs[i];
             if (i == 0) {
-              chrome.tabs.executeScript(tab.id, {
-                file: 'catchInviteId.bundle.js'
-              }, () => {
-                console.log('catch script executed');
-                chrome.tabs.update(tab.id, { active: true });
+              chrome.tabs.update(tab.id, { active: true }, () => {
+                chrome.tabs.reload()
               });
             } else {
               chrome.tabs.remove(tab.id);
@@ -61,8 +58,8 @@ chrome.storage.sync.get(['user'], (res) => {
   const { user = null } = res;
   if (user) {
     // 只保留需要的字段
-    let keeps = ["id", "username", "photo", "token"];
-    let tmp = {};
+    let keeps = ["id", 'aid', "username", "nickname", 'level', "photo", "token"];
+    let tmp = { level: 0 };
     Object.keys(user).forEach(k => {
       if (keeps.includes(k) && typeof user[k] !== "undefined") {
         tmp[k] = user[k];
@@ -103,6 +100,20 @@ const getNewWindow = (params) => {
     })
   });
 }
+const TAB_LIMIT_COUNT = 10;
+const checkUpToTabLimit = (wid, tid) => {
+  if (!DATA_HUB[wid] || DATA_HUB.loginUser?.level !== 0) {
+    return false;
+  }
+  if (DATA_HUB.loginUser?.level == 0 && DATA_HUB[wid].tabs.length >= TAB_LIMIT_COUNT) {
+    chrome.tabs.remove(tid, () => {
+      console.log("up to limit");
+      notifyActiveTab({ windowId: wid, action: EVENTS.TAB_LIMIT })
+    })
+    return true
+  }
+  return false
+}
 // 初始化workspace
 const initWorkspace = async ({ invited = false, windowId = null, roomId = "", winId = "", urls = [], tabId = undefined }) => {
   console.log('init workspace', { windowId, urls, tabId, winId });
@@ -141,9 +152,14 @@ const initWorkspace = async ({ invited = false, windowId = null, roomId = "", wi
         }
         break;
       case TabEvent.onCreated: {
+        const { tab: { id, windowId } } = rawParams;
+        const uptoLimit = checkUpToTabLimit(windowId, id);
+        if (uptoLimit) {
+
+          return
+        }
         needSyncTabsList = false;
         // 给新建的tab做标记
-        const { tab: { id, windowId } } = rawParams;
         DATA_HUB[windowId].createTabs.push(id);
       }
         break;
@@ -231,6 +247,14 @@ const notifyActiveTab = ({ windowId = 0, action = EVENTS.UPDATE_TABS, payload = 
     console.log('notify active tab', { tab, action });
     if (!tab) return;
     switch (action) {
+      case EVENTS.USER_ENTER: {
+        sendMessageToContentScript(tab?.id, payload, MessageLocation.Background, EVENTS.USER_ENTER)
+      }
+        break;
+      case EVENTS.TAB_LIMIT: {
+        sendMessageToContentScript(tab?.id, {}, MessageLocation.Background, EVENTS.TAB_LIMIT)
+      }
+        break;
       case EVENTS.CHECK_CONNECTION: {
         let connected = !!DATA_HUB[tab.windowId]?.workspace;
         sendMessageToContentScript(tab?.id, connected, MessageLocation.Background, EVENTS.CHECK_CONNECTION)
@@ -438,7 +462,7 @@ onMessageFromContentScript(MessageLocation.Background, {
         socket.on(EVENTS.USER_ENTER, (user) => {
           console.log('io enter event', user);
           if (user.id === socket.id) return;
-          sendMessageToTab(currTabId, { user }, EVENTS.USER_ENTER)
+          notifyActiveTab({ windowId, action: EVENTS.USER_ENTER, payload: { user } })
         });
         // 更新floater
         DATA_HUB[windowId].title = title;

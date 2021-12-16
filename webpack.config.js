@@ -45,7 +45,7 @@ var options = {
     background: path.join(__dirname, 'src', 'pages', 'Background', 'index.js'),
     contentScript: path.join(__dirname, 'src', 'pages', 'Content', 'index.js'),
     catchInviteId: path.join(__dirname, 'src', 'pages', 'Content', 'catchInviteId.js'),
-    browseLanding: path.join(__dirname, 'src', 'pages', 'Content', 'webrow.se.js'),
+    // browseLanding: path.join(__dirname, 'src', 'pages', 'Content', 'webrow.se.js'),
     login: path.join(__dirname, 'src', 'pages', 'Login', 'index.js'),
     // devtools: path.join(__dirname, 'src', 'pages', 'Devtools', 'index.js'),
     // panel: path.join(__dirname, 'src', 'pages', 'Panel', 'index.tsx'),

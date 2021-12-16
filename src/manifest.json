@@ -2,12 +2,12 @@
   "name": "__MSG_extName__",
   "description": "__MSG_extDescription__",
   "short_name": "Webrowse",
-  "version": "2021.12.05",
+  "version": "2021.12.16",
   "manifest_version": 2,
   "homepage_url": "https://webrow.se/",
   "permissions": [
     "http://localhost/*",
-    "https://nicegoodthings.com/*",
+    "https://webrow.se/*",
     "tabs",
     "storage"
   ],
@@ -40,7 +40,7 @@
         "<all_urls>"
       ],
       "exclude_matches": [
-        "https://nicegoodthings.com/*",
+        "https://webrow.se/*",
         "http://localhost/*"
       ],
       "js": [
@@ -54,8 +54,7 @@
         "<all_urls>"
       ],
       "exclude_matches": [
-        "https://nicegoodthings.com/",
-        "https://nicegoodthings.com/transfer/*",
+        "https://webrow.se/transfer/*",
         "http://localhost/*"
       ],
       "js": [
@@ -82,25 +81,11 @@
         "/catchInviteId.bundle.js"
       ],
       "run_at": "document_start"
-    },
-    {
-      "matches": [
-        "https://*.webrow.se/*",
-        "http://localhost/*"
-      ],
-      "exclude_matches": [
-        "https://*.webrow.se/vera/*",
-        "http://localhost/vera/*"
-      ],
-      "js": [
-        "/browseLanding.bundle.js"
-      ],
-      "run_at": "document_end"
     }
   ],
   "web_accessible_resources": [
     "*"
   ],
   "options_page": "./Options/index.html",
-  "default_locale": "zh_CN"
+  "default_locale": "en"
 }
