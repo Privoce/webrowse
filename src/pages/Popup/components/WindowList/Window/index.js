@@ -53,7 +53,7 @@ export default function Window({ data = null, handleTitleClick, handleTitleBlur,
   if (local) {
     const { title, id, winId, room, tabs, live } = data;
     return <StyledWindow key={id} className={`window ${live ? 'live' : ''}`}>
-      <h3 className={`title`} key={title} data-window-id={id} onClick={handleJumpTab} >
+      <h3 className={`title openable`} key={title} data-window-id={id} onClick={handleJumpTab} >
         <div className="arrow" onClick={toggleExpand}>
           <Triangle />
         </div>
@@ -70,14 +70,14 @@ export default function Window({ data = null, handleTitleClick, handleTitleBlur,
         return { id, title, url, icon: favIconUrl, windowId }
       })} handleJumpTab={handleJumpTab} />
       <div className="btm">
-        {live && <span className="live">LIVE</span>}
+        {live ? <span className="live">LIVE</span> : <span className="unsave">unsaved</span>}
       </div>
     </StyledWindow>
   } else {
     const { relation_id, title, id, room, tabs, active, live, windowId, updated_at } = data;
     return (
       <StyledWindow className={`window`}>
-        <h3 className={`title ${live ? 'live' : ''}`} data-window-id={windowId} onClick={handleJumpTab} >
+        <h3 className={`title ${live ? 'live openable' : ''}`} data-window-id={windowId} onClick={live ? handleJumpTab : null} >
           <div className="arrow" onClick={toggleExpand}>
             <Triangle />
           </div>
@@ -97,7 +97,7 @@ export default function Window({ data = null, handleTitleClick, handleTitleBlur,
           <TimeAgo
             locale={navigator.language == 'zh' ? "zh_CN" : 'en'}
             className="time"
-            datetime={updated_at}
+            datetime={new Date(updated_at)}
           />
           <ActiveUsers wid={id} />
         </div>

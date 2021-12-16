@@ -21,7 +21,6 @@ const StyledWindow = styled.div`
       /* border: 1px solid #68CC58; */
   }
   .title{
-    cursor: alias;
     position: relative;
     display: flex;
     align-items: center;
@@ -31,6 +30,9 @@ const StyledWindow = styled.div`
     padding-left: 0;
     margin: 0;
     border-radius: 8px;
+    &.openable{
+      cursor: alias;
+    }
     .arrow{
       cursor: pointer;
       height: 100%;
@@ -115,7 +117,7 @@ const StyledWindow = styled.div`
   align-items: center;
   justify-content: space-between;
   padding:12px 11px 12px 28px;
-  .time{
+  .time,.unsave{
     font-size: 12px;
     line-height: 18px;
     color: #BBBCBE;
