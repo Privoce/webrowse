@@ -52,4 +52,15 @@ const AniSlideUp = keyframes`
     transform: translateY(-110%);
   }
 `;
-export { AniBounceIn, AniRotate, AniSlideUp }
+const AniFadeIn = keyframes`
+  0%{
+    opacity:0.1;
+  }
+  50%{
+    opacity:1;
+  }
+  100%{
+    opacity:1;
+  }
+`;
+export { AniBounceIn, AniRotate, AniSlideUp, AniFadeIn }
