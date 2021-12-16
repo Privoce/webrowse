@@ -1,4 +1,5 @@
 import useInviteLink from './useInviteLink'
 import useWindow from './useWindow'
 import useUser from './useUser'
-export { useWindow, useUser, useInviteLink }
+import useTheme from './useTheme'
+export { useWindow, useUser, useInviteLink, useTheme }

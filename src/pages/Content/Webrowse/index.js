@@ -9,8 +9,9 @@ import TabLimitTipModal from './TabLimitTipModal';
 import useSocketRoom from './hooks/useSocketRoom';
 // import useUsername from './hooks/useUsername'
 import { EVENTS } from '../../../common';
-import { useUser } from '../../common/hooks'
+import { useUser, useTheme } from '../../common/hooks'
 import Floater from './Floater';
+import NewEnterNotification from './NewEnterNotification'
 import CobrowseStatus from './CobrowseStatus';
 
 const StyledWrapper = styled.section`
@@ -26,11 +27,13 @@ const StyledWrapper = styled.section`
   --option-item-color:#001529B2;
   --option-item-bg-hover-color:#52EDFF;
   --icon-color:#333;
+  --icon-btn-color:#44494F;
+  --icon-btn-hover-bg:#F0FBFC;
   --icon-hover-bg:#EBEBEC;
   --tab-icon-selected-bg:#FFBD2E;
   --modal-title-color:#44494F;
   --modal-content-color:#707478;
-  @media (prefers-color-scheme: dark) {
+  &[data-theme='dark'] {
       --webrowse-widget-bg-color: #010409;
       --font-color:#fff;
       --shadow-color:#010409;
@@ -43,6 +46,8 @@ const StyledWrapper = styled.section`
       --option-item-color:#fff;
       --option-item-bg-hover-color:#52EDFF;
       --icon-color:#eee;
+      --icon-btn-color:rgba(255,255,255,.5);
+      --icon-btn-hover-bg:rgba(255,255,255,.08);
       --icon-hover-bg:#1A222E;
       --tab-icon-selected-bg:#413E3A;
       --modal-title-color:#fff;
@@ -61,7 +66,7 @@ const StyledWrapper = styled.section`
   justify-content: flex-end;
   line-height: 1;
   &.cobrowsing{
-    box-shadow: inset 0 0 0 6px #77a5f1;
+    /* box-shadow: inset 0 0 0 6px #77a5f1; */
   }
   /* 通用设置 */
   input,textarea{
@@ -74,9 +79,8 @@ const StyledWrapper = styled.section`
     background: none;
   }
 `;
-
-
 export default function Webrowse() {
+  const { theme } = useTheme()
   const { initialUser, uid } = useUser()
   const containerRef = useRef(null)
   const [floaterVisible, setFloaterVisible] = useState(false)
@@ -112,12 +116,24 @@ export default function Webrowse() {
     }
   };
   useEffect(() => {
+    const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const inter = setTimeout(() => {
+      if (containerRef && containerRef.current) {
+        console.log({ containerRef });
+        containerRef.current.dataset.theme = theme == 'default' ? (isDark ? 'dark' : 'light') : theme;
+      }
+    }, 300);
+    return () => {
+      clearTimeout(inter)
+    }
+  }, [theme, containerRef]);
+  useEffect(() => {
     if (uid) {
       setCurrUser(prev => {
         return { ...prev, uid }
       })
     }
-  }, [uid])
+  }, [uid]);
   useEffect(() => {
     if (!leaveModalVisible) {
       // 相当于每关掉一次leave modal 就检查一下
@@ -178,6 +194,7 @@ export default function Webrowse() {
       {!currUser && nameModalVisible && <UsernameModal roomId={roomId} closeModal={toggleNameModalVisible} startCoBrowse={startWithCustomName} />}
       {leaveModalVisible && <LeaveModal winId={winId} endAll={endAll} user={currUser} closeModal={toggleLeaveModalVisible} />}
       {tabLimitModalVisible && <TabLimitTipModal user={currUser} closeModal={toggleTabLimitModalVisible} />}
+      <NewEnterNotification />
     </StyledWrapper>
 
   );

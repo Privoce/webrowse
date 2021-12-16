@@ -6,7 +6,8 @@
     opacity: .99;
   }
 }
-html {
+
+html,html[data-theme='light'] {
   animation: redraw 10s linear infinite alternate;
   --popup-bg-color: #fff;
   --dropdown-bg-color:#FAFAFA;
@@ -21,23 +22,23 @@ html {
   --option-item-color:#001529B2;
   --option-item-bg-hover-color:#52EDFF;
   --icon-color:#333;
+  --userinfo-hover-bg:rgba(0, 0, 0, 0.08);
 }
-@media (prefers-color-scheme: dark) {
-  html{
-    --popup-bg-color: #010409;
-    --dropdown-bg-color:#161B22;
-    --dropdown-shadow:0px 8px 24px rgba(1, 4, 9, 1);
-    --box-border:1px solid #30363D;
-    --box-hover-bg:#1A222E;
-    --window-bg-color:#0D1117;
-    --window-title-color:#fff;
-    --window-title-hover-bg-color:none;
-    --tab-title-color:rgba(255, 255, 255, 0.5);
-    --tab-title-hover-color:#fff;
-    --option-item-color:#fff;
-    --option-item-bg-hover-color:#52EDFF;
-    --icon-color:#eee;
-  }
+html[data-theme='dark'] {
+  --popup-bg-color: #010409;
+  --dropdown-bg-color:#161B22;
+  --dropdown-shadow:0px 8px 24px rgba(1, 4, 9, 1);
+  --box-border:1px solid #30363D;
+  --box-hover-bg:#1A222E;
+  --window-bg-color:#0D1117;
+  --window-title-color:#fff;
+  --window-title-hover-bg-color:none;
+  --tab-title-color:rgba(255, 255, 255, 0.5);
+  --tab-title-hover-color:#fff;
+  --option-item-color:#fff;
+  --option-item-bg-hover-color:#52EDFF;
+  --icon-color:#eee;
+  --userinfo-hover-bg:rgba(255, 255, 255, 0.08);
 }
 body {
   background: var(--popup-bg-color);

@@ -36,8 +36,9 @@ const StyledWrapper = styled.div`
       position: absolute;
       top: 40px;
       right: 0;
-      background: var(--window-bg-color);
-      box-shadow: 0px 10px 20px -15px rgba(22, 23, 24, 0.2), 0px 10px 38px -10px rgba(22, 23, 24, 0.35);
+      background-color:var(--dropdown-bg-color);
+      box-shadow: var(--dropdown-shadow);
+      border:var(--box-border);
       border-radius: 8px;
       padding:8px;
       display: flex;
@@ -58,10 +59,12 @@ const StyledWrapper = styled.div`
         font-size: 12px;
         line-height: 16px;
         padding:8px;
-        border-radius: 4px;
+        border-radius: 5px;
         .icon{
           width: 20px;
           height: 20px;
+          display: flex;
+          justify-content: center;
         }
         &:hover{
           background-color:var(--option-item-bg-hover-color);

@@ -171,10 +171,10 @@ const StyledWidget = styled.aside`
         line-height: 16px;
         border-radius: 4px;
         &:hover{
-          background:  #F0FBFC;
+          background:  var(--icon-btn-hover-bg);
         }
         .icon,.btn{
-          color:#44494F;
+          color:var(--icon-btn-color);
         }
         .btn{
           padding-right: 0;
@@ -185,17 +185,6 @@ const StyledWidget = styled.aside`
         }
         &.copy{
           min-width: 90px;
-        }
-        @media (prefers-color-scheme: dark) {
-          .icon,.btn{
-            color:rgba(255,255,255,.5);
-          }
-          &:hover{
-            .icon,.btn{
-              color:#fff;
-            }
-            background:  rgba(255,255,255,.08);
-          }
         }
       }
       >.btn{

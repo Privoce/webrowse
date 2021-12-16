@@ -1,11 +1,13 @@
 import { useState, useRef, useEffect } from 'react'
 import styled from 'styled-components';
+import { sendMessageToBackground, MessageLocation } from '@wbet/message-api'
 import Avatar from '../../../common/Avatar';
 import { MdInfoOutline } from 'react-icons/md'
 import { AiOutlineQuestionCircle } from 'react-icons/ai'
 import { HiOutlineLogout } from 'react-icons/hi'
 import NewWindow from './NewWindow'
 import Triangle from '../Triangle'
+import { EVENTS } from '../../../../common'
 const StyledWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -26,12 +28,7 @@ const StyledWrapper = styled.div`
       padding: 4px 8px;
       border-radius: 16px;
       &:hover{
-        background: rgba(0, 0, 0, 0.08);
-      }
-      @media (prefers-color-scheme: dark) {
-        &:hover{
-          background: rgba(255, 255, 255, 0.08);
-        }
+        background: var(--userinfo-hover-bg);
       }
     }
     .droplist{
@@ -63,6 +60,18 @@ const StyledWrapper = styled.div`
           color: #52E9FB;
           border: 1px solid #52E9FB;
           border-radius: 20px;
+        }
+        .upgrade{
+          color: #52E9FB;
+          cursor:pointer;
+          background:none;
+          border:none;
+          font-weight: 600;
+          font-size: 10px;
+          line-height: 6px;
+          &:hover{
+            color:#56CCDA;
+          }
         }
       }
       .item{
@@ -108,6 +117,9 @@ export default function UserInfo({ user, logout }) {
     // outside click
     setDroplistVisible(false);
   };
+  const handleUpgrade = () => {
+    sendMessageToBackground({ url: `https://webrow.se/pricing` }, MessageLocation.Popup, EVENTS.NEW_ACTIVE_WINDOW)
+  }
   useEffect(() => {
     if (droplistVisible) {
       document.addEventListener('mouseup', handleClickOutside, false);
@@ -127,7 +139,7 @@ export default function UserInfo({ user, logout }) {
         {droplistVisible && <ul className="droplist">
           <li className="info">
             <span className="username">{username}</span>
-            {level == 1 && <span className="pro">PRO</span>}
+            {level == 1 ? <span className="pro">PRO</span> : <button onClick={handleUpgrade} className="upgrade">Upgrade</button>}
           </li>
           <li className="item first">
             <MdInfoOutline size={14} />
