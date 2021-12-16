@@ -28,24 +28,16 @@ const StyledStatus = styled.div`
     left: 50%;
     transform: translateX(-50%);
     pointer-events: all;
-    background-color: #056CF2;
-    background-image:url("https://static.nicegoodthings.com/works/vera/white.logo.png");
-    background-repeat: no-repeat;
     text-align: center;
-    background-position: 5px;
-    background-size: 18px;
-    border-radius: 0px 0px 10px 10px;
-    min-width: 300px;
+    border-radius: 0px 0px 8px 8px;
     color:#fff;
     font-size: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     font-family: sans-serif;
     .tip{
-      padding:5px 0;
+      background: linear-gradient(271.12deg, #056CF2 0.35%, #74D6D7 95.13%);
       white-space: nowrap;
       font-size: 12px;
+      line-height:18px;
       &.overlay{
         position: absolute;
         left: 0;
@@ -55,13 +47,11 @@ const StyledStatus = styled.div`
         display: flex;
         align-items: center;
         justify-content: center;
-        padding-left: 15px;
         white-space: pre;
         width: -webkit-fill-available;
         height: -webkit-fill-available;
         z-index: 9;
-        background: #056CF2;
-        margin-left: 20px;
+        background: linear-gradient(271.12deg, #056CF2 0.35%, #74D6D7 95.13%);
         overflow: hidden;
         animation: ${AniSlideToggle} 6s;
         animation-fill-mode: both;
@@ -78,34 +68,54 @@ const StyledStatus = styled.div`
       }
     }
     .status{
-      flex: 1;
-      padding:5px 10px 5px 30px;
+      line-height:18px;
+      display:inline-block;
       white-space: nowrap;
+      background: linear-gradient(271.12deg, #056CF2 0.35%, #74D6D7 95.13%);
       .host{
         font-weight: 800;
       }
     }
+    .tip,.status{
+      position:relative;
+      padding:4px 12px 4px 36px;
+      &:before{
+        position:absolute;
+        left:12px;
+        top: 50%;
+        transform: translateY(-50%);
+        display:block;
+        content:"";
+        background-image:url('https://static.nicegoodthings.com/project/ext/webrowse.logo.white.png');
+        width:16px;
+        height:16px;
+        background-size:contain;
+        background-repeat:no-repeat;
+      }
+    }
     .status_btn{
+      line-height:18px;
+      display:inline-block;
       white-space: nowrap;
       user-select: none;
       border:none;
       outline: none;
       font-size: inherit;
       color:inherit;
-      flex:1;
       margin: 0;
-      padding:5px 25px 5px 24px;
-      padding-left: 20px;
+      padding:4px 12px 4px 24px;
+      padding-left: 26px;
       &.follow,&.host{
-        background-color:#68D6DD;
+        background-color:#52E9FB;
         background-image: url('https://static.nicegoodthings.com/works/vera/follow.icon.png') ;
         background-repeat: no-repeat;
         background-size: 11px auto;
         background-position: 8px;
         &.warning{
+          padding-left: 32px;
           position: relative;
           background-image: none;
-          background-color:#B63546;
+          background-color:#BA1B1B;
           &:before{
             position: absolute;
             top: 50%;
@@ -113,8 +123,9 @@ const StyledStatus = styled.div`
             left: 12px;
             content: "";
             display: block;
-            width: 8px;
-            height: 8px;
+            border-radius:2px;
+            width: 12px;
+            height: 12px;
             background-color: #fff;
           }
         }
@@ -160,7 +171,7 @@ export default function CobrowseStatus() {
       },
       [EVENTS.TAB_EVENT]: ({ username, type, tab }) => {
         console.log('receive tab event', username, type, tab);
-        let htmlStr = `<strong>${username}</strong> ${operations[type]} <strong class="tab_title">${tab.title}</strong>`;
+        let htmlStr = `${username} ${operations[type]} <strong class="tab_title">${tab.title}</strong>`;
         setHtmlTip(htmlStr);
       }
     });
@@ -182,7 +193,7 @@ export default function CobrowseStatus() {
     <StyledStatus>
       {htmlTip && <div className="tip overlay operation" onAnimationEnd={resetHtmlTip} dangerouslySetInnerHTML={{ __html: htmlTip }}></div>}
       <div className="status">
-        {hostMyself ? <span><strong className="host">You</strong> are now the host</span> : <span><strong className="host">{host.username}</strong> is now the host</span>}
+        {hostMyself ? <span>You are now the host</span> : <span>{host.username} is now the host</span>}
       </div>
       {hostMyself ?
         <button className={`status_btn host warning`} onClick={stopBeHost}>{chrome.i18n.getMessage('stop_hosting')}</button>
