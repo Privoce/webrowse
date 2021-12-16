@@ -51,6 +51,10 @@ const EVENTS = {
   UPDATE_WIN_TITLE: 'UPDATE_WIN_TITLE',
   // 更新favorite
   TOGGLE_FAV: 'TOGGLE_FAV',
+  // 触发tab limit
+  TAB_LIMIT: 'TAB_LIMIT',
+  // 用于从bg打开新窗口
+  NEW_ACTIVE_WINDOW: 'NEW_ACTIVE_WINDOW',
   // 新开标签集
   OPEN_TABS: 'OPEN_TABS',
   // 根据win id 拿tabs

@@ -5,6 +5,7 @@ import { sendMessageToBackground, onMessageFromBackground, MessageLocation } fro
 import { getUser } from './hooks/utils';
 import UsernameModal from './UsernameModal';
 import LeaveModal from './LeaveModal';
+import TabLimitTipModal from './TabLimitTipModal';
 import useSocketRoom from './hooks/useSocketRoom';
 // import useUsername from './hooks/useUsername'
 import { EVENTS } from '../../../common';
@@ -15,6 +16,7 @@ import CobrowseStatus from './CobrowseStatus';
 const StyledWrapper = styled.section`
   --webrowse-widget-bg-color: #fff;
   --font-color:#010409;
+  --shadow-color:#B6B7B7;
   --tab-status-bg-color:#FFF8E8;
   --tab-bg-color:#fff;
   --tab-hover-bg-color:rgba(0, 0, 0, 0.08);
@@ -26,9 +28,12 @@ const StyledWrapper = styled.section`
   --icon-color:#333;
   --icon-hover-bg:#EBEBEC;
   --tab-icon-selected-bg:#FFBD2E;
+  --modal-title-color:#44494F;
+  --modal-content-color:#707478;
   @media (prefers-color-scheme: dark) {
       --webrowse-widget-bg-color: #010409;
       --font-color:#fff;
+      --shadow-color:#010409;
       --tab-status-bg-color:#413E3A;
       --tab-bg-color:#0D1117;
       --tab-hover-bg-color:#1A222E;
@@ -40,6 +45,8 @@ const StyledWrapper = styled.section`
       --icon-color:#eee;
       --icon-hover-bg:#1A222E;
       --tab-icon-selected-bg:#413E3A;
+      --modal-title-color:#fff;
+      --modal-content-color:#667085;
   }
   position: fixed;
   top: 0;
@@ -75,6 +82,7 @@ export default function Webrowse() {
   const [floaterVisible, setFloaterVisible] = useState(false)
   const [nameModalVisible, setNameModalVisible] = useState(false)
   const [leaveModalVisible, setLeaveModalVisible] = useState(false)
+  const [tabLimitModalVisible, setTabLimitModalVisible] = useState(false)
   const [endAll, setEndAll] = useState(false)
   const [roomId, setRoomId] = useState(null);
   const [winId, setWinId] = useState(null);
@@ -87,6 +95,9 @@ export default function Webrowse() {
   const toggleLeaveModalVisible = (endForAll = false) => {
     setLeaveModalVisible(prev => !prev);
     setEndAll(endForAll)
+  }
+  const toggleTabLimitModalVisible = () => {
+    setTabLimitModalVisible(prev => !prev);
   }
   const startWithCustomName = (name) => {
     setCurrUser({ username: name })
@@ -130,6 +141,9 @@ export default function Webrowse() {
         setRoomId(roomId);
         setWinId(winId);
         setLoading(false);
+      },
+      [EVENTS.TAB_LIMIT]: () => {
+        setTabLimitModalVisible(true)
       }
     });
     // 初次初始化
@@ -163,6 +177,7 @@ export default function Webrowse() {
       {/* 不存在或者未设置用户名的话，先设置 */}
       {!currUser && nameModalVisible && <UsernameModal roomId={roomId} closeModal={toggleNameModalVisible} startCoBrowse={startWithCustomName} />}
       {leaveModalVisible && <LeaveModal winId={winId} endAll={endAll} user={currUser} closeModal={toggleLeaveModalVisible} />}
+      {tabLimitModalVisible && <TabLimitTipModal user={currUser} closeModal={toggleTabLimitModalVisible} />}
     </StyledWrapper>
 
   );
