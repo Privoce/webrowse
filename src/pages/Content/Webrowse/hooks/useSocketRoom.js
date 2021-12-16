@@ -41,11 +41,6 @@ const useSocketRoom = () => {
         setInitializing(false);
         // }
       },
-      [EVENTS.USER_ENTER]: (data) => {
-        console.log("user enter room", data);
-        const { user } = data;
-        setUsers((users) => [...users, user]);
-      },
       [EVENTS.UPDATE_USERS]: ({ users }) => {
         setUsers(users);
       }
