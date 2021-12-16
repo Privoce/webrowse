@@ -92,15 +92,15 @@ const StyledWrapper = styled.div`
       }
 `;
 
-export default function AvatarList({ users = null, limit = 3 }) {
+export default function AvatarList({ users = null, limit = 5 }) {
   const handleMoreMouseOver = (evt) => {
-    evt.currentTarget.classList.add('pop')
+    evt.currentTarget.classList.add('pop');
   }
   const handleMoreMouseLeave = (evt) => {
-    evt.currentTarget.classList.remove('pop')
+    evt.currentTarget.classList.remove('pop');
   }
   if (!users || users.length == 0) return null;
-  const lastMembers = users.splice(limit);
+  const lastMembers = users.splice(users.length > limit ? (limit - 1) : limit);
   return (
     <StyledWrapper className="members">
       {users.map((u, i) => {
