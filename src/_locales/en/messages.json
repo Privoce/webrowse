@@ -95,10 +95,10 @@
     "message": "Quit"
   },
   "save_later": {
-    "message": "Save It for Later"
+    "message": "Unsaved Session"
   },
   "save_later_tip": {
-    "message": "Would you like to save the window so you can cobrowse it again?"
+    "message": "Do you want to save or quit directly?"
   },
   "leave_session": {
     "message": "Leave Session"

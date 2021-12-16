@@ -11,28 +11,28 @@
     "message": "New Cobrowsing Session"
   },
   "new_window": {
-    "message": "New Window"
+    "message": "Nueva ventana"
   },
   "current_window": {
-    "message": "New Current Window"
+    "message": "Nueva ventana actual"
   },
   "current_window_title": {
-    "message": "Current Windows"
+    "message": "Ventanas actuales"
   },
   "saved_window_title": {
-    "message": "Saved Windows"
+    "message": "Ventanas guardadas"
   },
   "start": {
-    "message": "Start"
+    "message": "Comenzar"
   },
   "join": {
     "message": "Join"
   },
   "tabs": {
-    "message": "Tabs"
+    "message": "Pestañas"
   },
   "signout": {
-    "message": "Sign Out"
+    "message": "Desconectar"
   },
   "login": {
     "message": "Login"
@@ -41,7 +41,7 @@
     "message": "Log in to Webrowse to cobrowse any websites with your teammates!"
   },
   "remove": {
-    "message": "Remove"
+    "message": "Retirar"
   },
   "copy_link": {
     "message": "Copy Link"
@@ -50,7 +50,7 @@
     "message": "Copied"
   },
   "open_privately": {
-    "message": "Open Privately"
+    "message": "Abrir todas las pestañas"
   },
   "tab_status": {
     "message": "Tab Status"
@@ -68,7 +68,7 @@
     "message": "You are cobrowsing this window"
   },
   "be_host": {
-    "message": "Become Host"
+    "message": "Conviértete en anfitrión"
   },
   "host_tip": {
     "message": "Take over as host"
@@ -80,7 +80,7 @@
     "message": "Save Window"
   },
   "leave": {
-    "message": "Leave"
+    "message": "Cerrar Sesión"
   },
   "cancel": {
     "message": "Cancel"
@@ -95,10 +95,10 @@
     "message": "Quit"
   },
   "save_later": {
-    "message": "Save It for Later"
+    "message": "Sessão não salva"
   },
   "save_later_tip": {
-    "message": "Would you like to save the window so you can cobrowse it again?"
+    "message": "Esta sesión aún no está guardada, ¿Quieres salir sin guardarla?"
   },
   "leave_session": {
     "message": "Leave Session"
@@ -107,7 +107,7 @@
     "message": "End Session For All"
   },
   "about": {
-    "message": "About"
+    "message": "Acerca"
   },
   "voice_coming_soon": {
     "message": "Voice Channel coming soon!"

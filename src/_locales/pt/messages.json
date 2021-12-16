@@ -11,28 +11,28 @@
     "message": "New Cobrowsing Session"
   },
   "new_window": {
-    "message": "New Window"
+    "message": "Nova janela"
   },
   "current_window": {
-    "message": "New Current Window"
+    "message": "Nova janela atual"
   },
   "current_window_title": {
     "message": "Current Windows"
   },
   "saved_window_title": {
-    "message": "Saved Windows"
+    "message": "Janelas salvas"
   },
   "start": {
-    "message": "Start"
+    "message": "Iniciar"
   },
   "join": {
     "message": "Join"
   },
   "tabs": {
-    "message": "Tabs"
+    "message": "Abas"
   },
   "signout": {
-    "message": "Sign Out"
+    "message": "Sair"
   },
   "login": {
     "message": "Login"
@@ -41,16 +41,16 @@
     "message": "Log in to Webrowse to cobrowse any websites with your teammates!"
   },
   "remove": {
-    "message": "Remove"
+    "message": "Remover"
   },
   "copy_link": {
-    "message": "Copy Link"
+    "message": "Copiar link"
   },
   "copied": {
     "message": "Copied"
   },
   "open_privately": {
-    "message": "Open Privately"
+    "message": "Abrir todas as abas"
   },
   "tab_status": {
     "message": "Tab Status"
@@ -89,16 +89,16 @@
     "message": "End Meeting"
   },
   "save": {
-    "message": "Save"
+    "message": "Salvar"
   },
   "quit": {
-    "message": "Quit"
+    "message": "Sair"
   },
   "save_later": {
-    "message": "Save It for Later"
+    "message": "Sessão não salva"
   },
   "save_later_tip": {
-    "message": "Would you like to save the window so you can cobrowse it again?"
+    "message": "Esta sessão não esta salva ainda, você deseja sair sem salvá-la?"
   },
   "leave_session": {
     "message": "Leave Session"
@@ -107,7 +107,7 @@
     "message": "End Session For All"
   },
   "about": {
-    "message": "About"
+    "message": "Sobre"
   },
   "voice_coming_soon": {
     "message": "Voice Channel coming soon!"
