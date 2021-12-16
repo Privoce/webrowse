@@ -1,5 +1,8 @@
 import React from 'react'
 import styled from 'styled-components';
+
+import Login from './Login'
+import useLocalUser from '../useLocalUser'
 const StyledProfile = styled.div`
   display: flex;
   flex-direction: column;
@@ -44,6 +47,7 @@ const StyledProfile = styled.div`
     }
   }
   .btn{
+    cursor:pointer;
     border-radius: 20px;
     font-weight: bold;
     font-size: 12px;
@@ -63,23 +67,33 @@ const StyledProfile = styled.div`
   }
 `;
 export default function Profile() {
+  const { user } = useLocalUser();
+  const handleLogout = () => {
+    chrome.storage.sync.remove('user')
+  }
+  if (!user) return <Login />;
+  console.log("user", user);
+  const isGoogle = user.registerSource?.length ? user.registerSource.includes("social:google") : false
+
   return (
     <StyledProfile>
       <div className="item">
         <div className="title">Avatar</div>
-        <img src="https://static.nicegoodthings.com/project/ext/webrowse.logo.png" alt="avatar" className="img" />
+        <img src={user.photo} alt="avatar" className="img" />
       </div>
       <div className="item">
         <div className="title">Name</div>
-        <input readOnly className="name" value="dingyi" />
+        <input readOnly className="name" value={user.username} />
       </div>
-      <a href="#" className="btn update">Update</a>
+      {/* <a href="#" className="btn update">Update</a> */}
       <div className="item">
-        <div className="title">Authentication</div>
-        <span className="tip">Your Google account is connected with <em>dingyi@privoce.com</em></span>
-        <button className="btn logout">Log Out</button>
+        {isGoogle && <>
+          <div className="title">Authentication</div>
+          <span className="tip">Your Google account is connected with <em>{user.email}</em></span>
+        </>
+        }
+        <button onClick={handleLogout} className="btn logout">Log Out</button>
       </div>
-
     </StyledProfile>
   )
 }

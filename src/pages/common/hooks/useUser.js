@@ -29,6 +29,7 @@ const UPSERT_USER = gql`
         updated_at
         created_at
         avatar
+        level
       }
     }
   }
@@ -40,17 +41,30 @@ const useUser = () => {
   useEffect(() => {
     if (!upsertUserLoading && upsertUserData) {
       //  create personal room
-      const { id, username } = upsertUserData?.insert_portal_user.returning[0] || {};
+      const { id, username, level } = upsertUserData?.insert_portal_user.returning[0] || {};
       const obj = { id: `${id}`, name: username, personal: true }
-      upsertRoom({ variables: { obj } })
+      upsertRoom({ variables: { obj } });
+      // update level to local data
+      if (typeof level !== 'undefined') {
+        chrome.storage.sync.get(['user'], (res) => {
+          console.log('local user data', res.user);
+          const { user = null } = res;
+          if (user) {
+            chrome.storage.sync.set({ user: { ...user, level } })
+          }
+        }
+        )
+      }
     }
   }, [upsertUserLoading, upsertUserData])
   const initialUser = (user) => {
     const { id, username, photo, nickname } = user;
     upsertUser({ variables: { objects: [{ aid: id, username, avatar: photo, nickname }] } })
   }
+
   return {
     initialUser,
+    level: upsertUserData?.insert_portal_user?.returning[0]?.level,
     uid: upsertUserData?.insert_portal_user?.returning[0]?.id
   }
 }

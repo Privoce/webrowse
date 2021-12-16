@@ -98,6 +98,7 @@ export default function Container() {
     if (key == curr) return;
     setCurr(key)
   }
+
   return (
     <StyledContainer>
       <div className="left">

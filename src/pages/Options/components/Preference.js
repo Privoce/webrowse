@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components';
+import useTheme from '../../common/hooks/useTheme'
 const StyledPreference = styled.div`
   display: flex;
   flex-direction: column;
@@ -25,34 +26,48 @@ const StyledPreference = styled.div`
         display: flex;
         align-items: center;
         gap: 5px;
-
+        input{
+          cursor: pointer;
+        }
       }
     }
   }
 `;
+const themes = [
+  {
+    key: 'default',
+    title: "System Default"
+  },
+  {
+    key: 'light',
+    title: "Light"
+  },
+  {
+    key: 'dark',
+    title: "Dark"
+  },
+]
 export default function Preference() {
+  const { theme, updateTheme } = useTheme();
+  console.log(theme);
+  const handleThemeChange = ({ target }) => {
+    updateTheme(target.value)
+  }
   return (
     <StyledPreference>
       <div className="title">Theme</div>
       <ul className="themes">
-        <li className="theme">
-          <label className="item" htmlFor="light" >
-            <input type="radio" name="theme" id="light" />
-            Light
-          </label>
-        </li>
-        <li className="theme">
-          <label className="item" htmlFor="dark">
-            <input type="radio" name="theme" id="dark" />
-            Dark
-          </label>
-        </li>
-        <li className="theme">
-          <label className="item" htmlFor="sys">
-            <input type="radio" name="theme" id="sys" />
-            System Default
-          </label>
-        </li>
+        {/* <form> */}
+        {themes.map(({ key, title }) => {
+
+          return <li key={key} className="theme">
+            <label className="item" htmlFor={key} >
+              <input onChange={handleThemeChange} checked={theme == key} value={key} type="radio" name="theme" id={key} />
+              {title}
+            </label>
+          </li>
+        })}
+        {/* </form> */}
       </ul>
     </StyledPreference>
   )

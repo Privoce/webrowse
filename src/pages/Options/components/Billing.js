@@ -1,5 +1,8 @@
 import React from 'react'
 import styled from 'styled-components';
+
+import Login from './Login'
+import useLocalUser from '../useLocalUser'
 const StyledBilling = styled.div`
   display: flex;
   flex-direction: column;
@@ -71,6 +74,8 @@ const StyledBilling = styled.div`
   }
 `;
 export default function Billing() {
+  const { user } = useLocalUser();
+  if (!user) return <Login />;
   return (
     <StyledBilling>
       <div className="item">

@@ -1,8 +1,20 @@
-import { onMessageFromContentScript, onMessageFromPopup, MessageLocation } from '@wbet/message-api';
+import { onMessageFromContentScript, onMessageFromPopup, MessageLocation, onMessageFromOptions } from '@wbet/message-api';
 import { EVENTS } from '../../common';
-
+const openLoginTab = () => {
+  chrome.tabs.create(
+    {
+      active: true,
+      url: `Login/index.html`
+    },
+    null
+  );
+}
 // 监听来自content script 的触发事件
 onMessageFromContentScript(MessageLocation.Background, {
+  [EVENTS.NEW_ACTIVE_WINDOW]: (request) => {
+    const { url = 'login' } = request;
+    chrome.windows.create({ url })
+  },
   [EVENTS.JUMP_TAB]: (request) => {
     console.log('jump tab', request);
     chrome.tabs.update(Number(request.tabId), { active: true })
@@ -25,14 +37,12 @@ onMessageFromContentScript(MessageLocation.Background, {
   },
 });
 onMessageFromPopup(MessageLocation.Background, {
+  [EVENTS.NEW_ACTIVE_WINDOW]: (request) => {
+    const { url = 'login' } = request;
+    chrome.windows.create({ url })
+  },
   [EVENTS.LOGIN]: () => {
-    chrome.tabs.create(
-      {
-        active: true,
-        url: `Login/index.html`
-      },
-      null
-    );
+    openLoginTab()
   },
   [EVENTS.JUMP_TAB]: (request) => {
     console.log('jump tab', request);
@@ -47,3 +57,9 @@ onMessageFromPopup(MessageLocation.Background, {
     }
   },
 });
+onMessageFromOptions(MessageLocation.Background, {
+  [EVENTS.LOGIN]: () => {
+    openLoginTab()
+  },
+});
+
