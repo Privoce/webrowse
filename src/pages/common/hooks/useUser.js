@@ -30,6 +30,7 @@ const UPSERT_USER = gql`
         created_at
         avatar
         level
+        customer
       }
     }
   }
@@ -65,7 +66,9 @@ const useUser = () => {
   return {
     initialUser,
     level: upsertUserData?.insert_portal_user?.returning[0]?.level,
-    uid: upsertUserData?.insert_portal_user?.returning[0]?.id
+    uid: upsertUserData?.insert_portal_user?.returning[0]?.id,
+    loading: upsertUserLoading,
+    user: upsertUserData?.insert_portal_user.returning[0]
   }
 }
 

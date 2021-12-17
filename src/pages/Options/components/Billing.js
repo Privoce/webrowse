@@ -1,8 +1,9 @@
-import React from 'react'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components';
 
 import Login from './Login'
-import useLocalUser from '../useLocalUser'
+import useLocalUser from '../useLocalUser';
+import { useUser } from '../../common/hooks'
 const StyledBilling = styled.div`
   display: flex;
   flex-direction: column;
@@ -74,32 +75,67 @@ const StyledBilling = styled.div`
   }
 `;
 export default function Billing() {
+  const [billInfo, setBillInfo] = useState(undefined)
   const { user } = useLocalUser();
+  const { initialUser, user: dbUser, loading } = useUser();
+  useEffect(() => {
+    if (user) {
+      initialUser({ id: user.id, username: user.username })
+    }
+  }, [user]);
+  useEffect(() => {
+    const getBillingInfo = async (cid) => {
+      const resp = await fetch(`http://localhost:4000/stripe/portal/${cid}`);
+      const obj = await resp.json();
+      console.log("obj", obj);
+      const { customer, session } = obj;
+      setBillInfo({
+        email: customer.email,
+        expired: customer.subscriptions.data[0]?.current_period_end,
+        portal_url: session.url
+      })
+    }
+    if (dbUser && dbUser.customer) {
+      getBillingInfo(dbUser.customer)
+    }
+  }, [dbUser])
   if (!user) return <Login />;
+  if (loading) return null;
+  console.log("db user", dbUser);
+  const { level } = dbUser || {};
   return (
     <StyledBilling>
       <div className="item">
         <div className="title">Current Plan</div>
         <div className="block plan">
-          <div className="left">
-            <div className="head">Pro</div>
-            <span className="desc">$14.99 / month — billed annually</span>
-          </div>
-          <div className="right">
-            <button className="btn">Change Plan</button>
-          </div>
+          {level == 1 ? <>
+            <div className="left">
+              <div className="head">Pro</div>
+              <span className="desc">$14.99 / month — billed annually</span>
+            </div>
+            <div className="right">
+              <a className="btn" href={billInfo?.portal_url} target="_blank">Change Plan</a>
+            </div>
+          </> : <>
+            <div className="left">
+              <div className="head">Pro</div>
+            </div>
+            <div className="right">
+              <button className="btn">Change Plan</button>
+            </div>
+          </>}
         </div>
       </div>
-      <div className="item">
+      {billInfo && <div className="item">
         <div className="title">Billing</div>
         <ul className="blocks">
           <li className="block billing">
             <div className="left">
               <div className="head">Payment method</div>
-              <span className="desc">Ending in 2450 exp. 04/27</span>
+              <span className="desc">Ending in {new Date(billInfo.expired * 1000).toLocaleString()}</span>
             </div>
             <div className="right">
-              <a href="#" className="update">Update</a>
+              <a href={billInfo.portal_url} target="_blank" className="update">Update</a>
             </div>
           </li>
           <li className="block billing">
@@ -108,20 +144,20 @@ export default function Billing() {
               <span className="desc">Annually</span>
             </div>
             <div className="right">
-              <a href="#" className="update">Update</a>
+              <a href={billInfo.portal_url} target="_blank" className="update">Update</a>
             </div>
           </li>
           <li className="block billing">
             <div className="left">
               <div className="head">Billing email</div>
-              <span className="desc">yanggc333@fdas.com</span>
+              <span className="desc">{billInfo.email}</span>
             </div>
             <div className="right">
-              <a href="#" className="update">Update</a>
+              <a href={billInfo.portal_url} target="_blank" className="update">Update</a>
             </div>
           </li>
         </ul>
-      </div>
+      </div>}
 
     </StyledBilling>
   )

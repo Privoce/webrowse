@@ -85,7 +85,7 @@ export default function Profile() {
         <div className="title">Name</div>
         <input readOnly className="name" value={user.username} />
       </div>
-      {/* <a href="#" className="btn update">Update</a> */}
+      <a href="https://portal-china.authing.cn/u" target="_blank" className="btn update">Update</a>
       <div className="item">
         {isGoogle && <>
           <div className="title">Authentication</div>

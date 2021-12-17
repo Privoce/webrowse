@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components';
 import StyledDashboard from './StyledDashboard'
-import Billing from './Billing';
+// import Billing from './Billing';
 import Profile from './Profile';
 import Preference from './Preference';
 const StyledContainer = styled.section`
@@ -80,12 +80,12 @@ const NavBlocks = {
       <Preference />
     </StyledDashboard>
   },
-  bill: {
-    title: "Billing",
-    comp: <StyledDashboard title="Billing" >
-      <Billing />
-    </StyledDashboard>
-  },
+  // bill: {
+  //   title: "Billing",
+  //   comp: <StyledDashboard title="Billing" >
+  //     <Billing />
+  //   </StyledDashboard>
+  // },
   about: {
     title: "About",
     link: "https://webrow.se"
