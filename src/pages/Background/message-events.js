@@ -9,8 +9,21 @@ const openLoginTab = () => {
     null
   );
 }
+const copyToClipboard = (txt) => {
+  const input = document.createElement('textarea');
+  document.body.appendChild(input);
+  input.value = txt;
+  input.focus();
+  input.select();
+  document.execCommand('Copy');
+  input.remove();
+}
 // 监听来自content script 的触发事件
 onMessageFromContentScript(MessageLocation.Background, {
+  [EVENTS.COPY_SOMETHING]: (request) => {
+    const { content = '' } = request;
+    copyToClipboard(content);
+  },
   [EVENTS.NEW_ACTIVE_WINDOW]: (request) => {
     const { url = 'login' } = request;
     chrome.windows.create({ url })
@@ -37,6 +50,10 @@ onMessageFromContentScript(MessageLocation.Background, {
   },
 });
 onMessageFromPopup(MessageLocation.Background, {
+  [EVENTS.COPY_SOMETHING]: (request) => {
+    const { content = '' } = request;
+    copyToClipboard(content);
+  },
   [EVENTS.NEW_ACTIVE_WINDOW]: (request) => {
     const { url = 'login' } = request;
     chrome.windows.create({ url })

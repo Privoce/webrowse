@@ -58,7 +58,9 @@ const EVENTS = {
   // 新开标签集
   OPEN_TABS: 'OPEN_TABS',
   // 根据win id 拿tabs
-  GET_TABS_BY_WINDOW: 'GET_TABS_BY_WINDOW'
+  GET_TABS_BY_WINDOW: 'GET_TABS_BY_WINDOW',
+  // 复制
+  COPY_SOMETHING: 'COPY_SOMETHING'
 }
 // const SOCKET_SERVER_DOMAIN = 'stage.vera.nicegoodthings.com';
 const SOCKET_SERVER_DOMAIN = 'vera.nicegoodthings.com';

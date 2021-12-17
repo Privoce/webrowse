@@ -6,7 +6,7 @@ import { MdOutlineRefresh } from 'react-icons/md';
 import { RiUserReceived2Fill, RiUserStarFill } from 'react-icons/ri';
 import { ImStarEmpty, ImStarFull } from 'react-icons/im';
 import { EVENTS } from '../../../../common';
-import { useWindow, useInviteLink } from '../../../common/hooks';
+import { useWindow, useInviteLink, useCopy } from '../../../common/hooks';
 import { getWindowTitle, getWindowTabs } from '../../../common/utils'
 import StyledWidget from './styled';
 import Tabs from './Tabs';
@@ -14,7 +14,7 @@ import Dots from './Dots';
 import BehostPop from './BehostPop';
 import FollowModeTipModal from './FollowModeTipModal';
 // import FollowMode from './FollowMode';
-import useCopy from '../hooks/useCopy';
+// import useCopy from '../hooks/useCopy';
 // const mock_data = [{ id: 1, host: true, username: "杨二", photo: "https://files.authing.co/user-contents/photos/9be86bd9-5f18-419b-befa-2356dd889fe6.png" }, { id: 2, username: "杨二", photo: "https://files.authing.co/user-contents/photos/9be86bd9-5f18-419b-befa-2356dd889fe6.png" }]
 let followModalClosed = false;
 let tempTitle = '';
