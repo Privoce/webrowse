@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { sendMessageToBackground, MessageLocation } from '@wbet/message-api';
 import { MdOutlineRefresh } from 'react-icons/md';
+import ContentLoader from '../ContentLoader'
 import { useWindow } from '../../../common/hooks'
 import { generateUUID } from '../../../common/utils'
 import Window from './Window'
@@ -148,7 +149,7 @@ export default function WindowList({ titles = {}, windows = null, uid = null }) 
           })}
         </div>
       </StyledWrapper>}
-      {savedWindows && <StyledWrapper>
+      {savedWindows ? <StyledWrapper>
         <h2 className="title">{chrome.i18n.getMessage('saved_window_title')} {loading && <MdOutlineRefresh className="tip" />}</h2>
         <div className={`block ${savedWindows.length == 0 ? 'empty' : ''}`}>
           {savedWindows.length == 0 && <div className="tip">You haven’t saved any windows yet. Start cobrowsing and save any window that you would like to share again!</div>}
@@ -167,7 +168,7 @@ export default function WindowList({ titles = {}, windows = null, uid = null }) 
               handleSaveWindow={handleSaveWindow} />
           })}
         </div>
-      </StyledWrapper>}
+      </StyledWrapper> : <ContentLoader />}
     </>
   )
 }
