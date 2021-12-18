@@ -120,5 +120,8 @@
   },
   "be_host_desc": {
     "message": "You will take over as host, people will follow your browser windows, continue?"
+  },
+  "setting": {
+    "message": "Setting"
   }
 }
