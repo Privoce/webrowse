@@ -2,7 +2,7 @@
   "name": "__MSG_extName__",
   "description": "__MSG_extDescription__",
   "short_name": "Webrowse",
-  "version": "2021.12.16",
+  "version": "2021.12.17",
   "manifest_version": 2,
   "homepage_url": "https://webrow.se/",
   "permissions": [
@@ -59,17 +59,6 @@
       ],
       "js": [
         "/contentScript.bundle.js"
-      ],
-      "run_at": "document_idle"
-    },
-    {
-      "matches": [
-        "https://www.figma.com/*",
-        "https://*.notion.so/*",
-        "https://*.height.app/*"
-      ],
-      "js": [
-        "/assets/libs/allow-copy.js"
       ],
       "run_at": "document_idle"
     },
