@@ -109,9 +109,9 @@ export default function Webrowse() {
   const initUser = async () => {
     let curr = await getUser();
     if (curr) {
-      let { id = "", username, photo = "", nickname } = curr;
+      let { id = "", username, photo = "" } = curr;
       // 初始化数据库中的user
-      initialUser({ id, username, photo, nickname })
+      initialUser(id)
       setCurrUser({ aid: id, username, photo });
     }
   };

@@ -40,7 +40,7 @@ export default function Container() {
   useEffect(() => {
     if (user) {
       // 初始化数据库中的user
-      initialUser(user)
+      initialUser(user.id)
     }
   }, [user]);
   const logout = () => {

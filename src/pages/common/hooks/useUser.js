@@ -1,9 +1,26 @@
 import { useEffect } from 'react'
 import {
+  useLazyQuery,
   useMutation,
   gql
 } from "@apollo/client";
 
+const QUERY_USER = gql`
+  query FetchUser($aid: String = "") {
+    portal_user(where: {aid: {_eq: $aid}}) {
+      aid
+      avatar
+      created_at
+      customer
+      email
+      id
+      level
+      nickname
+      updated_at
+      username
+    }
+  }
+`;
 const UPSERT_PERSONAL_ROOM = gql`
   mutation UpsertRoom($obj: [portal_room_insert_input!]!) {
     insert_portal_room(objects:$obj, on_conflict: {constraint: room_id_key, update_columns: [personal,name]}) {
@@ -17,32 +34,15 @@ const UPSERT_PERSONAL_ROOM = gql`
     }
   }
 `;
-const UPSERT_USER = gql`
-  mutation UpSertUser($objects: [portal_user_insert_input!]!) {
-    insert_portal_user(objects: $objects, on_conflict: {constraint: user_aid_key, update_columns: [username]}) {
-      affected_rows
-      returning {
-        aid
-        id
-        nickname
-        username
-        updated_at
-        created_at
-        avatar
-        level
-        customer
-      }
-    }
-  }
-`;
 
 const useUser = () => {
-  const [upsertUser, { data: upsertUserData, loading: upsertUserLoading }] = useMutation(UPSERT_USER);
+  const [loadUserWithAid, { loading, data: userData }] = useLazyQuery(QUERY_USER)
+  // const [upsertUser, { data: userData, loading: loading }] = useMutation(UPSERT_USER);
   const [upsertRoom] = useMutation(UPSERT_PERSONAL_ROOM);
   useEffect(() => {
-    if (!upsertUserLoading && upsertUserData) {
+    if (!loading && userData) {
       //  create personal room
-      const { id, username, level } = upsertUserData?.insert_portal_user.returning[0] || {};
+      const { id, username, level, customer } = userData?.portal_user[0] || {};
       const obj = { id: `${id}`, name: username, personal: true }
       upsertRoom({ variables: { obj } });
       // update level to local data
@@ -51,24 +51,23 @@ const useUser = () => {
           console.log('local user data', res.user);
           const { user = null } = res;
           if (user) {
-            chrome.storage.sync.set({ user: { ...user, level } })
+            chrome.storage.sync.set({ user: { ...user, level, customer } })
           }
         }
         )
       }
     }
-  }, [upsertUserLoading, upsertUserData])
-  const initialUser = (user) => {
-    const { id, username, photo, nickname } = user;
-    upsertUser({ variables: { objects: [{ aid: id, username, avatar: photo, nickname }] } })
+  }, [loading, userData])
+  const initialUser = (aid) => {
+    loadUserWithAid({ variables: { aid } })
   }
 
   return {
     initialUser,
-    level: upsertUserData?.insert_portal_user?.returning[0]?.level,
-    uid: upsertUserData?.insert_portal_user?.returning[0]?.id,
-    loading: upsertUserLoading,
-    user: upsertUserData?.insert_portal_user.returning[0]
+    level: userData?.portal_user[0]?.level,
+    uid: userData?.portal_user[0]?.id,
+    loading,
+    user: userData?.portal_user[0]
   }
 }
 

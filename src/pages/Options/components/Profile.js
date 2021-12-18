@@ -66,26 +66,26 @@ const StyledProfile = styled.div`
     }
   }
 `;
-export default function Profile() {
-  const { user } = useLocalUser();
+export default function Profile({ user }) {
+  const { user: localUser } = useLocalUser();
   const handleLogout = () => {
     chrome.storage.sync.remove('user')
   }
-  if (!user) return <Login />;
+  if (!user || !localUser) return <Login />;
   console.log("user", user);
-  const isGoogle = user.registerSource?.length ? user.registerSource.includes("social:google") : false
+  const isGoogle = localUser.registerSource?.length ? localUser.registerSource.includes("social:google") : false
 
   return (
     <StyledProfile>
       <div className="item">
         <div className="title">Avatar</div>
-        <img src={user.photo} alt="avatar" className="img" />
+        <img src={user.avatar} alt="avatar" className="img" />
       </div>
       <div className="item">
         <div className="title">Name</div>
         <input readOnly className="name" value={user.username} />
       </div>
-      <a href="https://portal-china.authing.cn/u" target="_blank" className="btn update">Update</a>
+      <a href="https://portal-china.authing.cn/u" target="_blank" className="btn update">Edit</a>
       <div className="item">
         {isGoogle && <>
           <div className="title">Authentication</div>

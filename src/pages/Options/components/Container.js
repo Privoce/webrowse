@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components';
 import StyledDashboard from './StyledDashboard'
-// import Billing from './Billing';
+import Billing from './Billing';
 import Profile from './Profile';
 import Preference from './Preference';
+import useLocalUser from '../useLocalUser';
+import { useUser } from '../../common/hooks';
 const StyledContainer = styled.section`
   display: flex;
   >.left{
@@ -70,35 +72,56 @@ const StyledContainer = styled.section`
 const NavBlocks = {
   profile: {
     title: "Profile",
-    comp: <StyledDashboard title="Profile Settings" >
-      <Profile />
-    </StyledDashboard>
   },
   prefer: {
     title: "Preference",
-    comp: <StyledDashboard title="Preferences" >
-      <Preference />
-    </StyledDashboard>
   },
-  // bill: {
-  //   title: "Billing",
-  //   comp: <StyledDashboard title="Billing" >
-  //     <Billing />
-  //   </StyledDashboard>
-  // },
+  bill: {
+    title: "Billing",
+  },
   about: {
     title: "About",
     link: "https://webrow.se"
   },
 }
+const renderComponent = (key, params) => {
+  let comp = null;
+  switch (key) {
+    case 'profile':
+      comp = <StyledDashboard title="Profile Settings" >
+        <Profile {...params} />
+      </StyledDashboard>
+      break;
+    case 'prefer':
+      comp = <StyledDashboard title="Profile Settings" >
+        <Preference />
+      </StyledDashboard>
+      break;
+    case 'bill':
+      comp = <StyledDashboard title="Profile Settings" >
+        <Billing {...params} />
+      </StyledDashboard>
+      break;
+
+    default:
+      break;
+  }
+  return comp;
+}
 export default function Container() {
   const [curr, setCurr] = useState('profile');
+  const { user: localUser } = useLocalUser();
+  const { initialUser, user } = useUser();
   const handleNavClick = (evt) => {
     const { key } = evt.target.dataset;
     if (key == curr) return;
     setCurr(key)
   }
-
+  useEffect(() => {
+    if (localUser) {
+      initialUser(localUser.id)
+    }
+  }, [localUser]);
   return (
     <StyledContainer>
       <div className="left">
@@ -112,15 +135,11 @@ export default function Container() {
               const { link, title } = obj;
               return link ? <li key={key} className="item"><a href={link} target="_blank">{title}</a></li> : <li data-key={key} onClick={handleNavClick} key={key} className={`item ${key == curr ? 'curr' : ''}`}>{title}</li>
             })}
-            {/* <li className="item">Profile</li>
-            <li className="item">Preference</li>
-            <li className="item">Billing</li>
-            <li className="item">About</li> */}
           </ul>
         </nav>
       </div>
       <div className="right">
-        {NavBlocks[curr]?.comp}
+        {renderComponent(curr, { user })}
       </div>
     </StyledContainer>
   )
