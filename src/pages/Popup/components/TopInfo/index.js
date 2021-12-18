@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { sendMessageToBackground, MessageLocation } from '@wbet/message-api'
 import Avatar from '../../../common/Avatar';
 import { MdInfoOutline } from 'react-icons/md'
-import { AiOutlineQuestionCircle } from 'react-icons/ai'
+import { AiOutlineQuestionCircle, AiOutlineSetting } from 'react-icons/ai'
 import { HiOutlineLogout } from 'react-icons/hi'
 import NewWindow from './NewWindow'
 import Triangle from '../Triangle'
@@ -120,6 +120,9 @@ export default function UserInfo({ user, logout }) {
   const handleUpgrade = () => {
     sendMessageToBackground({ url: `https://webrow.se/pricing` }, MessageLocation.Popup, EVENTS.NEW_ACTIVE_WINDOW)
   }
+  const handleOpenSettingPage = () => {
+    chrome.runtime.openOptionsPage()
+  }
   useEffect(() => {
     if (droplistVisible) {
       document.addEventListener('mouseup', handleClickOutside, false);
@@ -142,6 +145,10 @@ export default function UserInfo({ user, logout }) {
             {level == 1 ? <span className="pro">PRO</span> : <button onClick={handleUpgrade} className="upgrade">Upgrade</button>}
           </li>
           <li className="item first">
+            <AiOutlineSetting size={14} />
+            <a href="#" onClick={handleOpenSettingPage}>{chrome.i18n.getMessage('setting')}</a>
+          </li>
+          <li className="item">
             <MdInfoOutline size={14} />
             <a href="http://webrow.se" target="_blank" rel="noopener noreferrer">{chrome.i18n.getMessage('about')}</a>
           </li>
