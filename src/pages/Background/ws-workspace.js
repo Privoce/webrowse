@@ -114,6 +114,22 @@ const checkUpToTabLimit = (wid, tid) => {
   }
   return false
 }
+const checkIsFollower = (wid, tid) => {
+  if (!DATA_HUB[wid]) {
+    return false;
+  }
+  const currentUser = DATA_HUB[wid].users?.find(u => u.id == DATA_HUB[wid].socketId);
+  const currentHost = DATA_HUB[wid].users?.find(u => !!u.host);
+  console.log("check follower", DATA_HUB[wid], DATA_HUB.loginUser);
+  if (currentHost && currentUser?.follow) {
+    chrome.tabs.remove(tid, () => {
+      console.log("stop opening new tab for following mode");
+      notifyActiveTab({ windowId: wid, action: EVENTS.FOLLOW_MODE_TIP })
+    })
+    return true
+  }
+  return false
+}
 // 初始化workspace
 const initWorkspace = async ({ invited = false, windowId = null, roomId = "", winId = "", urls = [], tabId = undefined }) => {
   console.log('init workspace', { windowId, urls, tabId, winId });
@@ -154,8 +170,8 @@ const initWorkspace = async ({ invited = false, windowId = null, roomId = "", wi
       case TabEvent.onCreated: {
         const { tab: { id, windowId } } = rawParams;
         const uptoLimit = checkUpToTabLimit(windowId, id);
-        if (uptoLimit) {
-
+        const isFollower = checkIsFollower(windowId, id);
+        if (uptoLimit || isFollower) {
           return
         }
         needSyncTabsList = false;
@@ -249,6 +265,14 @@ const notifyActiveTab = ({ windowId = 0, action = EVENTS.UPDATE_TABS, payload = 
     switch (action) {
       case EVENTS.USER_ENTER: {
         sendMessageToContentScript(tab?.id, payload, MessageLocation.Background, EVENTS.USER_ENTER)
+      }
+        break;
+      case EVENTS.ACCESS_TIP: {
+        sendMessageToContentScript(tab?.id, payload, MessageLocation.Background, EVENTS.ACCESS_TIP)
+      }
+        break;
+      case EVENTS.FOLLOW_MODE_TIP: {
+        sendMessageToContentScript(tab?.id, {}, MessageLocation.Background, EVENTS.FOLLOW_MODE_TIP)
       }
         break;
       case EVENTS.TAB_LIMIT: {
@@ -499,6 +523,8 @@ onMessageFromContentScript(MessageLocation.Background, {
     // 更新user列表
     socket.on(EVENTS.UPDATE_USERS, async ({ users }) => {
       console.log('update users', { users, socket });
+      // 预判
+      if (!DATA_HUB[windowId]) return;
       // 更新到全局变量
       DATA_HUB[windowId].users = users;
       notifyActiveTab({ windowId, action: EVENTS.UPDATE_USERS });
@@ -517,6 +543,12 @@ onMessageFromContentScript(MessageLocation.Background, {
       // 发送给popup
       sendMessageToPopup({ titles: DATA_HUB.windowTitles }, MessageLocation.Background, EVENTS.WINDOW_TITLES)
       notifyActiveTab({ windowId, action: EVENTS.UPDATE_FLOATER });
+    });
+    // 权限问题
+    socket.on(EVENTS.ACCESS_TIP, ({ site, index }) => {
+      console.log('access tip', site, index);
+      // 发送给active tab
+      notifyActiveTab({ windowId, action: EVENTS.ACCESS_TIP, payload: { site, index } });
     });
     // 服务器端触发，主动断掉
     socket.on("disconnect", () => {
@@ -635,6 +667,16 @@ onMessageFromContentScript(MessageLocation.Background, {
     const { windowId, id } = sender.tab;
     const title = DATA_HUB[windowId]?.title;
     sendMessageToContentScript(id, { title }, MessageLocation.Background, EVENTS.WIN_TITLE)
+  },
+  [EVENTS.ACCESS_TIP]: (req = {}, sender) => {
+    const { site = "" } = req;
+    const { windowId, index } = sender.tab;
+    const currSocket = DATA_HUB[windowId]?.socket;
+    if (currSocket) {
+      currSocket.send(
+        { cmd: EVENTS.ACCESS_TIP, payload: { site, index } }
+      )
+    }
   },
   [EVENTS.UPDATE_WIN_TITLE]: (request, sender) => {
     const { title = "" } = request;

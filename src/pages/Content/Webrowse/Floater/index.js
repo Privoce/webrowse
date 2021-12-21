@@ -12,18 +12,13 @@ import StyledWidget from './styled';
 import Tabs from './Tabs';
 import Dots from './Dots';
 import BehostPop from './BehostPop';
-import FollowModeTipModal from './FollowModeTipModal';
-// import FollowMode from './FollowMode';
-// import useCopy from '../hooks/useCopy';
 // const mock_data = [{ id: 1, host: true, username: "杨二", photo: "https://files.authing.co/user-contents/photos/9be86bd9-5f18-419b-befa-2356dd889fe6.png" }, { id: 2, username: "杨二", photo: "https://files.authing.co/user-contents/photos/9be86bd9-5f18-419b-befa-2356dd889fe6.png" }]
-let followModalClosed = false;
 let tempTitle = '';
 export default function Floater({ roomId, uid, winId, showLeaveModal, dragContainerRef = null }) {
   const { link } = useInviteLink({ roomId, winId })
   const { updateWindowTitle, checkFavorite, toggleFavorite, saveWindow } = useWindow(uid);
   const [faving, setFaving] = useState(false);
   const [editable, setEditable] = useState(false);
-  const [followTipModalVisible, setFollowTipModalVisible] = useState(false);
   const [behostPopoverVisible, setBehostPopoverVisible] = useState(false);
   const [fav, setFav] = useState(false)
   const [users, setUsers] = useState([]);
@@ -91,7 +86,6 @@ export default function Floater({ roomId, uid, winId, showLeaveModal, dragContai
       // 立即同步
       sendMessageToBackground({ tabId: activeTabId }, MessageLocation.Content, EVENTS.JUMP_TAB);
     }
-    setFollowTipModalVisible(!!currUser?.follow);
 
   }, [currUser, activeTabId]);
   const closeBlock = (evt) => {
@@ -232,10 +226,6 @@ export default function Floater({ roomId, uid, winId, showLeaveModal, dragContai
           {behostPopoverVisible && <BehostPop handleCancelHostPop={handleCancelHostPop} />}
         </StyledWidget>
       </motion.div>
-      {followTipModalVisible && !followModalClosed && <FollowModeTipModal closeModal={() => {
-        setFollowTipModalVisible(false);
-        followModalClosed = true;
-      }} />}
     </>
   );
 }
