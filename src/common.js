@@ -37,6 +37,8 @@ const EVENTS = {
   BE_HOST: 'BE_HOST',
   // 更新follow mode
   FOLLOW_MODE: 'FOLLOW_MODE',
+  // follow mode 提醒
+  FOLLOW_MODE_TIP: 'FOLLOW_MODE_TIP',
   // 更新floater 数据
   UPDATE_FLOATER: 'UPDATE_FLOATER',
   // 切换floater tab
@@ -60,7 +62,9 @@ const EVENTS = {
   // 根据win id 拿tabs
   GET_TABS_BY_WINDOW: 'GET_TABS_BY_WINDOW',
   // 复制
-  COPY_SOMETHING: 'COPY_SOMETHING'
+  COPY_SOMETHING: 'COPY_SOMETHING',
+  // 权限提醒
+  ACCESS_TIP: 'ACCESS_TIP'
 }
 // const SOCKET_SERVER_DOMAIN = 'stage.vera.nicegoodthings.com';
 const SOCKET_SERVER_DOMAIN = 'vera.nicegoodthings.com';

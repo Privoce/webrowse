@@ -12,6 +12,8 @@ import { EVENTS } from '../../../common';
 import { useUser, useTheme } from '../../common/hooks'
 import Floater from './Floater';
 import NewEnterNotification from './NewEnterNotification'
+import AccessNotification from './AccessNotification'
+import FollowTipNotification from './FollowTipNotification'
 import CobrowseStatus from './CobrowseStatus';
 
 const StyledWrapper = styled.section`
@@ -195,6 +197,8 @@ export default function Webrowse() {
       {leaveModalVisible && <LeaveModal winId={winId} endAll={endAll} user={currUser} closeModal={toggleLeaveModalVisible} />}
       {tabLimitModalVisible && <TabLimitTipModal user={currUser} closeModal={toggleTabLimitModalVisible} />}
       <NewEnterNotification />
+      <AccessNotification />
+      <FollowTipNotification />
     </StyledWrapper>
 
   );
