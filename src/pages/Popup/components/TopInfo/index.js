@@ -85,8 +85,12 @@ const StyledWrapper = styled.div`
         border-radius: 5px;
         white-space: nowrap;
         a{
+          width: 100%;
           text-decoration: none;
           color: inherit;
+          display: flex;
+          align-items: center;
+          gap: 5px;
         }
         &:hover{
           background-color:var(--option-item-bg-hover-color);
@@ -144,17 +148,21 @@ export default function UserInfo({ user, logout }) {
             <span className="username">{username}</span>
             {level == 1 ? <span className="pro">PRO</span> : <button onClick={handleUpgrade} className="upgrade">Upgrade</button>}
           </li>
-          <li className="item first">
+          <li className="item first" onClick={handleOpenSettingPage}>
             <AiOutlineSetting size={14} />
-            <a href="#" onClick={handleOpenSettingPage}>{chrome.i18n.getMessage('setting')}</a>
+            <a href="#" >{chrome.i18n.getMessage('setting')}</a>
           </li>
           <li className="item">
-            <MdInfoOutline size={14} />
-            <a href="http://webrow.se" target="_blank" rel="noopener noreferrer">{chrome.i18n.getMessage('about')}</a>
+            <a href="http://webrow.se" target="_blank" rel="noopener noreferrer">
+              <MdInfoOutline size={14} />
+              {chrome.i18n.getMessage('about')}
+            </a>
           </li>
           <li className="item">
-            <AiOutlineQuestionCircle size={14} />
-            <a href="http://webrow.se" target="_blank" rel="noopener noreferrer">FAQ</a>
+            <a href="http://webrow.se/pricing/#faq" target="_blank" rel="noopener noreferrer">
+              <AiOutlineQuestionCircle size={14} />
+              FAQ
+            </a>
           </li>
           <li className="item" onClick={handleLogout}>
             <HiOutlineLogout size={14} />
