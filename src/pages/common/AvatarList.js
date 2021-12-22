@@ -66,6 +66,7 @@ const StyledWrapper = styled.div`
               display: flex;
               position: relative;
               .username{
+                white-space: nowrap;
                 color: #fff;
                 display: none;
                 position: absolute;
