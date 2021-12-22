@@ -58,7 +58,7 @@ export default function NewEnterNotification() {
   return (
     <StyledWrapper className="notification">
       {items.map(name => {
-        return <span key={name} onAnimationEnd={handleRemoveItem.bind(null, name)} className='notify'>{name} just join the session now.</span>
+        return <span key={name} onAnimationEnd={handleRemoveItem.bind(null, name)} className='notify'>{name} just join the session.</span>
       })}
     </StyledWrapper>
   )
