@@ -14,7 +14,7 @@
     "message": "Nova janela"
   },
   "current_window": {
-    "message": "Nova janela atual"
+    "message": "Nova aba"
   },
   "current_window_title": {
     "message": "Current Windows"
@@ -90,6 +90,9 @@
   },
   "save": {
     "message": "Salvar"
+  },
+  "unsaved": {
+    "message": "unsaved"
   },
   "quit": {
     "message": "Sair"

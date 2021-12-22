@@ -29,7 +29,7 @@
     "message": "加入"
   },
   "tabs": {
-    "message": "标签"
+    "message": "标签页"
   },
   "signup": {
     "message": "注册"
@@ -93,6 +93,9 @@
   },
   "save": {
     "message": "保存"
+  },
+  "unsaved": {
+    "message": "暂未保存"
   },
   "quit": {
     "message": "直接退出"

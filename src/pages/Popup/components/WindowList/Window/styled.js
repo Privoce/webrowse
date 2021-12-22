@@ -30,9 +30,7 @@ const StyledWindow = styled.div`
     padding-left: 0;
     margin: 0;
     border-radius: 8px;
-    &.openable{
-      cursor: alias;
-    }
+   
     .arrow{
       cursor: pointer;
       height: 100%;
@@ -110,6 +108,9 @@ const StyledWindow = styled.div`
       transform: rotate(0);
     }
   }
+}
+.openable{
+  cursor: alias;
 }
 .btm{
   width: -webkit-fill-available;

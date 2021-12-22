@@ -68,15 +68,15 @@ export default function Window({ data = null, handleTitleClick, handleTitleBlur,
       <TabList tabs={tabs.map(({ id, title, url, favIconUrl, windowId }) => {
         return { id, title, url, icon: favIconUrl, windowId }
       })} handleJumpTab={handleJumpTab} />
-      <div className="btm">
-        {live ? <span className="live">LIVE</span> : <span className="unsave">unsaved</span>}
+      <div className="btm openable" data-window-id={id} onClick={handleJumpTab}>
+        {live ? <span className="live">LIVE</span> : <span className="unsave">{chrome.i18n.getMessage('unsaved')}</span>}
       </div>
     </StyledWindow>
   } else {
     const { relation_id, title, id, room, tabs, active, live, windowId, updated_at } = data;
     return (
       <StyledWindow className={`window`}>
-        <h3 className={`title ${live ? 'live openable' : ''}`} data-window-id={windowId} onClick={live ? handleJumpTab : null} >
+        <h3 className={`title openable ${live ? 'live' : ''}`} data-window-id={windowId} onClick={live ? handleJumpTab : handleOpenTabs.bind(null, tabs.map(t => t.url))} >
           <div className="arrow" onClick={toggleExpand}>
             <Triangle />
           </div>
@@ -92,7 +92,7 @@ export default function Window({ data = null, handleTitleClick, handleTitleBlur,
           </Options>
         </h3>
         <TabList tabs={tabs} handleJumpTab={handleJumpTab} />
-        <div className="btm">
+        <div className="btm openable" onClick={live ? handleJumpTab : handleOpenTabs.bind(null, tabs.map(t => t.url))}>
           <TimeAgo
             locale={navigator.language == 'zh' ? "zh_CN" : 'en'}
             className="time"

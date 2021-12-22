@@ -91,6 +91,9 @@
   "save": {
     "message": "Save"
   },
+  "unsaved": {
+    "message": "unsaved"
+  },
   "quit": {
     "message": "Quit"
   },
