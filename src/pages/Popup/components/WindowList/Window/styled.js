@@ -87,13 +87,16 @@ const StyledWindow = styled.div`
       top:50%;
       transform: translateY(-50%);
       right:34px;
-      color:#fff;
-      background: #52EDFF;
+      color:var(--main-btn-txt-color);
+      background: var(--main-btn-bg-color);
       border-radius: 15px;
       font-weight: bold;
       font-size: 12px;
       line-height: 16px;
       text-align: center;
+      &:hover{
+        background: var(--main-btn-hover-bg-color);
+      }
     }
 }
 &.expand{

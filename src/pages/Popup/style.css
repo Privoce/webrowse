@@ -11,7 +11,7 @@ html,html[data-theme='light'] {
   animation: redraw 10s linear infinite alternate;
   --popup-bg-color: #fff;
   --dropdown-bg-color:#FAFAFA;
-  --dropdown-shadow:0px 8px 24px rgba(182, 183, 183, 1);
+  --dropdown-shadow:0px 8px 24px -8px #B6B7B7;
   --box-border:1px solid #EBEBEC;
   --box-hover-bg:#fff;
   --window-bg-color:#fff;
@@ -27,7 +27,7 @@ html,html[data-theme='light'] {
 html[data-theme='dark'] {
   --popup-bg-color: #010409;
   --dropdown-bg-color:#161B22;
-  --dropdown-shadow:0px 8px 24px rgba(1, 4, 9, 1);
+  --dropdown-shadow:0px 8px 24px -8px #010409;
   --box-border:1px solid #30363D;
   --box-hover-bg:#1A222E;
   --window-bg-color:#0D1117;
@@ -41,6 +41,9 @@ html[data-theme='dark'] {
   --userinfo-hover-bg:rgba(255, 255, 255, 0.08);
 }
 body {
+  --main-btn-txt-color:#273F43;
+  --main-btn-bg-color:#52E9FB;
+  --main-btn-hover-bg-color:#56CCDA;
   background: var(--popup-bg-color);
   overflow: auto;
   padding: 0;

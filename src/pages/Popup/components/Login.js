@@ -25,13 +25,16 @@ const StyledWrapper = styled.div`
   }
   .login{
     cursor: pointer;
-    color:#fff;
+    color:var(--main-btn-txt-color);
     border:none;
-    background: #52EDFF;
+    background: var(--main-btn-bg-color);
     border-radius: 15px;
     padding:4px 12px;
     font-size: 12px;
     line-height: 16px;
+    &:hover{
+      background: var(--main-btn-hover-bg-color);
+    }
   }
 `;
 export default function Login() {

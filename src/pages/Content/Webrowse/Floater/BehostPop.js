@@ -50,8 +50,11 @@ const StyledWrapper = styled.div`
           background: none;
           padding: 4px 12px;
           &.yes{
-            background: #52EDFF;
-            color: #fff;
+            background: var(--main-btn-bg-color);
+            color: var(--main-btn-txt-color);
+            &:hover{
+              background: var(--main-btn-hover-bg-color);
+            }
           }
 
         }

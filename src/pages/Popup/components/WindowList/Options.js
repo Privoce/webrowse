@@ -17,7 +17,7 @@ const StyledOptions = styled.div`
       padding: 8px;
       list-style: none;
       border:var(--box-border);
-      box-shadow: 0px 8px 24px -8px var(--popup-bg-color);
+      box-shadow:var(--dropdown-shadow);
       border-radius: 8px;
       position: absolute;
       right: 5px;
