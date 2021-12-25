@@ -33,6 +33,7 @@ const StyledStatus = styled.div`
     color:#fff;
     font-size: 12px;
     font-family: sans-serif;
+    display: flex;
     .tip{
       background: linear-gradient(271.12deg, #056CF2 0.35%, #74D6D7 95.13%);
       white-space: nowrap;
@@ -86,9 +87,10 @@ const StyledStatus = styled.div`
         transform: translateY(-50%);
         display:block;
         content:"";
-        background-image:url('https://static.nicegoodthings.com/project/ext/webrowse.logo.white.png');
+        background-image: url(${({ avatar = 'https://static.nicegoodthings.com/project/ext/webrowse.logo.white.png' }) => avatar} );
         width:16px;
         height:16px;
+        border-radius: 50%;
         background-size:contain;
         background-repeat:no-repeat;
       }
@@ -105,7 +107,7 @@ const StyledStatus = styled.div`
       margin: 0;
       padding:4px 12px 4px 24px;
       padding-left: 26px;
-      &.follow,&.host{
+      &.follow,&.host,&.be_host{
         background-color:#52E9FB;
         background-image: url('https://static.nicegoodthings.com/works/vera/follow.icon.png') ;
         background-repeat: no-repeat;
@@ -130,6 +132,9 @@ const StyledStatus = styled.div`
           }
         }
       }
+      &.be_host{
+        background-color: #5C6065;
+      }
     }
 `;
 const operations = {
@@ -140,14 +145,14 @@ export default function CobrowseStatus() {
   const [host, setHost] = useState(null);
   const [currUser, setCurrUser] = useState(null);
   const [htmlTip, setHtmlTip] = useState(null)
-  const stopBeHost = () => {
+  const handleBeHost = (enable) => {
     if (!currUser) return;
     sendMessageToBackground({
       data: {
-        cmd: EVENTS.BE_HOST, payload: { enable: false }
+        cmd: EVENTS.BE_HOST, payload: { enable }
       }
     }, MessageLocation.Content, EVENTS.SOCKET_MSG);
-    setHost(null)
+    setHost(null);
   }
   const toggleFollow = () => {
     if (!currUser) return;
@@ -184,19 +189,22 @@ export default function CobrowseStatus() {
     {htmlTip ?
       <div className="tip operation" onAnimationEnd={resetHtmlTip} dangerouslySetInnerHTML={{ __html: htmlTip }}></div>
       :
-      <div className="tip">
-        {chrome.i18n.getMessage('cobrowsing_tip')}
-      </div>
+      <>
+        <div className="tip">
+          {chrome.i18n.getMessage('cobrowsing_tip')}
+        </div>
+        <button className={`status_btn be_host`} onClick={handleBeHost.bind(null, true)}>{chrome.i18n.getMessage('be_host')}</button>
+      </>
     }</StyledStatus>;
   const hostMyself = host.id == currUser.id;
   return (
-    <StyledStatus>
+    <StyledStatus avatar={hostMyself ? currUser.photo : host.photo}>
       {htmlTip && <div className="tip overlay operation" onAnimationEnd={resetHtmlTip} dangerouslySetInnerHTML={{ __html: htmlTip }}></div>}
       <div className="status">
         {hostMyself ? <span>You are now the host</span> : <span>{host.username} is now the host</span>}
       </div>
       {hostMyself ?
-        <button className={`status_btn host warning`} onClick={stopBeHost}>{chrome.i18n.getMessage('stop_hosting')}</button>
+        <button className={`status_btn host warning`} onClick={handleBeHost.bind(null, false)}>{chrome.i18n.getMessage('stop_hosting')}</button>
         :
         <button className={`status_btn follow ${currUser.follow ? 'warning' : ''}`} onClick={toggleFollow}>{currUser.follow ? chrome.i18n.getMessage('stop_following') : chrome.i18n.getMessage('follow_host')}</button>}
     </StyledStatus>

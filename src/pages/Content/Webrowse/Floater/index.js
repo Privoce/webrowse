@@ -3,7 +3,6 @@ import { onMessageFromBackground, sendMessageToBackground, MessageLocation } fro
 import { motion } from 'framer-motion';
 import { IoLinkOutline } from 'react-icons/io5';
 import { MdOutlineRefresh } from 'react-icons/md';
-import { RiUserReceived2Fill, RiUserStarFill } from 'react-icons/ri';
 import { ImStarEmpty, ImStarFull } from 'react-icons/im';
 import { EVENTS } from '../../../../common';
 import { useWindow, useInviteLink, useCopy } from '../../../common/hooks';
@@ -11,7 +10,6 @@ import { getWindowTitle, getWindowTabs } from '../../../common/utils'
 import StyledWidget from './styled';
 import Tabs from './Tabs';
 import Dots from './Dots';
-import BehostPop from './BehostPop';
 // const mock_data = [{ id: 1, host: true, username: "杨二", photo: "https://files.authing.co/user-contents/photos/9be86bd9-5f18-419b-befa-2356dd889fe6.png" }, { id: 2, username: "杨二", photo: "https://files.authing.co/user-contents/photos/9be86bd9-5f18-419b-befa-2356dd889fe6.png" }]
 let tempTitle = '';
 export default function Floater({ roomId, uid, winId, showLeaveModal, dragContainerRef = null }) {
@@ -19,7 +17,6 @@ export default function Floater({ roomId, uid, winId, showLeaveModal, dragContai
   const { updateWindowTitle, checkFavorite, toggleFavorite, saveWindow } = useWindow(uid);
   const [faving, setFaving] = useState(false);
   const [editable, setEditable] = useState(false);
-  const [behostPopoverVisible, setBehostPopoverVisible] = useState(false);
   const [fav, setFav] = useState(false)
   const [users, setUsers] = useState([]);
   const [tabs, setTabs] = useState([]);
@@ -114,29 +111,6 @@ export default function Floater({ roomId, uid, winId, showLeaveModal, dragContai
       evt.target.blur();
     }
   }
-  const handleCancelHostPop = () => {
-    setBehostPopoverVisible(false);
-  }
-
-  const handleBeHost = () => {
-    chrome.storage.sync.get(['BECOME_HOST_ASK'], (res) => {
-      let enable = (host && host.id == currUser?.id) ? false : true;
-      if (!res.BECOME_HOST_ASK && enable) {
-        setBehostPopoverVisible(true);
-        return;
-      } else {
-        // 成为host
-        sendMessageToBackground({
-          data: {
-            cmd: EVENTS.BE_HOST,
-            payload: {
-              enable
-            }
-          }
-        }, MessageLocation.Content, EVENTS.SOCKET_MSG)
-      }
-    });
-  }
   const toggleOptsVisible = (evt) => {
     evt.stopPropagation();
     const { currentTarget } = evt;
@@ -161,7 +135,6 @@ export default function Floater({ roomId, uid, winId, showLeaveModal, dragContai
     }
   }, [winId, uid])
   const { tab } = visible;
-  const isHost = host && host.id == currUser?.id;
   console.log({ users, host, currUser });
   return (
     <>
@@ -170,7 +143,7 @@ export default function Floater({ roomId, uid, winId, showLeaveModal, dragContai
         dragMomentum={false}
         dragConstraints={dragContainerRef}
         whileDrag={{ scale: 1.12 }}
-        style={{ position: 'absolute', right: '24px', bottom: '24px' }}
+        style={{ position: 'fixed', right: '24px', bottom: '24px' }}
       >
         <StyledWidget >
           <div className="top">
@@ -198,12 +171,6 @@ export default function Floater({ roomId, uid, winId, showLeaveModal, dragContai
               <button data-tooltip={chrome.i18n.getMessage('voice_coming_soon')} className={`btn audio tooltip`} data-type='audio' onClick={null}></button>
             </div>
             {link && <div className="cmds">
-              <div className="cmd host tooltip" data-tooltip={chrome.i18n.getMessage('host_tip')} onClick={handleBeHost}>
-                {isHost ? <RiUserStarFill size={16} color="#68D6DD" /> : <RiUserReceived2Fill className="icon" size={16} />}
-                <button className={`btn`} >
-                  {isHost ? chrome.i18n.getMessage('stop_hosting') : chrome.i18n.getMessage('be_host')}
-                </button>
-              </div>
               <div className="cmd copy tooltip" data-tooltip={chrome.i18n.getMessage('copy_link_tip')} onClick={handleCopyLink}>
                 <IoLinkOutline className="icon" size={16} />
                 <button className={`btn ${copied ? 'copied' : ''}`}>
@@ -222,8 +189,6 @@ export default function Floater({ roomId, uid, winId, showLeaveModal, dragContai
             {currUser?.creator && <button className="select" onClick={handleAllLeave}>{chrome.i18n.getMessage('end_for_all')}</button>}
             <button className="select" onClick={handleLeave}>{chrome.i18n.getMessage('leave_session')}</button>
           </div>}
-          {/* {follow && <FollowMode host={host} currUser={currUser} closeBlock={closeBlock} />} */}
-          {behostPopoverVisible && <BehostPop handleCancelHostPop={handleCancelHostPop} />}
         </StyledWidget>
       </motion.div>
     </>
