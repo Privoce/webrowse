@@ -194,9 +194,9 @@ const StyledWidget = styled.aside`
         line-height: 15px;
         color:#fff;
         padding:4px 12px ;
-        /* &:hover{
-          background: #B63546;
-        } */
+        &:hover{
+          background: #BA1B1B;
+        }
       }
 
     }
@@ -226,6 +226,9 @@ const StyledWidget = styled.aside`
         font-size: 12px;
         line-height: 16px;
         padding:4px 12px;
+        &:hover{
+          background: #BA1B1B;
+        }
       }
     }
   .tooltip{

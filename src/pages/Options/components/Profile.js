@@ -63,6 +63,9 @@ const StyledProfile = styled.div`
     }
     &.logout{
       background: #E42222;
+      &:hover{
+        background: #BA1B1B;
+      }
     }
   }
 `;
