@@ -205,8 +205,10 @@ export default function CobrowseStatus() {
       </div>
       {hostMyself ?
         <button className={`status_btn host warning`} onClick={handleBeHost.bind(null, false)}>{chrome.i18n.getMessage('stop_hosting')}</button>
-        :
-        <button className={`status_btn follow ${currUser.follow ? 'warning' : ''}`} onClick={toggleFollow}>{currUser.follow ? chrome.i18n.getMessage('stop_following') : chrome.i18n.getMessage('follow_host')}</button>}
+        : <>
+          <button className={`status_btn follow ${currUser.follow ? 'warning' : ''}`} onClick={toggleFollow}>{currUser.follow ? chrome.i18n.getMessage('stop_following') : chrome.i18n.getMessage('follow_host')}</button>
+          <button className={`status_btn be_host`} onClick={handleBeHost.bind(null, true)}>{chrome.i18n.getMessage('be_host')}</button>
+        </>}
     </StyledStatus>
   )
 }

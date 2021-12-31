@@ -2,17 +2,23 @@
 import { io } from "socket.io-client";
 // import Workspace, { ITabEvent as TabEvent } from 'workspace-api-for-chrome'
 import Workspace, { TabEvent } from './lib/main';
-import { onMessageAnywhere, sendMessageToContentScript, onMessageFromPopup, sendMessageToPopup, onMessageFromContentScript, MessageLocation } from '@wbet/message-api'
+import { sendMessageToContentScript, onMessageFromPopup, sendMessageToPopup, onMessageFromContentScript, MessageLocation } from '@wbet/message-api'
 import { EVENTS, SOCKET_SERVER_DOMAIN, DEFAULT_LANDING } from '../../common';
 import { getActiveTab } from './utils';
 import { debounce } from '../common/utils';
 const protocolPrefix = SOCKET_SERVER_DOMAIN.indexOf('localhost') > -1 ? 'http://' : 'wss://';
 const SOCKET_SERVER_URL = `${protocolPrefix}${SOCKET_SERVER_DOMAIN}`;
 const DATA_HUB = { windowTitles: {}, loginUser: null };
+const CursorTabs = {};
 const Tabs = {};
+const Connections = {};
 const InvitedWindows = {};
 const inactiveWindows = [];
 const tabOperations = [];
+// tab标签切换的处理事件
+chrome.tabs.onActivated.addListener(({ windowId }) => {
+  notifyActiveTab({ windowId, action: EVENTS.CHECK_CONNECTION });
+})
 // 安装扩展触发的事件
 chrome.runtime.onInstalled.addListener(function (details) {
   const { reason } = details;
@@ -80,6 +86,7 @@ chrome.storage.sync.get(['user'], (res) => {
 });
 // 向特定tab发消息
 const sendMessageToTab = (tid = null, params, actionType = '') => {
+  console.log("send msg to tab", tid, params);
   if (tid) {
     sendMessageToContentScript(tid, params, MessageLocation.Background, actionType);
   }
@@ -122,10 +129,12 @@ const checkIsFollower = (wid, tid) => {
   const currentHost = DATA_HUB[wid].users?.find(u => !!u.host);
   console.log("check follower", DATA_HUB[wid], DATA_HUB.loginUser);
   if (currentHost && currentUser?.follow) {
-    chrome.tabs.remove(tid, () => {
-      console.log("stop opening new tab for following mode");
-      notifyActiveTab({ windowId: wid, action: EVENTS.FOLLOW_MODE_TIP })
-    })
+    if (tid) {
+      chrome.tabs.remove(tid, () => {
+        console.log("stop opening new tab for following mode");
+        notifyActiveTab({ windowId: wid, action: EVENTS.FOLLOW_MODE_TIP })
+      })
+    }
     return true
   }
   return false
@@ -154,15 +163,12 @@ const initWorkspace = async ({ invited = false, windowId = null, roomId = "", wi
         // case TabEvent.onHighlighted:
         {
           needSyncTabsList = false;
-          let wid = null;
-          if (event == TabEvent.onActivated) {
-            wid = rawParams.activeInfo.windowId;
-          } else {
-            wid = rawParams.highlightInfo.windowId;
-          }
+          let { windowId: wid } = rawParams.activeInfo;
           let activeTab = await getActiveTab();
           if (activeTab.url && !activeTab.url.startsWith('chrome') && !activeTab.url.startsWith('edge')) {
             currSocket = DATA_HUB[wid].socket;
+            // 标记鼠标tab
+            CursorTabs[rawParams.activeInfo.windowId] = rawParams.activeInfo.tabId;
             console.log('tab active/highlight event', activeTab, currSocket);
           }
         }
@@ -189,21 +195,26 @@ const initWorkspace = async ({ invited = false, windowId = null, roomId = "", wi
         // youtube的判断条件： active && url && !url.startsWith('chrome') && url.indexOf(title)>-1 && pageLoadingStatus == "loading"
         const { status: pageLoadingStatus } = changeInfo;
         const isCreated = DATA_HUB[windowId].createTabs.includes(tab.id);
-        const shouldSync = currUser?.host || isCreated;
+        const shouldSync = (currUser?.host || isCreated) && active;
         console.log("tab update sync flag", { active, pageLoadingStatus, shouldSync, changeInfo, tab });
-        if (active && url && !url.startsWith('chrome') && pageLoadingStatus == "complete" && shouldSync) {
+        const isValidSyncTab = url && url.startsWith('http') && pageLoadingStatus == "complete";
+        if (isValidSyncTab) {
+          // 建立live connect, 用url当做name来日后识别
+          Connections[`${windowId}_${url}`] = chrome.tabs.connect(tab.id, { name: url });
           console.log(`page load status: ${pageLoadingStatus} `, changeInfo, tab);
-          // 拿到socket
-          currSocket = DATA_HUB[windowId].socket;
-          if (isCreated) {
-            currSocket.send({
-              cmd: EVENTS.TAB_EVENT, payload: {
-                type: "create", tab: { title, url }
-              }
-            })
+          if (shouldSync) {
+            // 拿到socket
+            currSocket = DATA_HUB[windowId].socket;
+            if (isCreated) {
+              currSocket.send({
+                cmd: EVENTS.TAB_EVENT, payload: {
+                  type: "create", tab: { title, url }
+                }
+              })
+            }
+            // 从创建tab id 集合中移除
+            DATA_HUB[windowId].createTabs = DATA_HUB[windowId].createTabs.filter(tid => tid !== tab.id)
           }
-          // 从创建tab id 集合中移除
-          DATA_HUB[windowId].createTabs = DATA_HUB[windowId].createTabs.filter(tid => tid !== tab.id)
         }
       }
         break;
@@ -252,10 +263,9 @@ const initWorkspace = async ({ invited = false, windowId = null, roomId = "", wi
       sendTabSyncMsg(currWorkspace, currSocket);
     }
     // 每次有变动 应该执行的事件
-    notifyActiveTab({ finalWindowId, action: EVENTS.UPDATE_FLOATER });
-    notifyActiveTab({ finalWindowId, action: EVENTS.CHECK_CONNECTION });
+    notifyActiveTab({ windowId: finalWindowId, action: EVENTS.UPDATE_FLOATER });
+    notifyActiveTab({ windowId: finalWindowId, action: EVENTS.CHECK_CONNECTION });
   });
-  notifyActiveTab({ finalWindowId, action: EVENTS.CHECK_CONNECTION });
 }
 // update tabs
 const notifyActiveTab = ({ windowId = 0, action = EVENTS.UPDATE_TABS, payload = {} }) => {
@@ -305,37 +315,7 @@ const notifyActiveTab = ({ windowId = 0, action = EVENTS.UPDATE_TABS, payload = 
     }
   })
 }
-// 监听来自非bg的事件
-onMessageAnywhere({
-  [EVENTS.GET_TABS_BY_WINDOW]: (req) => {
-    console.log("req from some where", req);
-    const { windowId, from } = req;
-    const sendResponse = (window) => {
-      switch (from) {
-        case 'content': {
-          let activeTab = window.tabs.find(t => t.active)
-          sendMessageToContentScript(activeTab.id, { tabs: window.tabs }, MessageLocation.Background, EVENTS.GET_TABS_BY_WINDOW)
-        }
-          break;
-        case 'popup':
-          sendMessageToPopup({ tabs: window.tabs }, MessageLocation.Background, EVENTS.GET_TABS_BY_WINDOW)
-          break;
 
-        default:
-          break;
-      }
-    }
-    if (windowId) {
-      chrome.windows.get(windowId, { populate: true }, (w) => {
-        sendResponse(w)
-      })
-    } else {
-      chrome.windows.getCurrent({ populate: true }, (w) => {
-        sendResponse(w)
-      })
-    }
-  }
-})
 // 监听来自popup的触发事件
 onMessageFromPopup(MessageLocation.Background, {
   [EVENTS.LOGOUT]: () => {
@@ -443,7 +423,7 @@ onMessageFromContentScript(MessageLocation.Background, {
     const { id: tabId, windowId } = sender.tab;
     // 如果已初始化，则不必再次初始化
     if (DATA_HUB[windowId]?.socket) return;
-    const newSocket = io(SOCKET_SERVER_URL, {
+    const socket = io(SOCKET_SERVER_URL, {
       jsonp: false,
       transports: ['websocket'],
       reconnectionAttempts: 8,
@@ -451,21 +431,16 @@ onMessageFromContentScript(MessageLocation.Background, {
     });
     console.log('invited', InvitedWindows[windowId]);
     console.log('init websocket', { roomId, winId, temp, user });
-    DATA_HUB[windowId].socket = newSocket;
+    DATA_HUB[windowId].socket = socket;
     // 当前room的socket实例
-    const { socket } = DATA_HUB[windowId];
     const currTabId = tabId;
-
     socket.on('connect', () => {
-      console.log('ws room io connect', socket.id);
+      console.log('ws room io connect', socket.id, windowId, DATA_HUB);
       // 去掉本地title
       delete DATA_HUB.windowTitles[windowId];
       // 全局维护window 与 peerid,roomId 的映射
       DATA_HUB[windowId].socketId = socket.id;
       sendMessageToContentScript(tabId, true, MessageLocation.Background, EVENTS.CHECK_CONNECTION)
-    });
-    socket.on('message', (wtf) => {
-      console.log('io message', wtf);
     });
     // 房间当前有哪些人 服务器端来判断是否是host
     socket.on(EVENTS.CURRENT_USERS, ({ room = {}, title = "", workspaceData = null, users, update = false }) => {
@@ -507,9 +482,11 @@ onMessageFromContentScript(MessageLocation.Background, {
     // workspace 事件
     socket.on(EVENTS.WORKSPACE, async (workspace) => {
       // workspace更新
-      const currentUser = DATA_HUB[windowId].users.find(u => u.id == socket.id);
+      const users = DATA_HUB[windowId]?.users;
+      const currentUser = users ? users.find(u => u.id == socket.id) : undefined;
       const { data: wsData, fromHost = false } = workspace;
-      const curWS = DATA_HUB[windowId].workspace;
+      const curWS = DATA_HUB[windowId]?.workspace;
+      if (!curWS) return;
       let filter = [TabEvent.onCreated, TabEvent.onMoved, TabEvent.onRemoved];
       // 没有开启follow mode 则忽略active index的更新
       if (currentUser?.follow) {
@@ -550,6 +527,17 @@ onMessageFromContentScript(MessageLocation.Background, {
       // 发送给active tab
       notifyActiveTab({ windowId, action: EVENTS.ACCESS_TIP, payload: { site, index } });
     });
+    // host的鼠标数据
+    socket.on(EVENTS.HOST_CURSOR, ({ x, y, index, url }) => {
+      console.log('host cursor data', x, y, index, url);
+      const port = Connections[`${windowId}_${url}`];
+      if (!port) return;
+      try {
+        port.postMessage({ x, y })
+      } catch (error) {
+        delete Connections[`${windowId}_${url}`]
+      }
+    });
     // 服务器端触发，主动断掉
     socket.on("disconnect", () => {
       console.log("disconnect from server");
@@ -559,22 +547,16 @@ onMessageFromContentScript(MessageLocation.Background, {
       notifyActiveTab({ windowId, action: EVENTS.CHECK_CONNECTION })
     })
     // 出错则重连
-    let retryCount = 0;
-    socket.on('connect_error', () => {
-      console.log('io socket connect error');
-      setTimeout(() => {
-        if (retryCount >= 3) {
-          // 超过十次重连，毁灭吧，赶紧的。
-          if (DATA_HUB[windowId]) {
-            DATA_HUB[windowId].workspace.destroy();
-            delete DATA_HUB[windowId];
-            notifyActiveTab({ windowId, action: EVENTS.CHECK_CONNECTION })
-          }
-          return
-        };
-        socket.connect();
-        retryCount++;
-      }, 2000);
+    socket.on('connect_error', (error) => {
+      console.log('io socket connect error', error);
+      // revert to classic upgrade
+      socket.io.opts.transports = ["polling", "websocket"];
+      // 先销毁当前相关数据
+      // if (DATA_HUB[windowId]) {
+      //   DATA_HUB[windowId].workspace.destroy();
+      //   delete DATA_HUB[windowId];
+      //   notifyActiveTab({ windowId, action: EVENTS.CHECK_CONNECTION })
+      // }
     });
   },
   // send socket msg
@@ -678,6 +660,17 @@ onMessageFromContentScript(MessageLocation.Background, {
       )
     }
   },
+  // host的鼠标move数据
+  [EVENTS.HOST_CURSOR]: (req = {}, sender) => {
+    const { x, y } = req;
+    const { windowId, index, url } = sender.tab;
+    const currSocket = DATA_HUB[windowId]?.socket;
+    if (currSocket) {
+      currSocket.send(
+        { cmd: EVENTS.HOST_CURSOR, payload: { x, y, index, url } }
+      )
+    }
+  },
   [EVENTS.UPDATE_WIN_TITLE]: (request, sender) => {
     const { title = "" } = request;
     if (!title) return;
@@ -707,7 +700,4 @@ chrome.tabs.onRemoved.addListener((tabId, { windowId, isWindowClosing }) => {
   if (!currWorkspace || isWindowClosing || tabOperations.length == 0) return;
   notifyActiveTab({ windowId, action: EVENTS.TAB_EVENT, payload: tabOperations.pop() })
 })
-// tab标签切换的处理事件
-chrome.tabs.onActivated.addListener(({ windowId }) => {
-  notifyActiveTab({ windowId, action: EVENTS.CHECK_CONNECTION });
-})
+

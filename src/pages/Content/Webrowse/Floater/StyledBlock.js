@@ -9,7 +9,7 @@ const StyledContainer = styled.div`
     flex-direction: column;
     align-items: flex-start;
     padding: 12px 14px;
-    transition: all .5s ease-in;
+    /* transition: all .5s ease-in; */
     width: 380px;
     >.title{
       color: var(--font-color);

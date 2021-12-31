@@ -64,7 +64,9 @@ const EVENTS = {
   // 复制
   COPY_SOMETHING: 'COPY_SOMETHING',
   // 权限提醒
-  ACCESS_TIP: 'ACCESS_TIP'
+  ACCESS_TIP: 'ACCESS_TIP',
+  // 鼠标位置事件
+  HOST_CURSOR: 'HOST_CURSOR'
 }
 // const SOCKET_SERVER_DOMAIN = 'stage.vera.nicegoodthings.com';
 const SOCKET_SERVER_DOMAIN = 'vera.nicegoodthings.com';

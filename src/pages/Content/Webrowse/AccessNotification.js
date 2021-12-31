@@ -8,7 +8,7 @@ import { AniFadeIn } from '../../common/animates'
 const StyledWrapper = styled.div`
     box-sizing: border-box;
     z-index: 10;
-    position: absolute;
+    position: fixed;
     right: 20px;
     top: 20px;
     min-width: 380px;

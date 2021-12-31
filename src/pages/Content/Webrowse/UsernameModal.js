@@ -6,7 +6,7 @@ import IconClose from './icons/Close'
 import { SOCKET_SERVER_DOMAIN } from '../../../common'
 
 const StyledModal = styled.section`
-  position: absolute;
+  position: fixed;
   top:0;
   left: 0;
   width: 100%;

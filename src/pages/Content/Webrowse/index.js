@@ -15,11 +15,15 @@ import NewEnterNotification from './NewEnterNotification'
 import AccessNotification from './AccessNotification'
 import FollowTipNotification from './FollowTipNotification'
 import CobrowseStatus from './CobrowseStatus';
+import Cursor from './Cursor';
 
 const StyledWrapper = styled.section`
+  --main-btn-txt-color:#273F43;
+  --main-btn-bg-color:#52E9FB;
+  --main-btn-hover-bg-color:#56CCDA;
   --webrowse-widget-bg-color: #fff;
   --font-color:#010409;
-  --shadow-color:#B6B7B7;
+  --shadow-color:rgba(0, 0, 0, 0.16);
   --tab-status-bg-color:#FFF8E8;
   --tab-bg-color:#fff;
   --tab-hover-bg-color:rgba(0, 0, 0, 0.08);
@@ -38,7 +42,7 @@ const StyledWrapper = styled.section`
   &[data-theme='dark'] {
       --webrowse-widget-bg-color: #010409;
       --font-color:#fff;
-      --shadow-color:#010409;
+      --shadow-color:rgba(230, 230, 230, 0.16);
       --tab-status-bg-color:#413E3A;
       --tab-bg-color:#0D1117;
       --tab-hover-bg-color:#1A222E;
@@ -55,13 +59,12 @@ const StyledWrapper = styled.section`
       --modal-title-color:#fff;
       --modal-content-color:#667085;
   }
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
   z-index: 9999999;
-  background: none !important;
   pointer-events: none;
   display: flex;
   align-items: center;
@@ -199,6 +202,7 @@ export default function Webrowse() {
       <NewEnterNotification />
       <AccessNotification />
       <FollowTipNotification />
+      <Cursor />
     </StyledWrapper>
 
   );
