@@ -180,14 +180,6 @@ export default function Webrowse() {
       initializeSocketRoom({ roomId, winId, user: currUser });
     }
   }, [roomId, winId, currUser]);
-  useEffect(() => {
-    if (floaterVisible) {
-      // 隐藏掉滚动条
-      const injectStyle = document.createElement("style");
-      injectStyle.innerHTML = "body::-webkit-scrollbar{display:none !important}";
-      document.head.appendChild(injectStyle)
-    }
-  }, [floaterVisible])
   if (loading) return null;
   console.log({ currUser, nameModalVisible, floaterVisible });
   return (
