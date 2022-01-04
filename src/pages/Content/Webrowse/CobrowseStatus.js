@@ -23,7 +23,7 @@ const AniSlideToggle = keyframes`
 `;
 const StyledStatus = styled.div`
     overflow: hidden;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 50%;
     transform: translateX(-50%);
