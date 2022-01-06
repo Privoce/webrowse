@@ -50,8 +50,8 @@ export default function Window({ data = null, handleTitleClick, handleTitleBlur,
   if (!data) return null;
   const { local = false } = data;
   if (local) {
-    const { title, id, winId, room, tabs, live } = data;
-    return <StyledWindow key={id} className={`window ${live ? 'live' : ''}`}>
+    const { title, id, winId, room, tabs, live, active } = data;
+    return <StyledWindow key={id} className={`window ${live ? 'live' : ''} ${active ? 'active' : ''}`}>
       <h3 className={`title openable`} key={title} data-window-id={id} onClick={handleJumpTab} >
         <div className="arrow" onClick={toggleExpand}>
           <Triangle />

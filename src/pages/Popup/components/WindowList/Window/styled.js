@@ -17,8 +17,8 @@ const StyledWindow = styled.div`
   border: var(--box-border);
   border-radius: 8px;
   background-color: var(--window-bg-color);
-  &.live{
-      /* border: 1px solid #68CC58; */
+  &.active{
+      border: 1px solid #68CC58;
   }
   .title{
     position: relative;

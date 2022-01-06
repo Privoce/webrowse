@@ -58,24 +58,29 @@ export default function WindowList({ titles = {}, windows = null, uid = null }) 
     }
   }
   useEffect(() => {
-    chrome.windows.getAll({ populate: true }, (wins) => {
-      const tmps = wins.map(({ id, tabs }, idx) => {
-        let localTitle = titles[id];
-        let browsingWindow = windows?.find(w => w.windowId == id)
-        return {
-          id,
-          room: browsingWindow?.roomId,
-          winId: browsingWindow?.winId,
-          live: !!browsingWindow,
-          title: localTitle || browsingWindow?.title || `Window ${idx + 1}`,
-          tabs: tabs.map(t => {
-            const { favIconUrl, id, title, windowId, url } = t;
-            return { favIconUrl, id, title, windowId, url }
-          })
-        }
-      });
-      console.log("window list", tmps, windows);
-      setCurrentWindows(tmps)
+    chrome.windows.getCurrent((w) => {
+      console.log("last focuse", w);
+      chrome.windows.getAll({ populate: true }, (wins) => {
+        const tmps = wins.map(({ id, tabs }, idx) => {
+          let localTitle = titles[id];
+          let browsingWindow = windows?.find(w => w.windowId == id)
+          console.log("compare", { id, w });
+          return {
+            id,
+            room: browsingWindow?.roomId,
+            winId: browsingWindow?.winId,
+            active: w.id == id,
+            live: !!browsingWindow,
+            title: localTitle || browsingWindow?.title || `Window ${idx + 1}`,
+            tabs: tabs.map(t => {
+              const { favIconUrl, id, title, windowId, url } = t;
+              return { favIconUrl, id, title, windowId, url }
+            })
+          }
+        });
+        console.log("window list", tmps, windows);
+        setCurrentWindows(tmps)
+      })
     })
   }, [windows, titles]);
 
@@ -137,10 +142,10 @@ export default function WindowList({ titles = {}, windows = null, uid = null }) 
       {currentWindows && currentWindows.length !== 0 && <StyledWrapper>
         <h2 className="title">{chrome.i18n.getMessage('current_window_title')}</h2>
         <div className={`block`}>
-          {currentWindows.map(({ title, id, winId, room, tabs, live }) => {
+          {currentWindows.map(({ active, title, id, winId, room, tabs, live }) => {
             return <Window
               key={id}
-              data={{ local: true, title, id, winId, room, tabs, live }}
+              data={{ local: true, title, id, winId, room, tabs, live, active }}
               handleTitleClick={handleTitleClick}
               handleTitleBlur={handleTitleBlur}
               handleNewBrowsing={handleNewBrowsing}
@@ -153,7 +158,11 @@ export default function WindowList({ titles = {}, windows = null, uid = null }) 
         <h2 className="title">{chrome.i18n.getMessage('saved_window_title')} {loading && <MdOutlineRefresh className="tip" />}</h2>
         <div className={`block ${savedWindows.length == 0 ? 'empty' : ''}`}>
           {savedWindows.length == 0 && <div className="tip">You haven’t saved any windows yet. Start cobrowsing and save any window that you would like to share again!</div>}
-          {savedWindows.map(({ relation_id, title, id, room, tabs, active, updated_at }) => {
+          {savedWindows.sort((a, b) => {
+            const aLive = !!currentWindows.find((w) => w.winId == a.id);
+            const bLive = !!currentWindows.find(w => w.winId == b.id);
+            return bLive - aLive;
+          }).map(({ relation_id, title, id, room, tabs, active, updated_at }) => {
             const localOpenedWindow = currentWindows.find(w => w.winId == id);
             const live = !!localOpenedWindow;
             const windowId = localOpenedWindow?.id;
