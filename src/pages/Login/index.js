@@ -15,6 +15,7 @@ const GithubIcon = `<path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd"
 
 const scene = new URLSearchParams(location.search).get('scene') || 'login';
 const guard = new AuthingGuard('6034a70af621af721e5320b9', {
+  title: "Webrowse",
   defaultScenes: scene,
   socialConnections: ['google', 'github'],
   lang: navigator.language == 'zh-CN' ? 'zh-CN' : 'en-US',
