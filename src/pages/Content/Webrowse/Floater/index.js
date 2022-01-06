@@ -146,6 +146,10 @@ export default function Floater({ roomId, uid, winId, showLeaveModal, dragContai
         style={{ position: 'fixed', right: '24px', bottom: '24px' }}
       >
         <StyledWidget >
+          <div className="drag">
+            <div className="line"></div>
+            <div className="line"></div>
+          </div>
           <div className="top">
             <div className={`title`}>
               <input onKeyDown={handleEnterKey} onBlur={handleTitleBlur} onClick={handleTitleClick} readOnly={!editable} value={title || 'Temporary Window'} onChange={handleTitleChange} />

@@ -11,6 +11,24 @@ const StyledWidget = styled.aside`
   flex-direction: column;
   width: 380px;
   box-sizing: border-box;
+  .drag{
+    cursor:move;
+    position: absolute;
+    top: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 12px;
+    height: 12px;
+    gap: 2px;
+    .line{
+      width: 100%;
+      height: 1px;
+      background-color: #c4c4c4;
+    }
+  }
   .top{
     display: flex;
     justify-content: space-between;
