@@ -113,7 +113,13 @@ export default function Cursor() {
             if (!currHost) {
                 setCursorPos(null)
             }
-        }
+        },
+        [EVENTS.CHECK_CONNECTION]: (connected = false) => {
+            console.log("connection check", connected);
+            if (!connected) {
+                setCursorPos(null)
+            }
+        },
     });
     const handleJumpToCursor = () => {
         // shadow DOM
