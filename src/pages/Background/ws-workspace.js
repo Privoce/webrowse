@@ -426,15 +426,18 @@ onMessageFromContentScript(MessageLocation.Background, {
     const socket = io(SOCKET_SERVER_URL, {
       jsonp: false,
       transports: ['websocket'],
-      reconnectionAttempts: 8,
+      // 暂时禁掉重连
+      reconnection: false,
+      // reconnectionAttempts: 8,
       query: { type: 'WEBROWSE', roomId, winId, temp, title: DATA_HUB.windowTitles[windowId] || "", invited: InvitedWindows[windowId], ...user }
     });
     console.log('invited', InvitedWindows[windowId]);
     console.log('init websocket', { roomId, winId, temp, user });
-    DATA_HUB[windowId].socket = socket;
     // 当前room的socket实例
     const currTabId = tabId;
+    DATA_HUB[windowId].socket = socket;
     socket.on('connect', () => {
+      // 包括reconnect情况
       console.log('ws room io connect', socket.id, windowId, DATA_HUB);
       // 去掉本地title
       delete DATA_HUB.windowTitles[windowId];
@@ -539,9 +542,12 @@ onMessageFromContentScript(MessageLocation.Background, {
       }
     });
     // 服务器端触发，主动断掉
-    socket.on("disconnect", () => {
-      console.log("disconnect from server");
-      // 销毁该销毁的
+    socket.on("disconnect", (reason) => {
+      console.log("disconnect from server", reason);
+      let explicit_disconnects = ['io server disconnect', 'io client disconnect'];
+      if (!explicit_disconnects.includes(reason)) return;
+      // 异常情况，则走reconnect流程
+      // 先销毁该销毁的
       DATA_HUB[windowId]?.workspace.destroy();
       delete DATA_HUB[windowId];
       notifyActiveTab({ windowId, action: EVENTS.CHECK_CONNECTION })
@@ -551,12 +557,6 @@ onMessageFromContentScript(MessageLocation.Background, {
       console.log('io socket connect error', error);
       // revert to classic upgrade
       socket.io.opts.transports = ["polling", "websocket"];
-      // 先销毁当前相关数据
-      // if (DATA_HUB[windowId]) {
-      //   DATA_HUB[windowId].workspace.destroy();
-      //   delete DATA_HUB[windowId];
-      //   notifyActiveTab({ windowId, action: EVENTS.CHECK_CONNECTION })
-      // }
     });
   },
   // send socket msg
