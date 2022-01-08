@@ -142,7 +142,7 @@ export default function WindowList({ titles = {}, windows = null, uid = null }) 
       {currentWindows && currentWindows.length !== 0 && <StyledWrapper>
         <h2 className="title">{chrome.i18n.getMessage('current_window_title')}</h2>
         <div className={`block`}>
-          {currentWindows.map(({ active, title, id, winId, room, tabs, live }) => {
+          {currentWindows.sort((a, b) => b.active - a.active).map(({ active, title, id, winId, room, tabs, live }) => {
             return <Window
               key={id}
               data={{ local: true, title, id, winId, room, tabs, live, active }}

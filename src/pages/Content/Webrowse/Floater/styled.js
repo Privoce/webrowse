@@ -12,6 +12,7 @@ const StyledWidget = styled.aside`
   width: 380px;
   box-sizing: border-box;
   .drag{
+    visibility: hidden;
     cursor:move;
     position: absolute;
     top: 6px;
@@ -28,6 +29,9 @@ const StyledWidget = styled.aside`
       height: 1px;
       background-color: #c4c4c4;
     }
+  }
+  &:hover .drag{
+    visibility: visible;
   }
   .top{
     display: flex;
