@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "build": "node utils/build.js",
-    "postbuild": "rm -rf ./build/227.js && tar -cvf webrowse.tar ./build/*",
+    "postbuild": "export EXT_VERSION=`date '+%Y.%m.%d'` && rm -rf ./build/227.js webrowse_*.zip && zip webrowse_$EXT_VERSION.zip ./build/* -r",
     "build:production": "export PRODUCTION=true && npm run build",
     "start": "node utils/webserver.js",
     "postinstall": "husky install",
