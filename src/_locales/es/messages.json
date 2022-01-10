@@ -37,6 +37,9 @@
   "login": {
     "message": "Login"
   },
+  "signup": {
+    "message": "Sign Up"
+  },
   "login_desc": {
     "message": "Log in to Webrowse to cobrowse any websites with your teammates!"
   },

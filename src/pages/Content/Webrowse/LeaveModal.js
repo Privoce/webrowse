@@ -128,7 +128,7 @@ export default function LeaveModal({ winId = "", endAll = false, user, closeModa
     }
   }, [user])
   const handleSignup = () => {
-    sendMessageToBackground({ scene: 'register' }, MessageLocation.Content, EVENTS.LOGIN);
+    sendMessageToBackground({ scene: 'register', popup: true }, MessageLocation.Content, EVENTS.LOGIN);
   }
   const handleQuit = async (keepTabs) => {
     console.log("click quit", { keepTabs, endAll });

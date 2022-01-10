@@ -31,6 +31,9 @@
   "tabs": {
     "message": "Tabs"
   },
+  "signup": {
+    "message": "Sign Up"
+  },
   "signout": {
     "message": "Sign Out"
   },

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { sendMessageToBackground, onMessageFromBackground, MessageLocation } from '@wbet/message-api'
+import { sendMessageToBackground, onMessageFromBackground, MessageLocation, onMessageFromContentScript } from '@wbet/message-api'
 
 import { getUser } from './hooks/utils';
 import UsernameModal from './UsernameModal';
@@ -163,10 +163,19 @@ export default function Webrowse() {
         setWinId(winId);
         setLoading(false);
       },
+
       [EVENTS.TAB_LIMIT]: () => {
         setTabLimitModalVisible(true)
       }
     });
+    onMessageFromContentScript(MessageLocation.Content, {
+      [EVENTS.LOGIN]: ({ user: loginedUser }) => {
+        console.log("logined user", loginedUser);
+        if (loginedUser.id) {
+          initUser(loginedUser.id)
+        }
+      },
+    })
     // 初次初始化
     initUser();
     sendMessageToBackground({}, MessageLocation.Content, EVENTS.CHECK_CONNECTION);

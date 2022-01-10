@@ -42,15 +42,19 @@ onMessageFromContentScript(MessageLocation.Background, {
     })
   },
   [EVENTS.LOGIN]: (request = {}, sender) => {
-    const { scene = 'login' } = request;
-    chrome.tabs.create(
-      {
-        openerTabId: sender.tab.id,
-        active: true,
-        url: `Login/index.html?tid=${sender.tab.id}&scene=${scene}`
-      },
-      null
-    );
+    const { scene = 'login', popup = false } = request;
+    if (popup) {
+      chrome.windows.create({ focused: true, url: `Login/index.html?tid=${sender.tab.id}&scene=${scene}&popup=1` })
+    } else {
+      chrome.tabs.create(
+        {
+          openerTabId: sender.tab.id,
+          active: true,
+          url: `Login/index.html?tid=${sender.tab.id}&scene=${scene}`
+        },
+        null
+      );
+    }
   },
   // get current tab info
   [EVENTS.CURRENT_TAB]: (request, sender) => {
