@@ -3,9 +3,11 @@ import { io } from "socket.io-client";
 // import Workspace, { ITabEvent as TabEvent } from 'workspace-api-for-chrome'
 import Workspace, { TabEvent } from './lib/main';
 import { sendMessageToContentScript, onMessageFromPopup, sendMessageToPopup, onMessageFromContentScript, MessageLocation } from '@wbet/message-api'
-import { EVENTS, SOCKET_SERVER_DOMAIN, DEFAULT_LANDING } from '../../common';
+import { EVENTS } from '../../common';
+import config from '../../config';
 import { getActiveTab } from './utils';
 import { debounce } from '../common/utils';
+const {DEFAULT_LANDING, SOCKET_SERVER_DOMAIN} = config;
 const protocolPrefix = SOCKET_SERVER_DOMAIN.indexOf('localhost') > -1 ? 'http://' : 'wss://';
 const SOCKET_SERVER_URL = `${protocolPrefix}${SOCKET_SERVER_DOMAIN}`;
 const DATA_HUB = { windowTitles: {}, loginUser: null };
