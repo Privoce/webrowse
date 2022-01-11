@@ -4,7 +4,7 @@ import { onMessageFromBackground, sendMessageToBackground, MessageLocation } fro
 import Login from './Login';
 import TopInfo from './TopInfo'
 import WindowList from './WindowList';
-import { EVENTS } from '../../../common'
+import { EVENTS } from '../../../config'
 import { useUser, useTheme } from '../../common/hooks'
 const StyledContainer = styled.section`
   min-width: 380px;

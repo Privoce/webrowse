@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import styled from 'styled-components';
 import { sendMessageToBackground, MessageLocation } from '@wbet/message-api'
-import { EVENTS } from '../../../common';
+import { EVENTS } from '../../../config';
 import IconClose from './icons/Close';
 import { TiWarningOutline } from 'react-icons/ti'
 import { useWindow } from '../../common/hooks';

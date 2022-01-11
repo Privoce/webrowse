@@ -1,5 +1,5 @@
 import { onMessageFromContentScript, onMessageAnywhere, sendMessageToPopup, onMessageFromPopup, MessageLocation, sendMessageToContentScript, onMessageFromOptions } from '@wbet/message-api';
-import { EVENTS } from '../../common';
+import { EVENTS } from '../../config';
 const openLoginTab = () => {
   chrome.tabs.create(
     {

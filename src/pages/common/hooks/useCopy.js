@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { MessageLocation, sendMessageToBackground } from '@wbet/message-api';
-import { EVENTS } from '../../../common'
+import { EVENTS } from '../../../config'
 const Froms = {
   content: MessageLocation.Content,
   popup: MessageLocation.Popup

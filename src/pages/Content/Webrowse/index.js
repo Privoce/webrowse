@@ -8,7 +8,7 @@ import LeaveModal from './LeaveModal';
 import TabLimitTipModal from './TabLimitTipModal';
 import useSocketRoom from './hooks/useSocketRoom';
 // import useUsername from './hooks/useUsername'
-import { EVENTS } from '../../../common';
+import { EVENTS } from '../../../config';
 import { useUser, useTheme } from '../../common/hooks'
 import Floater from './Floater';
 import NewEnterNotification from './NewEnterNotification'

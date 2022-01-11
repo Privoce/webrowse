@@ -3,7 +3,7 @@ import { io } from "socket.io-client";
 // import Workspace, { ITabEvent as TabEvent } from 'workspace-api-for-chrome'
 import Workspace, { TabEvent } from './lib/main';
 import { sendMessageToContentScript, onMessageFromPopup, sendMessageToPopup, onMessageFromContentScript, MessageLocation } from '@wbet/message-api'
-import { EVENTS } from '../../common';
+import { EVENTS } from '../../config';
 import config from '../../config';
 import { getActiveTab } from './utils';
 import { debounce } from '../common/utils';

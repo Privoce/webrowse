@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { onMessageFromBackground, sendMessageToBackground, MessageLocation } from '@wbet/message-api'
-import { EVENTS } from '../../../common';
+import { EVENTS } from '../../../config';
 const AniSlideToggle = keyframes`
   0% {
     opacity: 0.2;

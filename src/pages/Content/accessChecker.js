@@ -1,5 +1,5 @@
 import { sendMessageToBackground, MessageLocation } from '@wbet/message-api'
-import { EVENTS } from '../../common'
+import { EVENTS } from '../../config'
 
 console.log("access checker executed");
 setTimeout(() => {

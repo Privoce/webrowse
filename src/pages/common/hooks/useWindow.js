@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { sendMessageToBackground, MessageLocation } from '@wbet/message-api';
-import { EVENTS } from '../../../common'
+import { EVENTS } from '../../../config'
 import { getWindowTabs, getWindowTitle } from '../utils'
 import {
   useLazyQuery,

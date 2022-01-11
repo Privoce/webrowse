@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import styled from 'styled-components';
 import { MessageLocation, onMessageFromBackground } from '@wbet/message-api'
-import { EVENTS } from '../../../common';
+import { EVENTS } from '../../../config';
 import { AniFadeIn } from '../../common/animates'
 
 const StyledWrapper = styled.div`

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useInView } from 'react-intersection-observer';
 import { MessageLocation, onMessageFromBackground, sendMessageToBackground } from '@wbet/message-api'
-import { EVENTS } from '../../../common';
+import { EVENTS } from '../../../config';
 import { throttle } from '../../common/utils'
 import styled from 'styled-components';
 const StyledCursor = styled.aside`
