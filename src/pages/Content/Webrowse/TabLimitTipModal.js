@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import styled from 'styled-components';
 import { RiErrorWarningLine } from 'react-icons/ri'
 import { sendMessageToBackground, MessageLocation } from '@wbet/message-api'
-import { EVENTS } from '../../../config';
+import EVENTS from '../../common/events'
 import { AniBounceIn } from '../../common/animates'
 const StyledModal = styled.section`
   position: absolute;

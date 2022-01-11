@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import styled from 'styled-components';
 import { sendMessageToBackground, MessageLocation } from '@wbet/message-api'
 import StyledBlock from './StyledBlock';
-import { EVENTS } from '../../../../config';
+import EVENTS from '../../../common/events'
 import AvatarList from '../../../common/AvatarList'
 const StyledWrapper = styled(StyledBlock)`
     padding:12px 0;

@@ -5,7 +5,7 @@ import { FiCopy } from 'react-icons/fi'
 // import StyledBlock from './StyledBlock'
 import { generateUUID } from '../../../common/utils'
 import { sendMessageToBackground, MessageLocation } from '@wbet/message-api'
-import { EVENTS } from '../../../../config'
+import EVENTS from '../../../common/events'
 
 const StyledWrapper = styled.div`
   display: flex;

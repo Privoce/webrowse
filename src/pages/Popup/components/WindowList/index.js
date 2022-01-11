@@ -5,7 +5,7 @@ import ContentLoader from '../ContentLoader'
 import { useWindow } from '../../../common/hooks'
 import { generateUUID } from '../../../common/utils'
 import Window from './Window'
-import { EVENTS } from '../../../../config';
+import EVENTS from '../../../common/events'
 import StyledWrapper from './styled';
 let tempTitle = "";
 export default function WindowList({ titles = {}, windows = null, uid = null }) {

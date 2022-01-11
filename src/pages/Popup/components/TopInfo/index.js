@@ -7,7 +7,7 @@ import { AiOutlineQuestionCircle, AiOutlineSetting } from 'react-icons/ai'
 import { HiOutlineLogout } from 'react-icons/hi'
 import NewWindow from './NewWindow'
 import Triangle from '../Triangle'
-import { EVENTS } from '../../../../config'
+import EVENTS from '../../../common/events'
 const StyledWrapper = styled.div`
   display: flex;
   align-items: center;

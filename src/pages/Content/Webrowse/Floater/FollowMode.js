@@ -1,7 +1,7 @@
 // import { useEffect } from 'react'
 import styled from 'styled-components';
 import { sendMessageToBackground, MessageLocation } from '@wbet/message-api'
-import { EVENTS } from '../../../../config'
+import EVENTS from '../../../common/events'
 import StyledBlock from './StyledBlock'
 import Avator from './Avator'
 const StyledWrapper = styled(StyledBlock)`
