@@ -10,9 +10,19 @@ import StyledWrapper from './styled';
 let tempTitle = "";
 export default function WindowList({ titles = {}, windows = null, uid = null }) {
 
+  // 为了解决 graphql 默认的 loading 是 false，初始了自定义的 windowLoading 状态
+  const [windowLoading, setWindowLoading] = useState(true);
   const { windows: remoteWindows, saveWindow, removeWindow, updateWindowTitle, loading } = useWindow(uid)
   const [savedWindows, setSavedWindows] = useState(null);
   const [currentWindows, setCurrentWindows] = useState([]);
+
+  useEffect(() => {
+    // 当 graphql loading=true 时设置 windowLoading=false
+    if (loading) {
+      setWindowLoading(false);
+    }
+  }, [loading]);
+
   useEffect(() => {
     if (remoteWindows) {
       setSavedWindows(remoteWindows);
@@ -156,27 +166,31 @@ export default function WindowList({ titles = {}, windows = null, uid = null }) 
       </StyledWrapper>}
       {savedWindows ? <StyledWrapper>
         <h2 className="title">{chrome.i18n.getMessage('saved_window_title')} {loading && <MdOutlineRefresh className="tip" />}</h2>
-        <div className={`block ${savedWindows.length == 0 ? 'empty' : ''}`}>
-          {savedWindows.length == 0 && <div className="tip">You haven’t saved any windows yet. Start cobrowsing and save any window that you would like to share again!</div>}
-          {savedWindows.sort((a, b) => {
-            const aLive = !!currentWindows.find((w) => w.winId == a.id);
-            const bLive = !!currentWindows.find(w => w.winId == b.id);
-            return bLive - aLive;
-          }).map(({ relation_id, title, id, room, tabs, active, updated_at }) => {
-            const localOpenedWindow = currentWindows.find(w => w.winId == id);
-            const live = !!localOpenedWindow;
-            const windowId = localOpenedWindow?.id;
-            console.log({ localOpenedWindow });
-            return <Window
-              key={id}
-              data={{ relation_id, title, id, room, tabs, active, live, windowId, updated_at }}
-              handleTitleClick={handleTitleClick}
-              handleTitleBlur={handleTitleBlur}
-              handleNewBrowsing={handleNewBrowsing}
-              handleRemoveWindow={handleRemoveWindow}
-              handleSaveWindow={handleSaveWindow} />
-          })}
-        </div>
+        {
+          windowLoading ? <ContentLoader/> : (<div className={`block ${savedWindows.length == 0 ? 'empty' : ''}`}>
+            {savedWindows.length == 0 &&
+            <div className="tip">You haven’t saved any windows yet. Start cobrowsing and save any window that you would
+              like to share again!</div>}
+            {savedWindows.sort((a, b) => {
+              const aLive = !!currentWindows.find((w) => w.winId == a.id);
+              const bLive = !!currentWindows.find(w => w.winId == b.id);
+              return bLive - aLive;
+            }).map(({relation_id, title, id, room, tabs, active, updated_at}) => {
+              const localOpenedWindow = currentWindows.find(w => w.winId == id);
+              const live = !!localOpenedWindow;
+              const windowId = localOpenedWindow?.id;
+              console.log({localOpenedWindow});
+              return <Window
+                key={id}
+                data={{relation_id, title, id, room, tabs, active, live, windowId, updated_at}}
+                handleTitleClick={handleTitleClick}
+                handleTitleBlur={handleTitleBlur}
+                handleNewBrowsing={handleNewBrowsing}
+                handleRemoveWindow={handleRemoveWindow}
+                handleSaveWindow={handleSaveWindow}/>
+            })}
+          </div>)
+        }
       </StyledWrapper> : <ContentLoader />}
     </>
   )
