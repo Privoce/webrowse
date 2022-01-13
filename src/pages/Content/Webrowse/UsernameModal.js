@@ -3,7 +3,9 @@ import styled from 'styled-components';
 import useSWR from 'swr'
 import Avatar from '../../common/Avatar';
 import IconClose from './icons/Close'
-import { SOCKET_SERVER_DOMAIN } from '../../../common'
+import config from '../../../config';
+
+const {SOCKET_SERVER_DOMAIN} = config;
 
 const StyledModal = styled.section`
   position: fixed;

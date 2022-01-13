@@ -1,3 +1,11 @@
+/**
+ * @author: laoona
+ * @date:  2022-01-11
+ * @time: 22:10
+ * @contact: laoono.com
+ * @description: #
+ */
+
 const EVENTS = {
   // 用户加入，此时仅仅代表建立了websocket连接，webrtc连接暂未建立
   USER_ENTER: 'USER_ENTER',
@@ -67,9 +75,7 @@ const EVENTS = {
   ACCESS_TIP: 'ACCESS_TIP',
   // 鼠标位置事件
   HOST_CURSOR: 'HOST_CURSOR'
-}
-// const SOCKET_SERVER_DOMAIN = 'stage.vera.nicegoodthings.com';
-const SOCKET_SERVER_DOMAIN = 'vera.nicegoodthings.com';
-// const SOCKET_SERVER_DOMAIN = 'localhost:4000';
-const DEFAULT_LANDING = 'https://webrow.se/#howto';
-export { EVENTS, SOCKET_SERVER_DOMAIN, DEFAULT_LANDING }
+};
+
+export default EVENTS;
+

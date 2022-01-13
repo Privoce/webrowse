@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 // import useSWR from 'swr'
 import AvatarList from '../../../common/AvatarList'
-import { SOCKET_SERVER_DOMAIN } from '../../../../common'
+import config from '../../../../config';
+
+const {SOCKET_SERVER_DOMAIN} = config;
 
 // const fetcher = (...args) => fetch(...args).then(res => res.json());
 const prefix = SOCKET_SERVER_DOMAIN.indexOf('localhost') > -1 ? 'http:' : 'https:'

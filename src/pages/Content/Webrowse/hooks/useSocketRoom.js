@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { EVENTS } from '../../../../common'
+import EVENTS from '../../../common/events'
 import { sendMessageToBackground, onMessageFromBackground, MessageLocation } from '@wbet/message-api'
 
 const useSocketRoom = () => {

@@ -157,24 +157,28 @@ const StyledWidget = styled.aside`
         padding: 0;
         margin: 0;
         line-height: 1;
+        box-sizing: border-box;
         &.tab{
-          background-image: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/tab.svg`});
+          background-image: var(--icon-floater-tab);
           &:hover{
-            border:1px solid #FFBD2E;
+            border:1px solid var(--color-border);
           }
           &.curr{
             background-size: contain;
-            background-image: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/tab.fill.svg`});
+            background-image: var(--icon-floater-tab-curr);
+          }
+          &.curr:hover {
+            border: none;
           }
         }
         &.audio{
-          background-image: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/mic.svg`});
+          background-image: var(--icon-floater-audio);
           &:hover{
-            border:1px solid #9B51E0;
+            border:1px solid var(--color-border);
           }
           &.curr{
             background-size: contain;
-            background-image: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/mic.svg`});
+            background-image: var(--icon-floater-audio-curr);
           }
         }
       }

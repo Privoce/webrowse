@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { sendMessageToBackground, MessageLocation } from '@wbet/message-api'
-import { EVENTS } from '../../../common'
+import EVENTS from '../../common/events'
 
 const StyledWrapper = styled.div`
     min-width: 320px;

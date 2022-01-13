@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { IoLinkOutline } from 'react-icons/io5';
 import { MdOutlineRefresh } from 'react-icons/md';
 import { ImStarEmpty, ImStarFull } from 'react-icons/im';
-import { EVENTS } from '../../../../common';
+import EVENTS from '../../../common/events'
 import { useWindow, useInviteLink, useCopy } from '../../../common/hooks';
 import { getWindowTitle, getWindowTabs } from '../../../common/utils'
 import StyledWidget from './styled';

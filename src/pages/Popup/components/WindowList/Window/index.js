@@ -7,7 +7,7 @@ import TabList from '../TabList'
 import Triangle from '../../Triangle';
 import ActiveUsers from '../ActiveUsers';
 import { useInviteLink, useCopy } from '../../../../common/hooks';
-import { EVENTS } from '../../../../../common';
+import EVENTS from '../../../../common/events';
 export default function Window({ data = null, handleTitleClick, handleTitleBlur, handleSaveWindow, handleRemoveWindow, handleNewBrowsing }) {
   const { getInviteLink } = useInviteLink({});
   const { copy } = useCopy({ from: "popup" });

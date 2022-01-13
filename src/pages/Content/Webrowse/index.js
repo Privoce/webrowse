@@ -8,7 +8,7 @@ import LeaveModal from './LeaveModal';
 import TabLimitTipModal from './TabLimitTipModal';
 import useSocketRoom from './hooks/useSocketRoom';
 // import useUsername from './hooks/useUsername'
-import { EVENTS } from '../../../common';
+import EVENTS from '../../common/events'
 import { useUser, useTheme } from '../../common/hooks'
 import Floater from './Floater';
 import NewEnterNotification from './NewEnterNotification'
@@ -39,8 +39,19 @@ const StyledWrapper = styled.section`
   --tab-icon-selected-bg:#FFBD2E;
   --modal-title-color:#44494F;
   --modal-content-color:#707478;
+  --color-border: #A0A2A5;
+  
+  --icon-floater-tab: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/tab.svg`});
+  --icon-floater-tab-curr: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/tab-curr.svg`});
+
+  --icon-floater-audio: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/mic.svg`});
+  --icon-floater-audio-curr: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/mic-curr.svg`});
+  
   &[data-theme='dark'] {
+      --icon-floater-tab: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/tab-dark.svg`});
+      --icon-floater-audio: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/mic-dark.svg`});
       --webrowse-widget-bg-color: #010409;
+      --color-border: #fff;
       --font-color:#fff;
       --shadow-color:rgba(230, 230, 230, 0.16);
       --tab-status-bg-color:#413E3A;

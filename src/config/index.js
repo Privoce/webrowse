@@ -12,5 +12,4 @@ import prod from './prod';
 const env = process.env.NODE_ENV;
 const config = env === 'development' ? dev : prod;
 
-console.log(config, 'NODE_ENV');
 export default config;

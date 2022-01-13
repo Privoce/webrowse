@@ -1,6 +1,6 @@
 
 import { sendMessageToBackground, onMessageFromBackground, MessageLocation } from '@wbet/message-api';
-import { EVENTS } from '../../common'
+import EVENTS from '../common/events'
 const Locations = {
   content: MessageLocation.Content,
   popup: MessageLocation.Popup

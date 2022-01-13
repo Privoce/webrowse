@@ -2,7 +2,7 @@ import { useState } from 'react'
 import styled from 'styled-components';
 import { MessageLocation, onMessageFromBackground } from '@wbet/message-api'
 import { IoWarningOutline } from 'react-icons/io5'
-import { EVENTS } from '../../../common';
+import EVENTS from '../../common/events'
 import { AniFadeIn } from '../../common/animates'
 
 const StyledWrapper = styled.div`
