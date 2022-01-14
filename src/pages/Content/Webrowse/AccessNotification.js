@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import styled from 'styled-components';
 import { MessageLocation, onMessageFromBackground } from '@wbet/message-api'
 import { IoWarningOutline } from 'react-icons/io5'
@@ -37,27 +37,21 @@ const Sites = {
 }
 export default function AccessNotification() {
   const [items, setItems] = useState([])
-  onMessageFromBackground(MessageLocation.Content, {
-    [EVENTS.ACCESS_TIP]: (data) => {
-      console.log("access tip info", data);
-      const { site, index } = data;
-      const currItem = items.find(i => i.index == index);
-      if (currItem) return;
-      setItems(prev => {
-        return [{ site, index }, ...prev]
-      })
-    },
-  });
-  // useEffect(() => {
-  //   const inter = setInterval(() => {
-  //     setItems(prev => {
-  //       return [Math.random().toString(36).substring(7), ...prev]
-  //     })
-  //     return () => {
-  //       clearInterval(inter)
-  //     }
-  //   }, 1500);
-  // }, [])
+
+  useEffect(() => {
+    onMessageFromBackground(MessageLocation.Content, {
+      [EVENTS.ACCESS_TIP]: (data) => {
+        console.log("access tip info", data);
+        const { site, index } = data;
+        const currItem = items.find(i => i.index == index);
+        if (currItem) return;
+        setItems(prev => {
+          return [{ site, index }, ...prev];
+        });
+      },
+    });
+  }, []);
+
   const handleRemoveItem = (index) => {
     setTimeout(() => {
       setItems(prev => {
