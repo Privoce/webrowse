@@ -149,36 +149,63 @@ const StyledWidget = styled.aside`
       .btn{
         position: relative;
         border-radius:50%;
-        width: 24px;
-        height: 24px;
-        background-size: 14px;
-        background-position: center;
-        background-repeat: no-repeat;
         padding: 0;
         margin: 0;
         line-height: 1;
         box-sizing: border-box;
+        width: 24px;
+        height: 24px;
+        &:before {
+          content: '';
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          margin-top: -7px;
+          margin-left: -7px;
+          width: 14px;
+          height: 14px;
+          background-size: 14px;
+          background-position: center;
+          background-repeat: no-repeat;
+        }
+        &.curr {
+          background-image: linear-gradient(271.12deg, #056CF2 0.35%, #74D6D7 95.13%);
+        }
+        &:hover{
+          border:1px solid var(--color-border);
+        }
+        &.curr:hover {
+          border: none;
+        }
         &.tab{
-          background-image: var(--icon-floater-tab);
-          &:hover{
-            border:1px solid var(--color-border);
+          :before {
+            background-image: var(--icon-floater-tab);
           }
           &.curr{
-            background-size: contain;
-            background-image: var(--icon-floater-tab-curr);
-          }
-          &.curr:hover {
-            border: none;
+            :before {
+              background-image: var(--icon-floater-tab-curr);
+            }
           }
         }
         &.audio{
-          background-image: var(--icon-floater-audio);
-          &:hover{
-            border:1px solid var(--color-border);
+          :before {
+            background-image: var(--icon-floater-audio);
           }
           &.curr{
-            background-size: contain;
-            background-image: var(--icon-floater-audio-curr);
+            :before {
+              background-image: var(--icon-floater-audio-curr);
+            }
+          }
+        }
+
+        &.chat{
+          :before {
+            background-image: var(--icon-floater-audio);
+          }
+          &.curr{
+            :before {
+              background-image: var(--icon-floater-audio-curr);
+            }
           }
         }
       }
