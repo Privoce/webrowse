@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import styled from 'styled-components';
 import { MessageLocation, onMessageFromBackground } from '@wbet/message-api'
 import { IoWarningOutline } from 'react-icons/io5'
@@ -36,38 +36,37 @@ const Sites = {
   google_docs: "Google Docs"
 }
 export default function AccessNotification() {
-  const [items, setItems] = useState([])
-
-  useEffect(() => {
-    onMessageFromBackground(MessageLocation.Content, {
-      [EVENTS.ACCESS_TIP]: (data) => {
-        console.log("access tip info", data);
-        const { site, index } = data;
-        const currItem = items.find(i => i.index == index);
-        if (currItem) return;
-        setItems(prev => {
-          return [{ site, index }, ...prev];
-        });
-      },
-    });
-  }, []);
-
-  const handleRemoveItem = (index) => {
+  const [item, setItem] = useState(null)
+  onMessageFromBackground(MessageLocation.Content, {
+    [EVENTS.ACCESS_TIP]: (data) => {
+      console.log("access tip info", data);
+      // const { site, index } = data;
+      const { site } = data;
+      if (!site) return;
+      setItem(site)
+    },
+  });
+  // useEffect(() => {
+  //   const inter = setInterval(() => {
+  //     setItems(prev => {
+  //       return [Math.random().toString(36).substring(7), ...prev]
+  //     })
+  //     return () => {
+  //       clearInterval(inter)
+  //     }
+  //   }, 1500);
+  // }, [])
+  const handleRemoveItem = () => {
     setTimeout(() => {
-      setItems(prev => {
-        return prev.filter(itm => itm.index !== index)
-      })
+      setItem(null)
     }, 1500);
   }
   return (
     <StyledWrapper className="notification">
-      {items.map(({ site, index }) => {
-        const siteName = Sites[site]
-        return <span key={`${site}_${index}`} onAnimationEnd={handleRemoveItem.bind(null, index)} className='notify'>
-          <IoWarningOutline size={18} color='#B54708' />
-          Someone has no permission {siteName ? `in ${siteName}` : ''}
-        </span>
-      })}
+      {item && Sites[item] && <span onAnimationEnd={handleRemoveItem} className='notify'>
+        <IoWarningOutline size={18} color='#B54708' />
+        Someone has no permission {Sites[item] ? `in ${Sites[item]}` : ''}
+      </span>}
     </StyledWrapper>
   )
 }
