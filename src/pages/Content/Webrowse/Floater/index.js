@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { onMessageFromBackground, sendMessageToBackground, MessageLocation } from '@wbet/message-api';
-import { motion } from 'framer-motion';
+import { motion, useDragControls } from 'framer-motion';
 import { IoLinkOutline } from 'react-icons/io5';
 import { MdOutlineRefresh } from 'react-icons/md';
 import { ImStarEmpty, ImStarFull } from 'react-icons/im';
@@ -136,6 +136,7 @@ export default function Floater({ roomId, uid, winId, showLeaveModal, dragContai
   }, [winId, uid])
   const { tab } = visible;
   console.log({ users, host, currUser });
+  const dragControls = useDragControls();
   return (
     <>
       <motion.div
@@ -144,6 +145,17 @@ export default function Floater({ roomId, uid, winId, showLeaveModal, dragContai
         dragConstraints={dragContainerRef}
         whileDrag={{ scale: 1.12 }}
         style={{ position: 'fixed', right: '24px', bottom: '24px' }}
+        dragControls={dragControls}
+        onDragStart={ ( e, info ) => {
+          if (!e.path?.[0]) return;
+
+          if (e.path[0].classList.contains('drag-disabled')) {
+            // Stop the drag
+            dragControls.componentControls.forEach( entry => {
+              entry.stop( e, info )
+            });
+          }
+        }}
       >
         <StyledWidget >
           <div className="drag">
@@ -152,7 +164,7 @@ export default function Floater({ roomId, uid, winId, showLeaveModal, dragContai
           </div>
           <div className="top">
             <div className={`title`}>
-              <input onKeyDown={handleEnterKey} onBlur={handleTitleBlur} onClick={handleTitleClick} readOnly={!editable} value={title || 'Temporary Window'} onChange={handleTitleChange} />
+              <input className={'drag-disabled'} onKeyDown={handleEnterKey} onBlur={handleTitleBlur} onClick={handleTitleClick} readOnly={!editable} value={title || 'Temporary Window'} onChange={handleTitleChange} />
             </div>
             <div className="right">
               <div className="star" onClick={toggleFav}>
