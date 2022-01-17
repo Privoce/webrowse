@@ -205,7 +205,7 @@ export default function Floater({ roomId, uid, winId, showLeaveModal, dragContai
             </div>}
           </div>
           {tab && <Tabs tabs={tabs} users={users} closeBlock={closeBlock} />}
-          {chat && <Chat closeBlock={closeBlock} />}
+          {chat && <Chat closeBlock={closeBlock} currUser={currUser} winId={winId} />}
           {popup && <div className="leave_pop">
             {currUser?.creator && <button className="select" onClick={handleAllLeave}>{chrome.i18n.getMessage('end_for_all')}</button>}
             <button className="select" onClick={handleLeave}>{chrome.i18n.getMessage('leave_session')}</button>
