@@ -107,7 +107,7 @@ const WINDOW_USER_BY_WID = gql`
 
 const SAVED_WINDOWS = gql`
   query WindowList($uid: bigint ) {
-    portal_window_user(where: {user_id: {_eq: $uid}},order_by: {updated_at: desc}) {
+    portal_window_user(where: {user_id: {_eq: $uid}},order_by: {window: {updated_at: desc}}) {
       attr
       created_at
       updated_at
