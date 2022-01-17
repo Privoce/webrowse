@@ -47,9 +47,13 @@ const StyledWrapper = styled.section`
   --icon-floater-audio: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/mic.svg`});
   --icon-floater-audio-curr: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/mic-curr.svg`});
   
+  --icon-floater-chat: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/chat.svg`});
+  --icon-floater-chat-curr: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/chat-curr.svg`});
+  
   &[data-theme='dark'] {
       --icon-floater-tab: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/tab-dark.svg`});
       --icon-floater-audio: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/mic-dark.svg`});
+      --icon-floater-chat: url(${`chrome-extension://${chrome.runtime.id}/assets/icon/chat-dark.svg`});
       --webrowse-widget-bg-color: #010409;
       --color-border: #fff;
       --font-color:#fff;
