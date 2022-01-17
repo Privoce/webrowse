@@ -7155,6 +7155,7 @@ const StylesChat = styled.div`
 
   .messaging.str-chat .str-chat__list {
     padding: 0 var(--xl-p) 0;
+    padding: 0 30px;
     background: var(--white)
   }
 
