@@ -70,9 +70,17 @@ var options = {
     rules: [
       {
         // look for .css or .scss files
+        exclude: [/shadow\.css$/],
         test: /\.(css|scss)$/,
         use: [
           "style-loader",
+          "css-loader"
+        ]
+      },
+      {
+        test: /shadow\.css$/,
+        use: [
+          "to-string-loader",
           "css-loader"
         ]
       },

@@ -20,7 +20,6 @@ import {
 
 import 'stream-chat-react/dist/css/index.css';
 import StyledBlock from './StyledBlock';
-import StylesChat from "./StylesChat";
 import useLocalUser from "../../../Options/useLocalUser";
 
 const StyledWrapper = styled(StyledBlock)`
@@ -84,25 +83,23 @@ const ChatPage = ({closeBlock, winId}) => {
 
   return <StyledWrapper>
     <div className="close" data-type='tab' onClick={closeBlock}/>
-    <div className="title">{chrome.i18n.getMessage('tab_status')}</div>
+    <div className="title">{'Chat'}</div>
     <section className={'main'}>
-      <StylesChat>
-        {
-          !clientReady ? 'Loading' : <Chat client={client}>
-            <Channel
-              channel={channel}
-              // HeaderComponent={() => <div>1212</div>}
-            >
-              <Window>
-                <ChannelHeader image={'https://getstream.io/random_svg/?name=John'}/>
-                <MessageList/>
-                <MessageInput/>
-              </Window>
-              <Thread/>
-            </Channel>
-          </Chat>
-        }
-      </StylesChat>
+      {
+        !clientReady ? 'Loading' : <Chat client={client}>
+          <Channel
+            channel={channel}
+            // HeaderComponent={() => <div>1212</div>}
+          >
+            <Window>
+              <ChannelHeader image={'https://static.nicegoodthings.com/project/ext/webrowse.logo.png'}/>
+              <MessageList/>
+              <MessageInput/>
+            </Window>
+            <Thread/>
+          </Channel>
+        </Chat>
+      }
     </section>
   </StyledWrapper>
 };

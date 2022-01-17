@@ -8,6 +8,7 @@ console.log('index.ext exe');
 let panel = document.createElement('webrowse');
 panel.id = PanelID;
 document.body.appendChild(panel);
+import stylesChat from './Webrowse/Floater/shadow.css';
 
 // 禁止与页面上的一些快捷键冲突
 const handleKeydown = (evt) => {
@@ -15,6 +16,7 @@ const handleKeydown = (evt) => {
 }
 ReactDOM.render(
   <root.div onKeyDown={handleKeydown}>
+    <style type="text/css">{stylesChat}</style>
     <GraphQL>
       <Webrowse />
     </GraphQL>
