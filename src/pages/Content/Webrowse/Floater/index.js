@@ -187,7 +187,7 @@ export default function Floater({ roomId, uid, winId, showLeaveModal, dragContai
               {/* <button title="Follow Mode" className={`btn follow ${follow ? 'curr' : ''}`} data-type='follow' onClick={toggleVisible}></button> */}
               <button data-tooltip={chrome.i18n.getMessage('voice_coming_soon')} className={`btn audio tooltip`} data-type='audio' onClick={null}/>
 
-              <button data-tooltip={chrome.i18n.getMessage('tab_status')} className={`btn chat tooltip ${chat ? 'curr' : ''}`} data-type='chat' onClick={toggleVisible}/>
+              <button disabled={!currUser} data-tooltip={currUser ? 'Chat' : 'Please Login'} className={`btn chat tooltip ${chat ? 'curr' : ''}`} data-type='chat' onClick={toggleVisible}/>
 
             </div>
             {link && <div className="cmds">
@@ -205,7 +205,7 @@ export default function Floater({ roomId, uid, winId, showLeaveModal, dragContai
             </div>}
           </div>
           {tab && <Tabs tabs={tabs} users={users} closeBlock={closeBlock} />}
-          {chat && <Chat closeBlock={closeBlock} currUser={currUser} winId={winId} />}
+          {chat && currUser && <Chat closeBlock={closeBlock} winId={winId} />}
           {popup && <div className="leave_pop">
             {currUser?.creator && <button className="select" onClick={handleAllLeave}>{chrome.i18n.getMessage('end_for_all')}</button>}
             <button className="select" onClick={handleLeave}>{chrome.i18n.getMessage('leave_session')}</button>
