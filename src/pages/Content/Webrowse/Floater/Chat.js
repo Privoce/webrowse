@@ -21,6 +21,7 @@ import {
 import 'stream-chat-react/dist/css/index.css';
 import StyledBlock from './StyledBlock';
 import useLocalUser from "../../../Options/useLocalUser";
+import useStreamToken from "../../../common/hooks/useStreamToken";
 
 const StyledWrapper = styled(StyledBlock)`
   padding: 12px 0;
@@ -46,16 +47,14 @@ const ChatPage = ({closeBlock, winId}) => {
 
   const {user: localUser} = useLocalUser();
 
-  console.log(localUser, 'haha1')
+  const { token } = useStreamToken(localUser?.id);
 
   useEffect(() => {
-    if (!localUser || !winId) return;
+    if (!localUser || !winId || !token) return;
 
     const setupClient = async () => {
       try {
-        const {id, username: name, photo: image, stream_token: token} = localUser;
-
-        console.log(localUser, 'local');
+        const {id, username: name, photo: image} = localUser;
 
         await client.connectUser(
           {
@@ -77,13 +76,13 @@ const ChatPage = ({closeBlock, winId}) => {
     };
 
     setupClient();
-  }, [localUser, winId]);
+  }, [localUser, winId, token]);
 
   // if (!clientReady) return <LoadingIndicator/>;
 
   return <StyledWrapper>
     <div className="close" data-type='tab' onClick={closeBlock}/>
-    <div className="title">{'Chat'}</div>
+    <div className="title">Chat</div>
     <section className={'main'}>
       {
         !clientReady ? 'Loading' : <Chat client={client}>
