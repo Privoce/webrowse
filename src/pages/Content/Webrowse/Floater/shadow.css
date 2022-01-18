@@ -3855,7 +3855,7 @@
 
 .str-chat__header-livestream {
   padding: var(--xs-p) var(--xl-p);
-  min-height: 70px;
+  min-height: 40px;
   display: flex;
   align-items: center;
   font-family: var(--second-font);
@@ -6517,12 +6517,12 @@
 .str-chat__textarea textarea {
   width: 100%;
   outline: none;
-  padding: var(--sm-p);
+  padding: 10px 30px 10px 10px;
   background: var(--white);
   border: 1px solid var(--border);
   border-radius: var(--border-radius-md);
   font-size: var(--lg-font);
-  min-height: 42px;
+  min-height: 24px;
   transition: height 100ms ease-in;
   resize: none
 }
@@ -6857,13 +6857,12 @@
 }
 
 .str-chat__input-flat .str-chat__textarea > textarea {
-  min-height: 56px;
+  /*min-height: 56px;*/
+  min-height: 24px;
   background: var(--grey-whisper);
   border-radius: var(--border-radius-md);
-  padding: 20px 69px;
-  padding-left: 20px;
   font-size: var(--lg-font);
-  line-height: 17px;
+  line-height: 24px;
   border: none;
   margin: 0
 }
@@ -6939,8 +6938,8 @@
 
 .str-chat__input-flat .rfu-file-upload-button {
   position: absolute;
-  top: calc(100% - 40px);
-  right: 25px
+  top: calc(100% - 32px);
+  right: 10px
 }
 
 .str-chat__input-flat .rfu-file-upload-button svg {

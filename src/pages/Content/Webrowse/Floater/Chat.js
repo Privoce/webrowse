@@ -28,8 +28,8 @@ const StyledWrapper = styled(StyledBlock)`
   background: var(--tab-status-bg-color);
 
   .main {
-    height: 50vh;
-    max-height: 50vh;
+    height: 70vh;
+    max-height: 70vh;
     overflow-x: hidden;
     overflow-y: overlay;
     margin: 0;
