@@ -67,6 +67,7 @@ export default function WindowList({ titles = {}, windows = null, uid = null }) 
         break;
     }
   }
+
   useEffect(() => {
     chrome.windows.getCurrent((w) => {
       console.log("last focuse", w);
@@ -80,7 +81,7 @@ export default function WindowList({ titles = {}, windows = null, uid = null }) 
             room: browsingWindow?.roomId,
             winId: browsingWindow?.winId,
             active: w.id == id,
-            live: !!browsingWindow,
+            live: !!browsingWindow && browsingWindow.socketConnected,
             title: localTitle || browsingWindow?.title || `Window ${idx + 1}`,
             tabs: tabs.map(t => {
               const { favIconUrl, id, title, windowId, url } = t;
