@@ -12,8 +12,14 @@ import stylesChat from './Webrowse/Floater/shadow.css';
 
 // 禁止与页面上的一些快捷键冲突
 const handleKeydown = (evt) => {
-  evt.stopPropagation()
+  // 排除聊天的文本域、或者按下了 Enter 键
+  if (evt.target.classList.contains('rta__textarea') || +evt.keyCode === 13) {
+    return false;
+  }
+
+  evt.stopPropagation();
 }
+
 ReactDOM.render(
   <root.div onKeyDown={handleKeydown}>
     <style type="text/css">{stylesChat}</style>
