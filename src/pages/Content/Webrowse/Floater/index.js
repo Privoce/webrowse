@@ -10,6 +10,7 @@ import { getWindowTitle, getWindowTabs } from '../../../common/utils'
 import StyledWidget from './styled';
 import Tabs from './Tabs';
 import Dots from './Dots';
+import Chat from './Chat';
 // const mock_data = [{ id: 1, host: true, username: "杨二", photo: "https://files.authing.co/user-contents/photos/9be86bd9-5f18-419b-befa-2356dd889fe6.png" }, { id: 2, username: "杨二", photo: "https://files.authing.co/user-contents/photos/9be86bd9-5f18-419b-befa-2356dd889fe6.png" }]
 let tempTitle = '';
 export default function Floater({ roomId, uid, winId, showLeaveModal, dragContainerRef = null }) {
@@ -24,7 +25,7 @@ export default function Floater({ roomId, uid, winId, showLeaveModal, dragContai
   const [activeTabId, setActiveTabId] = useState(null)
   const [currUser, setCurrUser] = useState(undefined);
   const [host, setHost] = useState(undefined)
-  const [visible, setVisible] = useState({ tab: true, follow: false, audio: false });
+  const [visible, setVisible] = useState({ tab: true, follow: false, audio: false, chat: false });
   const [popup, setPopup] = useState(false)
   const { copied, copy } = useCopy();
   const toggleVisible = ({ target }) => {
@@ -134,7 +135,7 @@ export default function Floater({ roomId, uid, winId, showLeaveModal, dragContai
       checkFavorite(winId)
     }
   }, [winId, uid])
-  const { tab } = visible;
+  const { tab, chat } = visible;
   console.log({ users, host, currUser });
   const dragControls = useDragControls();
   return (
@@ -182,9 +183,12 @@ export default function Floater({ roomId, uid, winId, showLeaveModal, dragContai
           </div>
           <div className="opts">
             <div className="btns">
-              <button data-tooltip={chrome.i18n.getMessage('tab_status')} className={`btn tab tooltip ${tab ? 'curr' : ''}`} data-type='tab' onClick={toggleVisible}></button>
+              <button data-tooltip={chrome.i18n.getMessage('tab_status')} className={`btn tab tooltip ${tab ? 'curr' : ''}`} data-type='tab' onClick={toggleVisible}/>
               {/* <button title="Follow Mode" className={`btn follow ${follow ? 'curr' : ''}`} data-type='follow' onClick={toggleVisible}></button> */}
-              <button data-tooltip={chrome.i18n.getMessage('voice_coming_soon')} className={`btn audio tooltip`} data-type='audio' onClick={null}></button>
+              <button data-tooltip={chrome.i18n.getMessage('voice_coming_soon')} className={`btn audio tooltip`} data-type='audio' onClick={null}/>
+
+              <button disabled={!currUser} data-tooltip={currUser ? 'Chat' : 'Please Login'} className={`btn chat tooltip ${chat ? 'curr' : ''}`} data-type='chat' onClick={toggleVisible}/>
+
             </div>
             {link && <div className="cmds">
               <div className="cmd copy tooltip" data-tooltip={chrome.i18n.getMessage('copy_link_tip')} onClick={handleCopyLink}>
@@ -201,6 +205,7 @@ export default function Floater({ roomId, uid, winId, showLeaveModal, dragContai
             </div>}
           </div>
           {tab && <Tabs tabs={tabs} users={users} closeBlock={closeBlock} />}
+          {chat && currUser && <Chat closeBlock={closeBlock} winId={winId} />}
           {popup && <div className="leave_pop">
             {currUser?.creator && <button className="select" onClick={handleAllLeave}>{chrome.i18n.getMessage('end_for_all')}</button>}
             <button className="select" onClick={handleLeave}>{chrome.i18n.getMessage('leave_session')}</button>

@@ -45,6 +45,11 @@ export default function Container() {
   }, [user]);
   const logout = () => {
     setUser(null);
+
+    // 删除 Stream Token
+    const key = 'stream_token';
+    chrome.storage.sync.remove([key]);
+
     sendMessageToBackground({}, MessageLocation.Popup, EVENTS.LOGOUT);
   }
   if (!user) return <Login />;

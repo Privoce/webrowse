@@ -200,11 +200,11 @@ const StyledWidget = styled.aside`
 
         &.chat{
           :before {
-            background-image: var(--icon-floater-audio);
+            background-image: var(--icon-floater-chat);
           }
           &.curr{
             :before {
-              background-image: var(--icon-floater-audio-curr);
+              background-image: var(--icon-floater-chat-curr);
             }
           }
         }
