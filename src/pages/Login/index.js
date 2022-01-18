@@ -1,4 +1,4 @@
-import {AuthingGuard} from '@authing/native-js-ui-components'
+import { AuthingGuard } from '@authing/native-js-ui-components'
 // 引入 css 文件
 import '@authing/native-js-ui-components/lib/index.min.css'
 import { sendMessageToContentScript, MessageLocation } from '@wbet/message-api';
@@ -28,13 +28,12 @@ const guard = new AuthingGuard('6034a70af621af721e5320b9', {
 })
 
 // 事件监听
-const loginHandler = async (user) => {
-  user.stream_token = await (await fetch(`https://wechat.okeydemo.com/api/getstream/get_token?user=${user.id}`)).text();
+const loginHandler = (user) => {
+  console.log(user);
   // 本地种下用户数据
   chrome.storage.sync.set({ user }, function () {
     console.log('user from login page ', user)
   });
-
   if (popup) {
     chrome.tabs.getCurrent((tab) => {
       console.log(tabId, user);
