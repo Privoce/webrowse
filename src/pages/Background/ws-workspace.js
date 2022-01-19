@@ -329,12 +329,16 @@ onMessageFromPopup(MessageLocation.Background, {
     const { loginUser, windowTitles, ...windows } = DATA_HUB;
     let filteredWindows = [];
     if (windows) {
-      let keeps = ['roomId', 'winId', "title", 'tabs', 'socketId', 'users'];
+      let keeps = ['roomId', 'winId', "title", 'tabs', 'socketId', 'users', 'socketConnected', 'socket'];
       Object.entries(windows).forEach(([windowId, obj]) => {
         let tmp = { windowId };
         Object.keys(obj).forEach(k => {
-          if (keeps.includes(k) && typeof obj[k] !== "undefined") {
+          if (keeps.includes(k) && typeof obj[k] !== "undefined" && k !== 'socket') {
             tmp[k] = obj[k];
+          }
+
+          if (k === 'socket') {
+            tmp['socketConnected']  = obj[k]?.connected;
           }
         });
         filteredWindows.push(tmp)
