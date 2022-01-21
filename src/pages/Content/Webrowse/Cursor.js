@@ -15,6 +15,7 @@ const StyledCursor = styled.aside`
   height: 38px;
   background: radial-gradient(34.37% 34.37% at 50% 50%, #EC6D62 0%, rgba(229, 103, 92, 0.760417) 23.96%, rgba(206, 83, 71, 0) 100%);
   &:after{
+    font-family: sans-serif;
     content: "Host";
     position: absolute;
     bottom: -5px;
@@ -29,6 +30,7 @@ const StyledCursor = styled.aside`
   }
 `;
 const StyledAsideCursor = styled.aside`
+    font-family: sans-serif;
     user-select: none;
     pointer-events: all;
     cursor: pointer;
@@ -76,11 +78,14 @@ const getFixPosition = (pos) => {
     }
     return { x: newX, y: newY, rotate }
 }
+const inFigmaFile = location.host == 'www.figma.com' && location.pathname.toLocaleLowerCase().endsWith('app')
 export default function Cursor() {
     const [cursorPos, setCursorPos] = useState(undefined);
     const [isHost, setIsHost] = useState(true);
     const { ref, inView } = useInView({ threshold: 0 });
+
     useEffect(() => {
+        if (inFigmaFile) return;
         const collectCursorPosition = throttle((evt) => {
             const { pageX, pageY } = evt;
             console.log({ pageX, pageY });
@@ -95,6 +100,23 @@ export default function Cursor() {
         }
     }, [isHost]);
     useEffect(() => {
+        if (inFigmaFile) return;
+        onMessageFromBackground(MessageLocation.Content, {
+            [EVENTS.UPDATE_FLOATER]: ({ users, userId }) => {
+                let currHost = users.find(u => u.host);
+                setIsHost(userId ? currHost?.id == userId : false);
+                if (!currHost) {
+                    setCursorPos(null)
+                }
+            },
+            [EVENTS.CHECK_CONNECTION]: (connected = false) => {
+                console.log("connection check", connected);
+                if (!connected) {
+                    setCursorPos(null)
+                }
+            },
+        });
+        // msg handler
         const msgHandler = (port) => {
             port.onMessage.addListener((msg) => {
                 console.log("data from bg connection", msg);
@@ -106,21 +128,6 @@ export default function Cursor() {
             chrome.runtime.onConnect.removeListener(msgHandler);
         }
     }, []);
-    onMessageFromBackground(MessageLocation.Content, {
-        [EVENTS.UPDATE_FLOATER]: ({ users, userId }) => {
-            let currHost = users.find(u => u.host);
-            setIsHost(userId ? currHost?.id == userId : false);
-            if (!currHost) {
-                setCursorPos(null)
-            }
-        },
-        [EVENTS.CHECK_CONNECTION]: (connected = false) => {
-            console.log("connection check", connected);
-            if (!connected) {
-                setCursorPos(null)
-            }
-        },
-    });
     const handleJumpToCursor = () => {
         // shadow DOM
         const rootEle = document.querySelector('#PORTAL_WEBROWSE_PANEL > div').shadowRoot;
