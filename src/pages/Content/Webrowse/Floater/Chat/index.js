@@ -1,13 +1,7 @@
-/**
- * @author: laoona
- * @date:  2022-01-17
- * @time: 10:44
- * @contact: laoona.com
- * @description: #
- */
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import {StreamChat} from 'stream-chat';
+
+import { StreamChat } from 'stream-chat';
 import {
   Chat,
   Channel,
@@ -17,44 +11,52 @@ import {
   Thread,
   Window,
 } from 'stream-chat-react';
-
+import chatStyleCode from './shadow.css';
 import 'stream-chat-react/dist/css/index.css';
-import StyledBlock from './StyledBlock';
-import useLocalUser from "../../../Options/useLocalUser";
-import useStreamToken from "../../../common/hooks/useStreamToken";
+import StyledBlock from '../StyledBlock';
+import useLocalUser from "../../../../Options/useLocalUser";
+import useStreamToken from "../../../../common/hooks/useStreamToken";
+import useTheme from '../../../../common/hooks/useTheme';
 
 const StyledWrapper = styled(StyledBlock)`
-  padding: 12px 0;
-  background: var(--tab-status-bg-color);
-
+  padding:  0;
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  .close{
+    z-index: 999;
+  }
   .main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height: 70vh;
     max-height: 70vh;
     overflow-x: hidden;
     overflow-y: overlay;
     margin: 0;
-    padding: 16px;
+    padding: 0;
     width: -webkit-fill-available;
   }
 `;
 
 const client = StreamChat.getInstance('py67e2vhehfx');
 
-const ChatPage = ({closeBlock, winId}) => {
+const ChatPage = ({ closeBlock, winId }) => {
+  const { isDark } = useTheme()
 
   const [clientReady, setClientReady] = useState(false);
   const [channel, setChannel] = useState(null);
 
-  const {user: localUser} = useLocalUser();
+  const { user: localUser } = useLocalUser();
 
   const { token } = useStreamToken(localUser?.id);
-
   useEffect(() => {
     if (!localUser || !winId || !token) return;
 
     const setupClient = async () => {
       try {
-        const {id, username: name, photo: image} = localUser;
+        const { id, username: name, photo: image } = localUser;
 
         await client.connectUser(
           {
@@ -80,22 +82,23 @@ const ChatPage = ({closeBlock, winId}) => {
 
   // if (!clientReady) return <LoadingIndicator/>;
 
-  return <StyledWrapper>
-    <div className="close" data-type='tab' onClick={closeBlock}/>
-    <div className="title">Chat</div>
+  return <StyledWrapper >
+    <style>{chatStyleCode}</style>
+    <div className="close" data-type='tab' onClick={closeBlock} />
     <section className={'main'}>
       {
-        !clientReady ? 'Loading' : <Chat client={client}>
+        !clientReady ? 'Loading' : <Chat darkMode={isDark} client={client}>
           <Channel
+
             channel={channel}
-            // HeaderComponent={() => <div>1212</div>}
+          // HeaderComponent={() => <div>1212</div>}
           >
             <Window>
-              <ChannelHeader image={'https://static.nicegoodthings.com/project/ext/webrowse.logo.png'}/>
-              <MessageList/>
-              <MessageInput/>
+              <ChannelHeader image={'https://static.nicegoodthings.com/project/ext/webrowse.logo.png'} />
+              <MessageList />
+              <MessageInput />
             </Window>
-            <Thread/>
+            <Thread />
           </Channel>
         </Chat>
       }

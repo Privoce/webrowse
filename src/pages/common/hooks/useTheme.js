@@ -20,7 +20,9 @@ const useTheme = () => {
   const updateTheme = (theme = 'default') => {
     chrome.storage.sync.set({ local_theme: theme })
   }
+  const isDark = theme == 'default' ? window.matchMedia('(prefers-color-scheme: dark)').matches : theme == 'dark';
   return {
+    isDark,
     theme,
     updateTheme
   }
