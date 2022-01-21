@@ -78,14 +78,14 @@ const getFixPosition = (pos) => {
     }
     return { x: newX, y: newY, rotate }
 }
-const inFigmaFile = location.host == 'www.figma.com' && location.pathname.toLocaleLowerCase().endsWith('app')
+const inFigma = location.host == 'www.figma.com'
 export default function Cursor() {
     const [cursorPos, setCursorPos] = useState(undefined);
     const [isHost, setIsHost] = useState(true);
     const { ref, inView } = useInView({ threshold: 0 });
 
     useEffect(() => {
-        if (inFigmaFile) return;
+        if (inFigma) return;
         const collectCursorPosition = throttle((evt) => {
             const { pageX, pageY } = evt;
             console.log({ pageX, pageY });
@@ -100,7 +100,7 @@ export default function Cursor() {
         }
     }, [isHost]);
     useEffect(() => {
-        if (inFigmaFile) return;
+        if (inFigma) return;
         onMessageFromBackground(MessageLocation.Content, {
             [EVENTS.UPDATE_FLOATER]: ({ users, userId }) => {
                 let currHost = users.find(u => u.host);
