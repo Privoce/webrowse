@@ -147,13 +147,13 @@ export default function Floater({ roomId, uid, winId, showLeaveModal, dragContai
         whileDrag={{ scale: 1.12 }}
         style={{ position: 'fixed', right: '24px', bottom: '24px' }}
         dragControls={dragControls}
-        onDragStart={ ( e, info ) => {
+        onDragStart={(e, info) => {
           if (!e.path?.[0]) return;
 
           if (e.path[0].classList.contains('drag-disabled')) {
             // Stop the drag
-            dragControls.componentControls.forEach( entry => {
-              entry.stop( e, info )
+            dragControls.componentControls.forEach(entry => {
+              entry.stop(e, info)
             });
           }
         }}
@@ -183,11 +183,11 @@ export default function Floater({ roomId, uid, winId, showLeaveModal, dragContai
           </div>
           <div className="opts">
             <div className="btns">
-              <button data-tooltip={chrome.i18n.getMessage('tab_status')} className={`btn tab tooltip ${tab ? 'curr' : ''}`} data-type='tab' onClick={toggleVisible}/>
+              <button data-tooltip={chrome.i18n.getMessage('tab_status')} className={`btn tab tooltip ${tab ? 'curr' : ''}`} data-type='tab' onClick={toggleVisible} />
               {/* <button title="Follow Mode" className={`btn follow ${follow ? 'curr' : ''}`} data-type='follow' onClick={toggleVisible}></button> */}
-              <button data-tooltip={chrome.i18n.getMessage('voice_coming_soon')} className={`btn audio tooltip`} data-type='audio' onClick={null}/>
 
-              <button disabled={!currUser} data-tooltip={currUser ? 'Chat' : 'Please Login'} className={`btn chat tooltip ${chat ? 'curr' : ''}`} data-type='chat' onClick={toggleVisible}/>
+              <button disabled={!currUser} data-tooltip={currUser ? 'Chat' : 'Please Login'} className={`btn chat tooltip ${chat ? 'curr' : ''}`} data-type='chat' onClick={toggleVisible} />
+              <button data-tooltip={chrome.i18n.getMessage('voice_coming_soon')} className={`btn audio tooltip`} data-type='audio' onClick={null} />
 
             </div>
             {link && <div className="cmds">

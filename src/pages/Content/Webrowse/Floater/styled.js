@@ -172,10 +172,10 @@ const StyledWidget = styled.aside`
           background-image: linear-gradient(271.12deg, #056CF2 0.35%, #74D6D7 95.13%);
         }
         &:hover{
-          border:1px solid var(--color-border);
+          outline:1px solid var(--color-border);
         }
         &.curr:hover {
-          border: none;
+          outline: none;
         }
         &.tab{
           :before {
