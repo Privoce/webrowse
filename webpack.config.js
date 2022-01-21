@@ -70,7 +70,7 @@ var options = {
     rules: [
       {
         // look for .css or .scss files
-        exclude: [/shadow\.css$/],
+        exclude: path.resolve(__dirname, './node_modules/stream-chat-react/dist/css/index.css'),
         test: /\.(css|scss)$/,
         use: [
           "style-loader",
@@ -78,7 +78,7 @@ var options = {
         ]
       },
       {
-        test: /shadow\.css$/,
+        include: path.resolve(__dirname, './node_modules/stream-chat-react/dist/css/index.css'),
         use: [
           "to-string-loader",
           "css-loader"
