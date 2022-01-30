@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
-import styled from 'styled-components';
+import { useEffect, useState } from "react";
+import styled from "styled-components";
 
-import { StreamChat } from 'stream-chat';
+import { StreamChat } from "stream-chat";
 import {
   Chat,
   Channel,
@@ -10,20 +10,20 @@ import {
   MessageInput,
   Thread,
   Window,
-} from 'stream-chat-react';
-import chatStyleCode from './shadow.css';
-import 'stream-chat-react/dist/css/index.css';
-import StyledBlock from '../StyledBlock';
+} from "stream-chat-react";
+import chatStyleCode from "./shadow.css";
+import "stream-chat-react/dist/css/index.css";
+import StyledBlock from "../StyledBlock";
 import useLocalUser from "../../../../Options/useLocalUser";
 import useStreamToken from "../../../../common/hooks/useStreamToken";
-import useTheme from '../../../../common/hooks/useTheme';
+import useTheme from "../../../../common/hooks/useTheme";
 
 const StyledWrapper = styled(StyledBlock)`
-  padding:  0;
+  padding: 0;
   background: #fff;
   border-radius: 16px;
   overflow: hidden;
-  .close{
+  .close {
     z-index: 999;
   }
   .main {
@@ -37,13 +37,16 @@ const StyledWrapper = styled(StyledBlock)`
     margin: 0;
     padding: 0;
     width: -webkit-fill-available;
+    > div {
+      width: 100%;
+    }
   }
 `;
 
-const client = StreamChat.getInstance('py67e2vhehfx');
+const client = StreamChat.getInstance("py67e2vhehfx");
 
 const ChatPage = ({ closeBlock, winId }) => {
-  const { isDark } = useTheme()
+  const { isDark } = useTheme();
 
   const [clientReady, setClientReady] = useState(false);
   const [channel, setChannel] = useState(null);
@@ -64,10 +67,10 @@ const ChatPage = ({ closeBlock, winId }) => {
             name,
             image,
           },
-          token,
+          token
         );
 
-        const channel = await client.channel('messaging', winId);
+        const channel = await client.channel("messaging", winId);
 
         // await channel.create();
         setClientReady(true);
@@ -82,28 +85,35 @@ const ChatPage = ({ closeBlock, winId }) => {
 
   // if (!clientReady) return <LoadingIndicator/>;
 
-  return <StyledWrapper >
-    <style>{chatStyleCode}</style>
-    <div className="close" data-type='tab' onClick={closeBlock} />
-    <section className={'main'}>
-      {
-        !clientReady ? 'Loading' : <Chat darkMode={isDark} client={client}>
-          <Channel
-
-            channel={channel}
-          // HeaderComponent={() => <div>1212</div>}
-          >
-            <Window>
-              <ChannelHeader image={'https://static.nicegoodthings.com/project/ext/webrowse.logo.png'} />
-              <MessageList />
-              <MessageInput />
-            </Window>
-            <Thread />
-          </Channel>
-        </Chat>
-      }
-    </section>
-  </StyledWrapper>
+  return (
+    <StyledWrapper>
+      <style>{chatStyleCode}</style>
+      <div className="close" data-type="tab" onClick={closeBlock} />
+      <section className={"main"}>
+        {!clientReady ? (
+          "Loading"
+        ) : (
+          <Chat darkMode={isDark} client={client}>
+            <Channel
+              channel={channel}
+              // HeaderComponent={() => <div>1212</div>}
+            >
+              <Window>
+                <ChannelHeader
+                  image={
+                    "https://static.nicegoodthings.com/project/ext/webrowse.logo.png"
+                  }
+                />
+                <MessageList />
+                <MessageInput />
+              </Window>
+              <Thread />
+            </Channel>
+          </Chat>
+        )}
+      </section>
+    </StyledWrapper>
+  );
 };
 
 export default ChatPage;
