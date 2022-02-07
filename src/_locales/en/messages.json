@@ -46,11 +46,11 @@
   "remove": {
     "message": "Remove"
   },
-  "copy_link": {
-    "message": "Copy Link"
+  "invite": {
+    "message": "Invite"
   },
   "copied": {
-    "message": "Copied"
+    "message": "link copied"
   },
   "open_privately": {
     "message": "Open Privately"
@@ -99,6 +99,9 @@
   },
   "quit": {
     "message": "Quit"
+  },
+  "save_quit": {
+    "message": "Save and Quit"
   },
   "save_later": {
     "message": "Unsaved Session"

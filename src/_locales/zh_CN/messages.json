@@ -46,11 +46,11 @@
   "remove": {
     "message": "删除"
   },
-  "copy_link": {
-    "message": "复制邀请连接"
+  "invite": {
+    "message": "邀请"
   },
   "copied": {
-    "message": "已复制"
+    "message": "连接已复制"
   },
   "open_privately": {
     "message": "本地打开窗口"
@@ -99,6 +99,9 @@
   },
   "quit": {
     "message": "直接退出"
+  },
+  "save_quit": {
+    "message": "保存并退出"
   },
   "save_later": {
     "message": "保存窗口"

@@ -88,7 +88,12 @@ const ChatPage = ({ closeBlock, winId }) => {
   return (
     <StyledWrapper>
       <style>{chatStyleCode}</style>
-      <div className="close" data-type="tab" onClick={closeBlock} />
+      <div
+        title="minimize"
+        className="close"
+        data-type="tab"
+        onClick={closeBlock}
+      />
       <section className={"main"}>
         {!clientReady ? (
           "Loading"
