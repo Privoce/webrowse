@@ -1,19 +1,19 @@
-import styled from 'styled-components';
-import { AniRotate, AniSlideUp } from '../../../common/animates'
+import styled from "styled-components";
+import { AniRotate, AniSlideUp } from "../../../common/animates";
 
 const StyledWidget = styled.aside`
   pointer-events: all;
   font-family: sans-serif;
   background: var(--webrowse-widget-bg-color);
   border-radius: 16px;
-  padding:12px 16px;
+  padding: 12px 16px;
   display: flex;
   flex-direction: column;
   width: 380px;
   box-sizing: border-box;
-  .drag{
+  .drag {
     visibility: hidden;
-    cursor:move;
+    cursor: move;
     position: absolute;
     top: 6px;
     left: 50%;
@@ -24,26 +24,26 @@ const StyledWidget = styled.aside`
     width: 12px;
     height: 12px;
     gap: 2px;
-    .line{
+    .line {
       width: 100%;
       height: 1px;
       background-color: #c4c4c4;
     }
   }
-  &:hover .drag{
+  &:hover .drag {
     visibility: visible;
   }
-  .top{
+  .top {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 14px;
-    > .right{
+    > .right {
       display: flex;
       align-items: center;
       height: 100%;
       gap: 10px;
-      .star{
+      .star {
         cursor: pointer;
         width: 21px;
         height: 21px;
@@ -51,15 +51,15 @@ const StyledWidget = styled.aside`
         align-items: center;
         justify-content: center;
         border-radius: 50%;
-        .tip{
+        .tip {
           transform-origin: center;
           animation: ${AniRotate} 1s infinite;
         }
-        &:hover{
+        &:hover {
           background: var(--icon-hover-bg);
         }
       }
-      .others{
+      .others {
         z-index: 9;
         width: 20px;
         height: 20px;
@@ -69,21 +69,22 @@ const StyledWidget = styled.aside`
         display: flex;
         justify-content: center;
         align-items: center;
-        &:hover{
+        &:hover {
           background: var(--icon-hover-bg);
         }
-        .items{
+        .items {
           display: none;
           padding: 8px;
           list-style: none;
-          box-shadow: 0px 10px 20px -15px rgba(22, 23, 24, 0.2), 0px 10px 38px -10px rgba(22, 23, 24, 0.35);
+          box-shadow: 0px 10px 20px -15px rgba(22, 23, 24, 0.2),
+            0px 10px 38px -10px rgba(22, 23, 24, 0.35);
           border-radius: 8px;
           position: absolute;
           right: 0;
           bottom: 0;
           white-space: nowrap;
-          background-color:var(--list-bg-color);
-          .item{
+          background-color: var(--list-bg-color);
+          .item {
             font-weight: 600;
             font-size: 12px;
             line-height: 16px;
@@ -92,33 +93,33 @@ const StyledWidget = styled.aside`
             border-radius: 4px;
             text-align: left;
             /* transition: all .5s ease-in-out; */
-            &:hover{
+            &:hover {
               background: var(--option-item-bg-hover-color);
             }
           }
         }
         &.expand {
-            svg path{
-              fill:#C4C4C4;
-            }
-            .items{
-              display: block;
-            }
+          svg path {
+            fill: #c4c4c4;
           }
+          .items {
+            display: block;
+          }
+        }
       }
     }
-    > .title{
+    > .title {
       width: 80%;
       display: flex;
       align-items: center;
       gap: 8px;
-      input{
+      input {
         outline: none;
-        background:none;
+        background: none;
         padding: 4px 8px;
-        border: 1px solid #056CF2;
+        border: 1px solid #056cf2;
         border-radius: 5px;
-        color:var(--font-color);
+        color: var(--font-color);
         overflow: hidden;
         text-overflow: ellipsis;
         width: 100%;
@@ -126,29 +127,29 @@ const StyledWidget = styled.aside`
         font-size: 16px;
         white-space: nowrap;
         text-align: left;
-        &:read-only{
-          border-color: rgba(1,1,1,0);
+        &:read-only {
+          border-color: rgba(1, 1, 1, 0);
         }
-        &:hover{
+        &:hover {
           border-color: #ccc;
         }
-        &:focus{
-          border-color: #1FE1F9;
+        &:focus {
+          border-color: #1fe1f9;
         }
       }
     }
   }
-  >.opts{
+  > .opts {
     display: flex;
     align-items: center;
-    justify-content:space-between ;
+    justify-content: space-between;
     .btns {
       display: flex;
       align-items: center;
-      gap:8px;
-      .btn{
+      gap: 8px;
+      .btn {
         position: relative;
-        border-radius:50%;
+        border-radius: 50%;
         padding: 0;
         margin: 0;
         line-height: 1;
@@ -156,7 +157,7 @@ const StyledWidget = styled.aside`
         width: 24px;
         height: 24px;
         &:before {
-          content: '';
+          content: "";
           position: absolute;
           left: 50%;
           top: 50%;
@@ -169,40 +170,44 @@ const StyledWidget = styled.aside`
           background-repeat: no-repeat;
         }
         &.curr {
-          background-image: linear-gradient(271.12deg, #056CF2 0.35%, #74D6D7 95.13%);
+          background-image: linear-gradient(
+            271.12deg,
+            #056cf2 0.35%,
+            #74d6d7 95.13%
+          );
         }
-        &:hover{
-          outline:1px solid var(--color-border);
+        &:hover {
+          outline: 1px solid var(--color-border);
         }
         &.curr:hover {
           outline: none;
         }
-        &.tab{
+        &.tab {
           :before {
             background-image: var(--icon-floater-tab);
           }
-          &.curr{
+          &.curr {
             :before {
               background-image: var(--icon-floater-tab-curr);
             }
           }
         }
-        &.audio{
+        &.audio {
           :before {
             background-image: var(--icon-floater-audio);
           }
-          &.curr{
+          &.curr {
             :before {
               background-image: var(--icon-floater-audio-curr);
             }
           }
         }
 
-        &.chat{
+        &.chat {
           :before {
             background-image: var(--icon-floater-chat);
           }
-          &.curr{
+          &.curr {
             :before {
               background-image: var(--icon-floater-chat-curr);
             }
@@ -210,88 +215,85 @@ const StyledWidget = styled.aside`
         }
       }
     }
-    .cmds{
+    .cmds {
       display: flex;
       align-items: center;
       gap: 4px;
-      .cmd{
+      .cmd {
         display: flex;
         align-items: center;
         cursor: pointer;
-        padding:4px 6px;
+        padding: 4px 6px;
         font-weight: 600;
         font-size: 12px;
         line-height: 16px;
         border-radius: 4px;
-        &:hover{
-          background:  var(--icon-btn-hover-bg);
+        &:hover {
+          background: var(--icon-btn-hover-bg);
         }
-        .icon,.btn{
-          color:var(--icon-btn-color);
+        .icon,
+        .btn {
+          color: var(--icon-btn-color);
         }
-        .btn{
+        .btn {
           padding-right: 0;
           cursor: pointer;
           white-space: nowrap;
-          border:none;
+          border: none;
           background: none;
         }
-        &.copy{
-          min-width: 90px;
-        }
       }
-      >.btn{
-        background: #E42222;
+      > .btn {
+        background: #e42222;
         border-radius: 15px;
         font-size: 12px;
         line-height: 15px;
-        color:#fff;
-        padding:4px 12px ;
-        &:hover{
-          background: #BA1B1B;
+        color: #fff;
+        padding: 4px 12px;
+        &:hover {
+          background: #ba1b1b;
         }
       }
-
     }
   }
-  .leave_pop{
-      z-index: 9;
-      position: absolute;
-      top: 0;
-      right: 0;
-      animation:${AniSlideUp} .5s forwards;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap:8px;
-      padding:12px;
-      background: var(--webrowse-widget-bg-color);
-      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-      border-radius: 5px;
-      .select{
-        color: #fff;
-        white-space: nowrap;
-        width: 100%;
-        text-align: center;
-        border-radius: 15px;
-        background: #E42222;
-        font-weight: bold;
-        font-size: 12px;
-        line-height: 16px;
-        padding:4px 12px;
-        &:hover{
-          background: #BA1B1B;
-        }
+  .leave_pop {
+    z-index: 9;
+    position: absolute;
+    top: 0;
+    right: 0;
+    animation: ${AniSlideUp} 0.5s forwards;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    background: var(--webrowse-widget-bg-color);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 5px;
+    .select {
+      color: #fff;
+      white-space: nowrap;
+      width: 100%;
+      text-align: center;
+      border-radius: 15px;
+      background: #e42222;
+      font-weight: bold;
+      font-size: 12px;
+      line-height: 16px;
+      padding: 4px 12px;
+      &:hover {
+        background: #ba1b1b;
       }
     }
-  .tooltip{
+  }
+  .tooltip {
     position: relative;
-    &:after{
+    &:after {
       visibility: hidden;
       content: attr(data-tooltip);
       position: absolute;
-      left:50%;
-      top:-22px;
+      left: 50%;
+      top: -22px;
       transform: translateX(-50%);
       background: #161616;
       box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
@@ -299,12 +301,12 @@ const StyledWidget = styled.aside`
       font-weight: 600;
       font-size: 10px;
       line-height: 12px;
-      color: #FFFFFF;
+      color: #ffffff;
       padding: 2px 3px;
       white-space: nowrap;
     }
-    &:hover{
-      &:after{
+    &:hover {
+      &:after {
         visibility: visible;
       }
     }
