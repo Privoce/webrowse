@@ -123,6 +123,14 @@ export default function LeaveModal({
   const { saveWindow, saving } = useWindow(user?.uid);
   const [modalType, setModalType] = useState(null);
   useEffect(() => {
+    const backup = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = backup;
+    };
+  }, []);
+
+  useEffect(() => {
     console.log({ user });
     if (user?.uid) {
       setModalType("logined");
