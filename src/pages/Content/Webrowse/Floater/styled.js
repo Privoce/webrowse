@@ -11,6 +11,7 @@ const StyledWidget = styled.aside`
   flex-direction: column;
   width: 380px;
   box-sizing: border-box;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.16);
   .drag {
     visibility: hidden;
     cursor: move;
@@ -276,14 +277,14 @@ const StyledWidget = styled.aside`
       width: 100%;
       text-align: center;
       border-radius: 15px;
-      background: #e42222;
+      background: #5c6065;
       font-weight: bold;
       font-size: 12px;
       line-height: 16px;
       padding: 4px 12px;
-      &:hover {
+      /* &:hover {
         background: #ba1b1b;
-      }
+      } */
     }
   }
   .tooltip {

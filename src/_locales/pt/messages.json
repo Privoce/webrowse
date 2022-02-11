@@ -49,6 +49,9 @@
   "invite": {
     "message": "Invite"
   },
+  "copy_link": {
+    "message": "Copy Link"
+  },
   "copied": {
     "message": "link copied"
   },

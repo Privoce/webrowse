@@ -49,6 +49,9 @@
   "invite": {
     "message": "邀请"
   },
+  "copy_link": {
+    "message": "复制连接"
+  },
   "copied": {
     "message": "连接已复制"
   },

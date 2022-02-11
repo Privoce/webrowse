@@ -205,7 +205,9 @@ export default function Window({
               {chrome.i18n.getMessage("open_privately")}
             </li>
             <li className="item" onClick={handleCopyLink.bind(null, id, room)}>
-              {chrome.i18n.getMessage("invite")}
+              {active
+                ? chrome.i18n.getMessage("invite")
+                : chrome.i18n.getMessage("copy_link")}
             </li>
             <li
               className="item"
