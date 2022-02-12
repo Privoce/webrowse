@@ -47,6 +47,7 @@ export default function Floater({
     chat: false,
   });
   const [popup, setPopup] = useState(false);
+  const [badged, setBadged] = useState(false);
   const { copied, copy } = useCopy();
   const toggleVisible = ({ target }) => {
     const { type } = target.dataset;
@@ -167,6 +168,11 @@ export default function Floater({
     const tabs = await getWindowTabs();
     saveWindow({ id: winId, title, tabs });
   };
+
+  const handleUpdateMessage = (type) => {
+    setBadged(type === 'new');
+  };
+
   const toggleFav = async () => {
     setFaving(true);
     await toggleFavorite({ wid: winId, fav: !fav });
@@ -262,7 +268,9 @@ export default function Floater({
                 className={`btn chat tooltip ${chat ? "curr" : ""}`}
                 data-type="chat"
                 onClick={toggleVisible}
-              />
+              >
+                <span className={`badge ${badged && !chat ? 'badge__active' : ''}`}/>
+              </button>
               <button
                 data-tooltip={chrome.i18n.getMessage("voice_coming_soon")}
                 className={`btn audio tooltip`}
@@ -297,7 +305,10 @@ export default function Floater({
             )}
           </div>
           {tab && <Tabs tabs={tabs} users={users} closeBlock={closeBlock} />}
-          {chat && currUser && <Chat closeBlock={closeBlock} winId={winId} />}
+          {currUser && <Chat
+            visible={chat} closeBlock={closeBlock} winId={winId}
+            onUpdateMessage={handleUpdateMessage}
+          />}
           {popup && (
             <div className="leave_pop">
               {currUser?.creator && (

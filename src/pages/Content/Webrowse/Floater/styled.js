@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { AniRotate, AniSlideUp } from "../../../common/animates";
+import { AniRotate, AniSlideUp, AniBounceIn } from "../../../common/animates";
 
 const StyledWidget = styled.aside`
   pointer-events: all;
@@ -205,6 +205,32 @@ const StyledWidget = styled.aside`
         }
 
         &.chat {
+          > .badge {
+            position: absolute;
+            bottom: 18px;
+            right: 0;
+            width: 8px;
+            height: 8px;
+            :after {
+              content: '';
+              position: absolute;
+              left: 50%;
+              top: 50%;
+              width: 0;
+              height: 0;
+              border-radius: 50%;
+              background-color: #e42222;
+              margin: -4px 0 0 -4px;
+              transform: translate(-50%, -50%);
+            }
+            &__active {
+              :after {
+                width: 8px;
+                height: 8px;
+                animation: ${AniBounceIn} 1s forwards;
+              }
+            }
+          }
           :before {
             background-image: var(--icon-floater-chat);
           }
