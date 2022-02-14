@@ -43,9 +43,13 @@ const StyledWrapper = styled(StyledBlock)`
   }
 `;
 
-const client = StreamChat.getInstance("py67e2vhehfx");
+const client = StreamChat.getInstance("c4vxfxpdzwfm");
 
-const ChatPage = ({ closeBlock, winId }) => {
+const ChatPage = (
+  {
+    closeBlock, winId, visible,
+    onUpdateMessage = () => {},
+  }) => {
   const { isDark } = useTheme();
 
   const [clientReady, setClientReady] = useState(false);
@@ -71,8 +75,21 @@ const ChatPage = ({ closeBlock, winId }) => {
         );
 
         const channel = await client.channel("messaging", winId);
+        await channel.watch();
 
-        // await channel.create();
+        channel.on(event => {
+          if (event.type === 'message.new' && id !== event?.user?.id) {
+            onUpdateMessage('new');
+          }
+
+          if ((event.type === 'notification.mark_read' && !event.unread_count)
+            || event.type === 'message.read'
+            || (event.type === 'message.new' && id === event?.user?.id)
+          ) {
+            onUpdateMessage('read');
+          }
+        });
+
         setClientReady(true);
         setChannel(channel);
       } catch (err) {
@@ -83,7 +100,13 @@ const ChatPage = ({ closeBlock, winId }) => {
     setupClient();
   }, [localUser, winId, token]);
 
-  // if (!clientReady) return <LoadingIndicator/>;
+  useEffect(() => {
+    if (visible) {
+      onUpdateMessage('read');
+    }
+  }, [visible]);
+
+  if (!visible) return <></>;
 
   return (
     <StyledWrapper>
