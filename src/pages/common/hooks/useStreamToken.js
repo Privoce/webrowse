@@ -8,7 +8,7 @@
 import { useState, useEffect } from 'react';
 
 const useStreamToken = (uid) => {
-  const key = 'stream_token';
+  const key = 'stream_token_v2';
   const [token, setToken] = useState(null)
 
   // 更新 key;
