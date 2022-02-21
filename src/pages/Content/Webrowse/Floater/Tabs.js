@@ -4,6 +4,7 @@ import { sendMessageToBackground, MessageLocation } from "@wbet/message-api";
 import StyledBlock from "./StyledBlock";
 import EVENTS from "../../../common/events";
 import AvatarList from "../../../common/AvatarList";
+import Favicon from "../../../common/Favicon";
 const StyledWrapper = styled(StyledBlock)`
   padding: 12px 0;
   background: var(--tab-status-bg-color);
@@ -69,6 +70,7 @@ const StyledWrapper = styled(StyledBlock)`
     }
   }
 `;
+
 export default function Tabs({ tabs, users, closeBlock }) {
   const handleTabClick = (evt) => {
     const { tabId } = evt.currentTarget.dataset;
@@ -109,12 +111,11 @@ export default function Tabs({ tabs, users, closeBlock }) {
                 title={title}
               >
                 <div className="ico">
-                  <img
-                    src={
+                  <Favicon
+                    url={
                       favIconUrl ||
                       `chrome-extension://${chrome.runtime.id}/assets/icon/tab.svg`
                     }
-                    alt="favicon"
                   />
                 </div>
                 <span className="title">{title}</span>
