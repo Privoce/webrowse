@@ -16,6 +16,7 @@ import Tabs from "./Tabs";
 import Dots from "./Dots";
 import Chat from "./Chat";
 // const mock_data = [{ id: 1, host: true, username: "杨二", photo: "https://files.authing.co/user-contents/photos/9be86bd9-5f18-419b-befa-2356dd889fe6.png" }, { id: 2, username: "杨二", photo: "https://files.authing.co/user-contents/photos/9be86bd9-5f18-419b-befa-2356dd889fe6.png" }]
+const DefaultTitle = "Temporary Window";
 let tempTitle = "";
 export default function Floater({
   roomId,
@@ -62,7 +63,7 @@ export default function Floater({
   const handleCopyLink = async () => {
     if (copied || !link) return;
     // 先save一下
-    const title = (await getWindowTitle()) || "Temporary Window";
+    const title = (await getWindowTitle()) || DefaultTitle;
     const tabs = await getWindowTabs();
     saveWindow({ id: winId, title, tabs, onlySave: true });
     copy(link);
@@ -96,7 +97,7 @@ export default function Floater({
         let tmp2 = users.find((u) => u.host);
         setCurrUser(tmp);
         setHost(tmp2);
-        setTitle(title);
+        setTitle(title || DefaultTitle);
         setFav(fav);
       },
     });
@@ -141,10 +142,11 @@ export default function Floater({
   };
   const handleTitleBlur = () => {
     setEditable(false);
-    if (!title || tempTitle == title) return;
-    updateWindowTitle({ id: winId, title });
+    if (tempTitle == title) return;
+    let tmp = title || DefaultTitle;
+    updateWindowTitle({ id: winId, title: tmp });
     sendMessageToBackground(
-      { title },
+      { title: tmp },
       MessageLocation.Content,
       EVENTS.UPDATE_WIN_TITLE
     );
@@ -164,7 +166,7 @@ export default function Floater({
     currentTarget.parentElement.classList.remove("expand");
   };
   const handleSaveWindow = async (winId) => {
-    const title = (await getWindowTitle()) || "Temporary Window";
+    const title = (await getWindowTitle()) || DefaultTitle;
     const tabs = await getWindowTabs();
     saveWindow({ id: winId, title, tabs });
   };
@@ -219,7 +221,7 @@ export default function Floater({
                 onBlur={handleTitleBlur}
                 onClick={handleTitleClick}
                 readOnly={!editable}
-                value={title || "Temporary Window"}
+                value={title}
                 onChange={handleTitleChange}
               />
             </div>
