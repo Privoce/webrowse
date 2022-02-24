@@ -170,7 +170,7 @@ export default function Floater({
   };
 
   const handleUpdateMessage = (type) => {
-    setBadged(type === 'new');
+    setBadged(type === "new");
   };
 
   const toggleFav = async () => {
@@ -245,9 +245,6 @@ export default function Floater({
                   >
                     {chrome.i18n.getMessage("save_window")}
                   </li>
-                  <li className="item" onClick={handleLeave}>
-                    {chrome.i18n.getMessage("end_meeting")}
-                  </li>
                 </ul>
               </div>
             </div>
@@ -269,7 +266,9 @@ export default function Floater({
                 data-type="chat"
                 onClick={toggleVisible}
               >
-                <span className={`badge ${badged && !chat ? 'badge__active' : ''}`}/>
+                <span
+                  className={`badge ${badged && !chat ? "badge__active" : ""}`}
+                />
               </button>
               <button
                 data-tooltip={chrome.i18n.getMessage("voice_coming_soon")}
@@ -305,10 +304,14 @@ export default function Floater({
             )}
           </div>
           {tab && <Tabs tabs={tabs} users={users} closeBlock={closeBlock} />}
-          {currUser && <Chat
-            visible={chat} closeBlock={closeBlock} winId={winId}
-            onUpdateMessage={handleUpdateMessage}
-          />}
+          {currUser && (
+            <Chat
+              visible={chat}
+              closeBlock={closeBlock}
+              winId={winId}
+              onUpdateMessage={handleUpdateMessage}
+            />
+          )}
           {popup && (
             <div className="leave_pop">
               {currUser?.creator && (
