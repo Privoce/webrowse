@@ -22,7 +22,6 @@ const CursorTabs = {};
 const Tabs = {};
 const Connections = {};
 const InvitedWindows = {};
-const inactiveWindows = [];
 const tabOperations = [];
 // tab标签切换的处理事件
 chrome.tabs.onActivated.addListener(({ tabId, windowId }) => {
@@ -40,11 +39,17 @@ chrome.runtime.onInstalled.addListener(function (details) {
     case "install":
       {
         // 初始化未激活的window list
-        chrome.windows.getAll((windows) => {
-          let winIds = windows.map((w) => {
-            return w.id;
+        chrome.windows.getAll({ populate: true }, (windows) => {
+          const tabIds = [];
+          windows.forEach((w) => {
+            let tabs = w.tabs;
+            tabs.forEach((t) => {
+              tabIds.push(t.id);
+            });
           });
-          inactiveWindows.push(...winIds);
+          tabIds.forEach((tid) => {
+            chrome.tabs.reload(tid);
+          });
         });
         chrome.tabs.query({ url: "*://webrow.se/i/*" }, function (tabs) {
           console.log("query invite tabs", tabs);
@@ -569,18 +574,6 @@ onMessageFromPopup(MessageLocation.Background, {
         { url: DEFAULT_LANDING, active: true },
         ({ windowId }) => {
           initWorkspace({ windowId, roomId: finalRoomId, winId: finalWinId });
-          // 如果是未激活的window 则刷新其它tab
-          // eslint-disable-next-line no-undef
-          if (inactiveWindows.includes(windowId)) {
-            chrome.tabs.query(
-              { active: false, currentWindow: true },
-              (tabs = []) => {
-                tabs.forEach((tab) => {
-                  chrome.tabs.reload(tab.id);
-                });
-              }
-            );
-          }
         }
       );
     } else {
