@@ -100,6 +100,8 @@ export default function NewWindow({ uid = "" }) {
       MessageLocation.Popup,
       EVENTS.NEW_WINDOW
     );
+    // 关掉，防止多次点击
+    setSubMenuVisible(false);
   };
   const handleClickOutside = (e) => {
     console.log("clicking anywhere");

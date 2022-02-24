@@ -18,6 +18,13 @@ export default function Window({
 }) {
   const { getInviteLink } = useInviteLink({});
   const { copy } = useCopy({ from: "popup" });
+  const handleStart = (evt) => {
+    evt.target.disabled = true;
+    handleNewBrowsing(evt);
+    setTimeout(() => {
+      evt.target.disabled = false;
+    }, 500);
+  };
   const toggleExpand = (evt) => {
     evt.stopPropagation();
     const { currentTarget } = evt;
@@ -94,7 +101,7 @@ export default function Window({
               data-type="current"
               data-room={room}
               data-win-id={id}
-              onClick={handleNewBrowsing}
+              onClick={handleStart}
               className="start"
             >
               {chrome.i18n.getMessage("start")}
@@ -186,7 +193,7 @@ export default function Window({
               data-type="saved"
               data-room-id={room}
               data-win-id={id}
-              onClick={handleNewBrowsing}
+              onClick={handleStart}
               className="start"
             >
               {active
