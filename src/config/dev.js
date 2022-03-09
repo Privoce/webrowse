@@ -7,8 +7,8 @@
  */
 
 
-const SOCKET_SERVER_DOMAIN = 'vera.nicegoodthings.com';
-// const SOCKET_SERVER_DOMAIN = 'localhost:4000';
+// const SOCKET_SERVER_DOMAIN = 'vera.nicegoodthings.com';
+const SOCKET_SERVER_DOMAIN = 'localhost:4000';
 // 开发环境的 landing 和 post message origin
 const DEFAULT_LANDING = 'http://192.168.10.30:8003/started';
 const MESSAGE_TARGET_ORIGIN = 'http://192.168.10.30:8003';
