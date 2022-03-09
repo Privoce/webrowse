@@ -15,6 +15,9 @@ import StyledWidget from "./styled";
 import Tabs from "./Tabs";
 import Dots from "./Dots";
 import Chat from "./Chat";
+
+import config from '../../../../config';
+
 // const mock_data = [{ id: 1, host: true, username: "杨二", photo: "https://files.authing.co/user-contents/photos/9be86bd9-5f18-419b-befa-2356dd889fe6.png" }, { id: 2, username: "杨二", photo: "https://files.authing.co/user-contents/photos/9be86bd9-5f18-419b-befa-2356dd889fe6.png" }]
 const DefaultTitle = "Temporary Window";
 let tempTitle = "";
@@ -185,6 +188,38 @@ export default function Floater({
       checkFavorite(winId);
     }
   }, [winId, uid]);
+
+  useEffect(() => {
+    const handleMessage = async (ev) => {
+      const {
+        source,
+        event,
+      } = ev.data || {};
+
+      // 监听来自 webrow.se 的消息 且 event = copy
+      if (!(source === 'webrow.se' && event === 'copy')) return;
+
+      const title = (await getWindowTitle()) || DefaultTitle;
+      const tabs = await getWindowTabs();
+      await saveWindow({ id: winId, title, tabs, onlySave: true });
+      copy(link);
+
+      const message = {
+        source: 'webrowse.ext',
+        payload: {},
+        event: 'copied',
+      };
+
+      // 发送消息
+      window.postMessage(message, config.MESSAGE_TARGET_ORIGIN);
+    };
+
+    window.addEventListener('message', handleMessage);
+    return () => {
+      window.removeEventListener('message', handleMessage);
+    }
+  }, [link, winId, title, tabs]);
+
   const { tab, chat } = visible;
   console.log({ users, host, currUser });
   const dragControls = useDragControls();

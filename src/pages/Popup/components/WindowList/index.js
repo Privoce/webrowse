@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { sendMessageToBackground, MessageLocation } from "@wbet/message-api";
 import { MdOutlineRefresh } from "react-icons/md";
 import ContentLoader from "../ContentLoader";
-import { useWindow } from "../../../common/hooks";
+import { useWindow, useInviteLink } from "../../../common/hooks";
 import { generateUUID } from "../../../common/utils";
 import Window from "./Window";
 import EVENTS from "../../../common/events";
@@ -13,6 +13,8 @@ export default function WindowList({
   windows = null,
   uid = null,
 }) {
+  const { getInviteLink } = useInviteLink({});
+
   // 为了解决 graphql 默认的 loading 是 false，初始了自定义的 windowLoading 状态
   const [windowLoading, setWindowLoading] = useState(true);
   const {
@@ -45,18 +47,23 @@ export default function WindowList({
       });
     }
   }, [remoteWindows]);
-  const handleNewBrowsing = (evt) => {
+  const handleNewBrowsing = async (evt) => {
     evt.stopPropagation();
     const { roomId, winId, type } = evt.target.dataset;
     let urls = [];
     let finalRoomId = roomId;
     let finalWinId = winId;
+
     switch (type) {
       case "current":
         {
+
           console.log("window id", winId);
           finalRoomId = uid;
           finalWinId = generateUUID();
+
+          const inviteId = await getInviteLink({ roomId: finalRoomId, winId: finalWinId}, false);
+
           chrome.windows.getCurrent(({ id }) => {
             if (id == winId) {
               sendMessageToBackground(
@@ -65,6 +72,7 @@ export default function WindowList({
                   roomId: finalRoomId,
                   winId: finalWinId,
                   urls,
+                  inviteId,
                 },
                 MessageLocation.Popup,
                 EVENTS.NEW_WINDOW
@@ -77,6 +85,7 @@ export default function WindowList({
                     roomId: finalRoomId,
                     winId: finalWinId,
                     urls,
+                    inviteId,
                   },
                   MessageLocation.Popup,
                   EVENTS.NEW_WINDOW
