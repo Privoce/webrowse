@@ -45,7 +45,14 @@ export default function useInviteLink({ roomId, winId }) {
       }
     }
   }, [data, loading]);
-  const getInviteLink = async (data = null) => {
+
+  /**
+   * 获取邀请链接
+   * @param data
+   * @param whole 是否返回完整链接，默认是。否则返回 rand
+   * @returns {Promise<string>}
+   */
+  const getInviteLink = async (data = null, whole = true) => {
     if (!data) return "";
     const { roomId, winId } = data;
     const resp = await upsertInvite({
@@ -57,8 +64,10 @@ export default function useInviteLink({ roomId, winId }) {
       },
     });
     const [obj] = resp.data.insert_portal_invite.returning;
-    return `https://webrow.se/i#${obj.rand}`;
+
+    return whole ? `https://webrow.se/i#${obj.rand}` : obj.rand;
   };
+
   return {
     getInviteLink,
     link: inviteLink,
