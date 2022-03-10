@@ -551,6 +551,7 @@ onMessageFromPopup(MessageLocation.Background, {
     roomId = "",
     winId = "",
     urls = [],
+    inviteId  = '',
   }) => {
     const { loginUser } = DATA_HUB;
     let isOpenedWindow = winId !== "" && Number.isInteger(Number(winId));
@@ -568,10 +569,14 @@ onMessageFromPopup(MessageLocation.Background, {
       urls,
       isOpenedWindow,
     });
+
+    // 重新声明邀请的落地页地址
+    const DEFAULT_LANDING_INVITE = `${DEFAULT_LANDING}/?invite=${inviteId}`;
+
     if (currentWindow) {
       // 不新开窗口的逻辑
       chrome.tabs.create(
-        { url: DEFAULT_LANDING, active: true },
+        { url: DEFAULT_LANDING_INVITE, active: true },
         ({ windowId }) => {
           initWorkspace({ windowId, roomId: finalRoomId, winId: finalWinId });
         }
@@ -585,7 +590,7 @@ onMessageFromPopup(MessageLocation.Background, {
             roomId: finalRoomId,
             winId: finalWinId,
           });
-          chrome.tabs.create({ url: DEFAULT_LANDING, active: true }, () => {
+          chrome.tabs.create({ url: DEFAULT_LANDING_INVITE, active: true }, () => {
             console.log("create new page");
           });
         });
@@ -593,7 +598,7 @@ onMessageFromPopup(MessageLocation.Background, {
         initWorkspace({
           roomId: finalRoomId,
           winId: finalWinId,
-          urls: urls.length == 0 ? [DEFAULT_LANDING] : urls,
+          urls: urls.length == 0 ? [DEFAULT_LANDING_INVITE] : urls,
         });
       }
     }

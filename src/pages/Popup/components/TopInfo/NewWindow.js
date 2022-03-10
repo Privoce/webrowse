@@ -6,6 +6,7 @@ import { FiCopy } from "react-icons/fi";
 import { generateUUID } from "../../../common/utils";
 import { sendMessageToBackground, MessageLocation } from "@wbet/message-api";
 import EVENTS from "../../../common/events";
+import {useInviteLink} from "../../../common/hooks";
 
 const StyledWrapper = styled.div`
   display: flex;
@@ -87,16 +88,25 @@ const StyledWrapper = styled.div`
   }
 `;
 export default function NewWindow({ uid = "" }) {
+  const { getInviteLink } = useInviteLink({});
+
   const [subMenuVisible, setSubMenuVisible] = useState(false);
   const node = useRef(null);
   const showSubMenu = () => {
     setSubMenuVisible(true);
   };
-  const handleNewBrowsing = (evt) => {
+
+  const handleNewBrowsing = async (evt) => {
     const { type } = evt.currentTarget.dataset;
     const winId = generateUUID();
+
+    const inviteId = await getInviteLink({ roomId: uid, winId }, false);
+
     sendMessageToBackground(
-      { currentWindow: type == "current", roomId: uid, winId },
+      {
+        currentWindow: type == "current", roomId: uid, winId,
+        inviteId,
+      },
       MessageLocation.Popup,
       EVENTS.NEW_WINDOW
     );

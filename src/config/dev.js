@@ -9,9 +9,12 @@
 
 // const SOCKET_SERVER_DOMAIN = 'vera.nicegoodthings.com';
 const SOCKET_SERVER_DOMAIN = 'localhost:4000';
-const DEFAULT_LANDING = 'https://webrow.se/#howto';
+// 开发环境的 landing 和 post message origin
+const DEFAULT_LANDING = 'http://192.168.10.30:8003/started';
+const MESSAGE_TARGET_ORIGIN = 'http://192.168.10.30:8003';
 
 export default {
   SOCKET_SERVER_DOMAIN,
-  DEFAULT_LANDING
+  DEFAULT_LANDING,
+  MESSAGE_TARGET_ORIGIN
 }
