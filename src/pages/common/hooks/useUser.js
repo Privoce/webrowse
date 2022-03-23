@@ -51,7 +51,7 @@ const useUser = () => {
           console.log('local user data', res.user);
           const { user = null } = res;
           if (user) {
-            chrome.storage.sync.set({ user: { ...user, level, customer } })
+            chrome.storage.sync.set({ user: { ...user, level, customer, intUid: id } })
           }
         }
         )
