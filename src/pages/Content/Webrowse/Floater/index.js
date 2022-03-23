@@ -15,6 +15,7 @@ import StyledWidget from "./styled";
 import Tabs from "./Tabs";
 import Dots from "./Dots";
 import Chat from "./Chat";
+import Audio from "./Audio";
 
 import config from '../../../../config';
 
@@ -220,7 +221,7 @@ export default function Floater({
     }
   }, [link, winId, title, tabs]);
 
-  const { tab, chat } = visible;
+  const { tab, chat, audio } = visible;
   console.log({ users, host, currUser });
   const dragControls = useDragControls();
   return (
@@ -308,10 +309,10 @@ export default function Floater({
                 />
               </button>
               <button
-                data-tooltip={chrome.i18n.getMessage("voice_coming_soon")}
-                className={`btn audio tooltip`}
+                data-tooltip={currUser ? "Voice Channel" : "Please Login"}
+                className={`btn audio tooltip ${audio ? "curr" : ""}`}
                 data-type="audio"
-                onClick={null}
+                onClick={toggleVisible}
               />
             </div>
             {link && (
@@ -349,6 +350,14 @@ export default function Floater({
               onUpdateMessage={handleUpdateMessage}
             />
           )}
+          {
+            currUser && <Audio
+              visible={audio}
+              users={users}
+              closeBlock={closeBlock}
+              winId={winId}
+            />
+          }
           {popup && (
             <div className="leave_pop">
               {currUser?.creator && (
