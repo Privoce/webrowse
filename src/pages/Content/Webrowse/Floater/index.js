@@ -51,6 +51,7 @@ export default function Floater({
     audio: false,
     chat: false,
   });
+  const [voiceStatus, setVoiceStatus] = useState('disconnected');
   const [popup, setPopup] = useState(false);
   const [badged, setBadged] = useState(false);
   const { copied, copy } = useCopy();
@@ -92,11 +93,13 @@ export default function Floater({
         users,
         tabs,
         userId,
+        voiceStatus,
       }) => {
         console.log({ floaterTabVisible, users, tabs, userId });
         setVisible(floaterTabVisible);
         setUsers(users);
         setTabs(tabs);
+        setVoiceStatus(voiceStatus);
         let tmp = users.find((u) => u.id == userId);
         let tmp2 = users.find((u) => u.host);
         setCurrUser(tmp);
@@ -309,6 +312,7 @@ export default function Floater({
                 />
               </button>
               <button
+                disabled={!currUser}
                 data-tooltip={currUser ? "Voice Channel" : "Please Login"}
                 className={`btn audio tooltip ${audio ? "curr" : ""}`}
                 data-type="audio"
@@ -355,6 +359,7 @@ export default function Floater({
               visible={audio}
               users={users}
               closeBlock={closeBlock}
+              voiceStatus={voiceStatus}
               winId={winId}
             />
           }

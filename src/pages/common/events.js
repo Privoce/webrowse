@@ -74,7 +74,13 @@ const EVENTS = {
   // 权限提醒
   ACCESS_TIP: 'ACCESS_TIP',
   // 鼠标位置事件
-  HOST_CURSOR: 'HOST_CURSOR'
+  HOST_CURSOR: 'HOST_CURSOR',
+  // 语音连接状态事件
+  UPDATE_VOICE_STATUS: 'UPDATE_VOICE_STATUS',
+  // 加入、离开语音事件
+  VOICE_ACTION: 'VOICE_ACTION',
+  // 后台触发加入、离开语音事件
+  FIRE_VOICE_ACTION: 'FIRE_VOICE_ACTION',
 };
 
 export default EVENTS;
