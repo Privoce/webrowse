@@ -98,12 +98,11 @@ const Audio = (props) => {
     })()
   }, [remoteUsers]);
 
-
   /**
    * 加入房间
    */
-  const handleJoin = () => {
-    window.open(`${config.MESSAGE_TARGET_ORIGIN}/voice?cid=${winId}`);
+  const handleJoin = async () => {
+    await sendMessageToBackground({action: 'join'}, MessageLocation.Content, EVENTS.VOICE_ACTION);
   }
   /**
    * 离开房间
@@ -116,18 +115,37 @@ const Audio = (props) => {
     // 监听由 content script 触发的后台 FIRE_VOICE_ACTION 事件
     onMessageFromBackground(MessageLocation.Content, {
       [EVENTS.FIRE_VOICE_ACTION]: (data) => {
-        const {action} = data;
+        const {action, tabs = []} = data;
         const uri = new URL(config.MESSAGE_TARGET_ORIGIN);
+        const meetingUri = `${config.MESSAGE_TARGET_ORIGIN}/voice`
         console.log(action, 'action message');
 
-        // 当前 tab location host 不是 MESSAGE_TARGET_ORIGIN 直接退出
-        if (location.host !== uri.host) return;
+        // 是否已经打开了 meeting tab
+        const _isOpenMeeting = !!tabs.find(tab => tab?.url?.indexOf(meetingUri) > -1);
 
         const message = {
           source: 'webrowse.ext',
           payload: {},
           event: action,
         };
+
+        switch (action) {
+          case 'join':
+            if (!_isOpenMeeting) {
+              return window.open(`${config.MESSAGE_TARGET_ORIGIN}/voice?cid=${winId}`);
+            }
+
+            break;
+
+          case 'leave':
+            break;
+
+          default:
+            break;
+        }
+
+        // 当前 tab location host 不是 MESSAGE_TARGET_ORIGIN 直接退出
+        if (location.host !== uri.host) return;
 
         // 向 MESSAGE_TARGET_ORIGIN 发送消息
         window.postMessage(message, config.MESSAGE_TARGET_ORIGIN);
@@ -184,7 +202,7 @@ const Audio = (props) => {
           voiceStatus === 'connected' ? <button
               onClick={handleLeave}
               className="button leave">Leave</button>
-            : <button className="button join" onClick={handleJoin}>Join</button>
+            : <button disabled={voiceStatus === 'connecting'} className="button join" onClick={handleJoin}>Join</button>
         }
       </div>
     </section>

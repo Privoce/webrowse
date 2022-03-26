@@ -96,6 +96,9 @@ const StyledVoice = styled(StyledBlock)`
     }
     .join {
       background: rgba(82, 233, 251, 1);
+      &:disabled {
+        background-color: #A0A2A5;
+      }
     }
     .leave {
     }

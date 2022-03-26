@@ -993,6 +993,7 @@ onMessageFromContentScript(MessageLocation.Background, {
           item.id,
           {
             action,
+            tabs,
           },
           MessageLocation.Background,
           EVENTS.FIRE_VOICE_ACTION
