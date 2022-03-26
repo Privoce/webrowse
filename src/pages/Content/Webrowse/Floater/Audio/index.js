@@ -19,7 +19,7 @@ const statusMap = new Map([
   ['connected', 'Connected!'],
 ])
 const Audio = (props) => {
-  const {visible = true, closeBlock, users = [], winId, voiceStatus} = props;
+  const {visible = true, closeBlock, users = [], winId, voiceStatus, remoteUsers: _remoteUsers} = props;
   const [status, setStatus] = useState(undefined);
   const {user: localUser} = useLocalUser();
   const [remoteUsers, setRemoteUsers] = useState([]);
@@ -85,6 +85,20 @@ const Audio = (props) => {
     })()
   }, [status]);
 
+  // remoteUsers 变化时更新扩展的 remoteUsers
+  useEffect(() => {
+    if (status === undefined) return;
+
+    (async () => {
+      await sendMessageToBackground(
+        {remoteUsers},
+        MessageLocation.Content,
+        EVENTS.UPDATE_REMOTE_USERS,
+      )
+    })()
+  }, [remoteUsers]);
+
+
   /**
    * 加入房间
    */
@@ -121,6 +135,29 @@ const Audio = (props) => {
     });
   }, []);
 
+  const renderUser = (user) => {
+    const _user = user?.intUid ? user : users.find(item => item.intUid === user.uid);
+
+    return (
+      <li key={user.uid} className="voiceItem">
+        <div className="main">
+          <div className="avatarBox">
+            <img src={_user?.photo} className="avatar"/>
+          </div>
+          <div className="name">{_user?.username}</div>
+        </div>
+        <div className="buttons">
+          <button className="button">
+            <div className="mic"><Mic/></div>
+          </button>
+          <button className="button">
+            <div className="speaker"><Speaker/></div>
+          </button>
+        </div>
+      </li>
+    )
+  }
+
   if (!visible) return <></>;
 
   return <StyledVoice>
@@ -134,25 +171,12 @@ const Audio = (props) => {
       onClick={closeBlock}
     />
     <section className="wrapper">
-      <ul className="voiceItems" style={{display: 'none'}}>
+      <ul className="voiceItems">
         {
-          remoteUsers?.map(user => <li key={user.id} className="voiceItem">
-              <div className="main">
-                <div className="avatarBox">
-                  <img src={user.photo} className="avatar"/>
-                </div>
-                <div className="name">{user.username}</div>
-              </div>
-              <div className="buttons">
-                <button className="button">
-                  <div className="mic"><Mic/></div>
-                </button>
-                <button className="button">
-                  <div className="speaker"><Speaker/></div>
-                </button>
-              </div>
-            </li>
-          )
+          voiceStatus === 'connected' && renderUser(localUser)
+        }
+        {
+          _remoteUsers?.map(user => renderUser(user))
         }
       </ul>
       <div className="footer">

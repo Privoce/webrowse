@@ -55,6 +55,7 @@ export default function Floater({
   const [popup, setPopup] = useState(false);
   const [badged, setBadged] = useState(false);
   const { copied, copy } = useCopy();
+  const [remoteUsers, setRemoteUsers] = useState([]);
   const toggleVisible = ({ target }) => {
     const { type } = target.dataset;
     // setVisible({tab:false,follow:false})
@@ -94,12 +95,16 @@ export default function Floater({
         tabs,
         userId,
         voiceStatus,
+        remoteUsers,
       }) => {
         console.log({ floaterTabVisible, users, tabs, userId });
         setVisible(floaterTabVisible);
         setUsers(users);
         setTabs(tabs);
         setVoiceStatus(voiceStatus);
+        setRemoteUsers(remoteUsers);
+
+
         let tmp = users.find((u) => u.id == userId);
         let tmp2 = users.find((u) => u.host);
         setCurrUser(tmp);
@@ -358,6 +363,7 @@ export default function Floater({
             currUser && <Audio
               visible={audio}
               users={users}
+              remoteUsers={remoteUsers}
               closeBlock={closeBlock}
               voiceStatus={voiceStatus}
               winId={winId}

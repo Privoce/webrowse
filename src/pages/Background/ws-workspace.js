@@ -209,6 +209,7 @@ const initWorkspace = async ({
     users: [],
     socketId: "",
     voiceStatus: 'disconnected',
+    remoteUsers: [], // agora 远端用户
   };
   currWorkspace.addEventHandler(async ({ event, rawParams }) => {
     const currUser = DATA_HUB[finalWindowId].users.find(
@@ -464,6 +465,7 @@ const notifyActiveTab = ({
               title,
               fav,
               voiceStatus,
+              remoteUsers,
             } = DATA_HUB[windowId];
             sendMessageToContentScript(
               tab?.id,
@@ -475,6 +477,7 @@ const notifyActiveTab = ({
                 title,
                 fav,
                 voiceStatus,
+                remoteUsers,
               },
               MessageLocation.Background,
               EVENTS.UPDATE_FLOATER
@@ -964,6 +967,17 @@ onMessageFromContentScript(MessageLocation.Background, {
     DATA_HUB[windowId].voiceStatus = status;
     notifyActiveTab({ windowId, action: EVENTS.UPDATE_FLOATER });
   },
+
+  // remoteUsers 状态更新
+  [EVENTS.UPDATE_REMOTE_USERS]: (request, sender) => {
+    const {remoteUsers = ''} = request;
+    const { windowId } = sender.tab;
+    const datahub = DATA_HUB[windowId];
+    if (!datahub) return;
+    DATA_HUB[windowId].remoteUsers = remoteUsers;
+    notifyActiveTab({ windowId, action: EVENTS.UPDATE_FLOATER });
+  },
+
 
   // voice 房间的加入、离开事件
   [EVENTS.VOICE_ACTION]: (request, sender) => {

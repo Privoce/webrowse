@@ -81,6 +81,8 @@ const EVENTS = {
   VOICE_ACTION: 'VOICE_ACTION',
   // 后台触发加入、离开语音事件
   FIRE_VOICE_ACTION: 'FIRE_VOICE_ACTION',
+  // 会议在线用户更新
+  UPDATE_REMOTE_USERS: 'UPDATE_REMOTE_USERS',
 };
 
 export default EVENTS;
