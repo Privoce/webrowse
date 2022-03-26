@@ -89,7 +89,7 @@ const Audio = (props) => {
    * 加入房间
    */
   const handleJoin = () => {
-    window.open(`https://deve.okeydemo.com/voice?cid=${winId}`);
+    window.open(`${config.MESSAGE_TARGET_ORIGIN}/voice?cid=${winId}`);
   }
   /**
    * 离开房间
