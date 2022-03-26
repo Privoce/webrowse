@@ -154,10 +154,10 @@ const Audio = (props) => {
   }, []);
 
   const renderUser = (user) => {
-    const _user = user?.intUid ? user : users.find(item => item.intUid === user.uid);
+    const _user = user?.intUid ? user : users.find(item => item.intUid === user?.uid);
 
     return (
-      <li key={user.uid} className="voiceItem">
+      <li key={user?.uid} className="voiceItem">
         <div className="main">
           <div className="avatarBox">
             <img src={_user?.photo} className="avatar"/>
