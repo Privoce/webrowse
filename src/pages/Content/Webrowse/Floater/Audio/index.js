@@ -129,29 +129,21 @@ const Audio = (props) => {
   useEffect(() => {
     // 监听由 content script 触发的后台 FIRE_VOICE_ACTION 事件
     onMessageFromBackground(MessageLocation.Content, {
-      [EVENTS.FIRE_VOICE_ACTION]: async (data) => {
-        const {action, tabs = []} = data;
-        console.log(action, 'action message');
+      [EVENTS.FIRE_VOICE_ACTION]: async (data = {}) => {
+        const {action, payload = {}} = data;
+        const {tabs = [], type = ''} = payload;
+
+        console.log(action, type, 'action message');
 
         // 是否已经打开了 meeting tab
-        const _isOpenMeeting = !!tabs.find(tab => tab?.url?.indexOf(meetingUri) > -1);
+        const _isOpenMeeting = !!tabs?.find(tab => tab?.url?.indexOf(meetingUri) > -1);
 
-        switch (action) {
-          case 'join':
-            // 打开 meeting tab
-            if (!_isOpenMeeting) {
-              return window.open(`${config.MESSAGE_TARGET_ORIGIN}/voice?cid=${winId}`);
-            }
-            break;
-
-          case 'leave':
-            break;
-
-          default:
-            break;
+        if (action === 'join' && !_isOpenMeeting) {
+          // 打开 meeting tab
+          return window.open(`${config.MESSAGE_TARGET_ORIGIN}/voice?cid=${winId}`);
         }
 
-        sendMessage(action);
+        sendMessage(action, {type});
       },
     });
   }, []);
@@ -175,11 +167,11 @@ const Audio = (props) => {
     };
   }, [tabs]);
 
-  const handleMute = (type) => {
-    sendMessage('mute', {
-      type,
-    });
+  // 关闭设备采集
+  const handleMute = async (type) => {
+    await sendMessageToBackground({action: 'mute', type}, MessageLocation.Content, EVENTS.VOICE_ACTION);
   }
+
   const renderUser = (user = {}) => {
     const _user = user?.intUid ? user : users.find(item => item.intUid === user?.uid);
 

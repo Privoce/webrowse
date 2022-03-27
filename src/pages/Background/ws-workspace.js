@@ -981,7 +981,7 @@ onMessageFromContentScript(MessageLocation.Background, {
 
   // voice 房间的加入、离开事件
   [EVENTS.VOICE_ACTION]: (request, sender) => {
-    const {action = ''} = request;
+    const {action = '', type = ''} = request;
     const { windowId } = sender.tab;
     const datahub = DATA_HUB[windowId];
     if (!datahub) return;
@@ -993,7 +993,7 @@ onMessageFromContentScript(MessageLocation.Background, {
           item.id,
           {
             action,
-            tabs,
+            payload: {tabs, type},
           },
           MessageLocation.Background,
           EVENTS.FIRE_VOICE_ACTION
