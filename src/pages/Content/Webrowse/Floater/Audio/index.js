@@ -119,7 +119,7 @@ const Audio = (props) => {
   useEffect(() => {
     // 监听由 content script 触发的后台 FIRE_VOICE_ACTION 事件
     onMessageFromBackground(MessageLocation.Content, {
-      [EVENTS.FIRE_VOICE_ACTION]: (data) => {
+      [EVENTS.FIRE_VOICE_ACTION]: async (data) => {
         const {action, tabs = []} = data;
         const meetingUri = `${config.MESSAGE_TARGET_ORIGIN}/voice`
         console.log(action, 'action message');
@@ -135,8 +135,13 @@ const Audio = (props) => {
 
         switch (action) {
           case 'join':
+            // 打开 meeting tab
             if (!_isOpenMeeting) {
-              return window.open(`${config.MESSAGE_TARGET_ORIGIN}/voice?cid=${winId}`);
+              await sendMessageToBackground({
+                  url: `${config.MESSAGE_TARGET_ORIGIN}/voice?cid=${winId}`},
+                MessageLocation.Content,
+                EVENTS.SET_PINNED)
+              return;
             }
 
             break;

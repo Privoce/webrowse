@@ -83,6 +83,8 @@ const EVENTS = {
   FIRE_VOICE_ACTION: 'FIRE_VOICE_ACTION',
   // 会议在线用户更新
   UPDATE_REMOTE_USERS: 'UPDATE_REMOTE_USERS',
+  // 设置 tab pinned
+  SET_PINNED: 'SET_PINNED',
 };
 
 export default EVENTS;

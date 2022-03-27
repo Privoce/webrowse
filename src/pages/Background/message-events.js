@@ -61,6 +61,18 @@ onMessageFromContentScript(MessageLocation.Background, {
     console.log('get current tab info', sender.tab);
     return sender.tab;
   },
+
+  // 设置 tab pinned
+  [EVENTS.SET_PINNED]: (request = {}, sender) => {
+    const { url = '' } = request;
+    chrome.tabs.create(
+      {
+        url,
+        pinned: true,
+        openerTabId: sender.tab.id,
+      }
+    )
+  }
 });
 onMessageFromPopup(MessageLocation.Background, {
   [EVENTS.COPY_SOMETHING]: (request) => {
