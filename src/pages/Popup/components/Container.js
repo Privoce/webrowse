@@ -47,7 +47,7 @@ export default function Container() {
     setUser(null);
 
     // 删除 Stream Token
-    const key = 'stream_token_v2';
+    const key = 'stream_token_v3';
     chrome.storage.sync.remove([key]);
 
     sendMessageToBackground({}, MessageLocation.Popup, EVENTS.LOGOUT);
