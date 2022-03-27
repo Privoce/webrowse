@@ -366,6 +366,7 @@ export default function Floater({
               remoteUsers={remoteUsers}
               closeBlock={closeBlock}
               voiceStatus={voiceStatus}
+              tabs={tabs}
               winId={winId}
             />
           }

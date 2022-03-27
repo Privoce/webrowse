@@ -63,15 +63,11 @@ onMessageFromContentScript(MessageLocation.Background, {
   },
 
   // 设置 tab pinned
-  [EVENTS.SET_PINNED]: (request = {}, sender) => {
-    const { url = '' } = request;
-    chrome.tabs.create(
-      {
-        url,
-        pinned: true,
-        openerTabId: sender.tab.id,
-      }
-    )
+  [EVENTS.SET_PINNED]: (request = {}) => {
+    const { tabId = '' } = request;
+    if (tabId) {
+      chrome.tabs.update(Number(tabId), { pinned: true });
+    }
   }
 });
 onMessageFromPopup(MessageLocation.Background, {

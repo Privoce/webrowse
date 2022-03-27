@@ -21,11 +21,12 @@ const statusMap = new Map([
 ])
 
 const Audio = (props) => {
-  const {visible = true, closeBlock, users = [], winId, voiceStatus, remoteUsers: _remoteUsers} = props;
+  const {visible = true, closeBlock, users = [], winId, voiceStatus, remoteUsers: _remoteUsers, tabs} = props;
   const [status, setStatus] = useState(undefined);
   const {user: localUser} = useLocalUser();
   const [remoteUsers, setRemoteUsers] = useState([]);
   const uri = new URL(config.MESSAGE_TARGET_ORIGIN);
+  const meetingUri = `${config.MESSAGE_TARGET_ORIGIN}/voice`
 
   useEffect(() => {
     const message = {
@@ -121,7 +122,6 @@ const Audio = (props) => {
     onMessageFromBackground(MessageLocation.Content, {
       [EVENTS.FIRE_VOICE_ACTION]: async (data) => {
         const {action, tabs = []} = data;
-        const meetingUri = `${config.MESSAGE_TARGET_ORIGIN}/voice`
         console.log(action, 'action message');
 
         // 是否已经打开了 meeting tab
@@ -137,11 +137,7 @@ const Audio = (props) => {
           case 'join':
             // 打开 meeting tab
             if (!_isOpenMeeting) {
-              await sendMessageToBackground({
-                  url: `${config.MESSAGE_TARGET_ORIGIN}/voice?cid=${winId}`},
-                MessageLocation.Content,
-                EVENTS.SET_PINNED)
-              return;
+              return window.open(`${config.MESSAGE_TARGET_ORIGIN}/voice?cid=${winId}`);
             }
 
             break;
@@ -162,11 +158,30 @@ const Audio = (props) => {
     });
   }, []);
 
+  useEffect(() => {
+    // 是否已经打开了 meeting tab
+    const tab = tabs.find(tab => tab?.url?.indexOf(meetingUri) > -1);
+
+    const handlePinned = async () => {
+      await sendMessageToBackground({
+        tabId: tab?.id
+      },
+        MessageLocation.Content,
+        EVENTS.SET_PINNED)
+    }
+
+    if (tab) {
+      (async () => await handlePinned())();
+    }
+    return () => {
+    };
+  }, [tabs]);
+
   const renderUser = (user) => {
     const _user = user?.intUid ? user : users.find(item => item.intUid === user?.uid);
 
     return (
-      <li key={user?.uid} className="voiceItem">
+      <li key={user?.uid} className={`voiceItem ${user.current ? "current" : ""}`}>
         <div className="main">
           <div className="avatarBox">
             <img src={_user?.photo} className="avatar"/>

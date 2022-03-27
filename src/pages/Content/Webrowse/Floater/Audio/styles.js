@@ -20,14 +20,14 @@ const StyledVoice = styled(StyledBlock)`
     position: absolute;
     left: 50%;
     top: 50%;
-    transform: translate(-50%,-50%); 
+    transform: translate(-50%,-50%);
     font-size: 12px;
   }
   .wrapper {
     padding: 0 20px;
   }
   .voiceItems {
-    margin: 0; 
+    margin: 0;
     padding: 0;
   }
   .voiceItem {
@@ -36,15 +36,23 @@ const StyledVoice = styled(StyledBlock)`
     justify-content: space-between;
     height: 32px;
     color: var(--font-color);
+    &.current {
+      .name, .button {
+        //color: rgba(82, 233, 251, 1);
+      }
+      .button {
+        cursor: pointer;
+      }
+    }
     svg {
       vertical-align: top;
     }
     .main {
-      display: flex; 
+      display: flex;
       align-items: center;
     }
     .avatarBox {
-      width: 20px;    
+      width: 20px;
       height: 20px;
       border-radius: 50%;
       overflow: hidden;
@@ -54,7 +62,7 @@ const StyledVoice = styled(StyledBlock)`
       height: 100%;
     }
     .name {
-      text-align: left; 
+      text-align: left;
       margin-left: 4px;
       font-size: 12px;
       line-height: 18px;
@@ -63,7 +71,6 @@ const StyledVoice = styled(StyledBlock)`
       display: flex;
     }
     .button {
-      cursor: pointer;
       display: flex;
       width: 24px;
       height: 24px;
@@ -73,10 +80,10 @@ const StyledVoice = styled(StyledBlock)`
       justify-content: center;
     }
     .mic {
-      
+
     }
     .speaker {
-      
+
     }
   }
   .footer {
