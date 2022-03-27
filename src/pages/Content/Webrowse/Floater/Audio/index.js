@@ -28,20 +28,30 @@ const Audio = (props) => {
   const uri = new URL(config.MESSAGE_TARGET_ORIGIN);
   const meetingUri = `${config.MESSAGE_TARGET_ORIGIN}/voice`
 
-  useEffect(() => {
+  /**
+   * 向 webrow.se 发送消息
+   * @param event
+   * @param payload
+   */
+  const sendMessage = (event, payload = {}) => {
     const message = {
       source: 'webrowse.ext',
-      payload: {
-        users,
-        currentUser: localUser
-      },
-      event: 'webrows_users',
+      payload,
+      event,
     };
 
-    // 向指定 HOST 发送消息
+    // 当前 tab location host === MESSAGE_TARGET_ORIGIN
+    // 向 MESSAGE_TARGET_ORIGIN 发送消息
     if (location.host === uri.host) {
       window.postMessage(message, config.MESSAGE_TARGET_ORIGIN);
     }
+  };
+
+  useEffect(() => {
+    sendMessage('webrowse_users', {
+      users,
+      currentUser: localUser
+    });
   }, [users, localUser]);
 
   useEffect(() => {
@@ -57,7 +67,6 @@ const Audio = (props) => {
       // 监听来自 webrow.se/voice 的消息
       if (source !== 'webrow.se/voice') return;
 
-      console.log(status, 'haha status')
       switch (event) {
         case 'connect':
           setStatus(status);
@@ -127,19 +136,12 @@ const Audio = (props) => {
         // 是否已经打开了 meeting tab
         const _isOpenMeeting = !!tabs.find(tab => tab?.url?.indexOf(meetingUri) > -1);
 
-        const message = {
-          source: 'webrowse.ext',
-          payload: {},
-          event: action,
-        };
-
         switch (action) {
           case 'join':
             // 打开 meeting tab
             if (!_isOpenMeeting) {
               return window.open(`${config.MESSAGE_TARGET_ORIGIN}/voice?cid=${winId}`);
             }
-
             break;
 
           case 'leave':
@@ -149,11 +151,7 @@ const Audio = (props) => {
             break;
         }
 
-        // 当前 tab location host 不是 MESSAGE_TARGET_ORIGIN 直接退出
-        if (location.host !== uri.host) return;
-
-        // 向 MESSAGE_TARGET_ORIGIN 发送消息
-        window.postMessage(message, config.MESSAGE_TARGET_ORIGIN);
+        sendMessage(action);
       },
     });
   }, []);
@@ -177,11 +175,16 @@ const Audio = (props) => {
     };
   }, [tabs]);
 
-  const renderUser = (user) => {
+  const handleMute = (type) => {
+    sendMessage('mute', {
+      type,
+    });
+  }
+  const renderUser = (user = {}) => {
     const _user = user?.intUid ? user : users.find(item => item.intUid === user?.uid);
 
     return (
-      <li key={user?.uid} className={`voiceItem ${user.current ? "current" : ""}`}>
+      <li key={user?.uid} className={`voiceItem ${user?.current ? "current" : ""}`}>
         <div className="main">
           <div className="avatarBox">
             <img src={_user?.photo} className="avatar"/>
@@ -189,10 +192,14 @@ const Audio = (props) => {
           <div className="name">{_user?.username}</div>
         </div>
         <div className="buttons">
-          <button className="button">
+          <button
+            disabled={!user?.current}
+            className="button" onClick={() => handleMute('video')}>
             <div className="speaker">{user?.hasVideo ? <Video/> : <VideoClose/>}</div>
           </button>
-          <button className="button">
+          <button
+            disabled={!user?.current}
+            className="button" onClick={() => handleMute('audio')}>
             <div className="mic">{user?.hasAudio ? <Mic/> : <AudioClose/>}</div>
           </button>
         </div>

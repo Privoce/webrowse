@@ -71,6 +71,7 @@ const StyledVoice = styled(StyledBlock)`
       display: flex;
     }
     .button {
+      cursor: default;
       display: flex;
       width: 24px;
       height: 24px;
