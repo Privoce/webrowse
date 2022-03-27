@@ -8,21 +8,24 @@
 
 import React, {useEffect, useState} from 'react';
 import StyledVoice from "./styles";
-import {Mic, Speaker} from './Icons';
+import {AudioClose, Audio as Mic, Video, VideoClose} from './Icons';
 import config from "../../../../../config";
 import useLocalUser from "../../../../Options/useLocalUser";
 import {MessageLocation, sendMessageToBackground, onMessageFromBackground} from "@wbet/message-api";
 import EVENTS from "../../../../common/events";
 
+// 会议连接状文案
 const statusMap = new Map([
   ['connecting', 'Connecting...'],
   ['connected', 'Connected!'],
 ])
+
 const Audio = (props) => {
   const {visible = true, closeBlock, users = [], winId, voiceStatus, remoteUsers: _remoteUsers} = props;
   const [status, setStatus] = useState(undefined);
   const {user: localUser} = useLocalUser();
   const [remoteUsers, setRemoteUsers] = useState([]);
+  const uri = new URL(config.MESSAGE_TARGET_ORIGIN);
 
   useEffect(() => {
     const message = {
@@ -34,8 +37,10 @@ const Audio = (props) => {
       event: 'webrows_users',
     };
 
-    // 发送消息
-    window.postMessage(message, config.MESSAGE_TARGET_ORIGIN);
+    // 向指定 HOST 发送消息
+    if (location.host === uri.host) {
+      window.postMessage(message, config.MESSAGE_TARGET_ORIGIN);
+    }
   }, [users, localUser]);
 
   useEffect(() => {
@@ -116,7 +121,6 @@ const Audio = (props) => {
     onMessageFromBackground(MessageLocation.Content, {
       [EVENTS.FIRE_VOICE_ACTION]: (data) => {
         const {action, tabs = []} = data;
-        const uri = new URL(config.MESSAGE_TARGET_ORIGIN);
         const meetingUri = `${config.MESSAGE_TARGET_ORIGIN}/voice`
         console.log(action, 'action message');
 
@@ -166,10 +170,10 @@ const Audio = (props) => {
         </div>
         <div className="buttons">
           <button className="button">
-            <div className="mic"><Mic/></div>
+            <div className="speaker">{user?.hasVideo ? <Video/> : <VideoClose/>}</div>
           </button>
           <button className="button">
-            <div className="speaker"><Speaker/></div>
+            <div className="mic">{user?.hasAudio ? <Mic/> : <AudioClose/>}</div>
           </button>
         </div>
       </li>
@@ -190,9 +194,6 @@ const Audio = (props) => {
     />
     <section className="wrapper">
       <ul className="voiceItems">
-        {
-          voiceStatus === 'connected' && renderUser(localUser)
-        }
         {
           _remoteUsers?.map(user => renderUser(user))
         }
