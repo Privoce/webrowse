@@ -229,6 +229,30 @@ export default function Floater({
     }
   }, [link, winId, title, tabs]);
 
+  useEffect(() => {
+    const meetingUri = `${config.MESSAGE_TARGET_ORIGIN}/voice`
+
+    // 是否已经打开了 meeting tab
+    const tab = !!tabs.find(tab => tab?.url?.indexOf(meetingUri) > -1);
+
+    // 没有找到 meeting tab 并且已经在线时，重置连接状态和用户列表
+    if (!tab && voiceStatus === 'connected') {
+      (async () => {
+        await sendMessageToBackground({
+          status: '',
+        }, MessageLocation.Content, EVENTS.UPDATE_VOICE_STATUS);
+
+        await sendMessageToBackground({
+          remoteUsers: [],
+        }, MessageLocation.Content, EVENTS.UPDATE_REMOTE_USERS);
+      })();
+    }
+
+    return () => {
+    };
+  }, [tabs, remoteUsers, voiceStatus]);
+
+
   const { tab, chat, audio } = visible;
   console.log({ users, host, currUser });
   const dragControls = useDragControls();

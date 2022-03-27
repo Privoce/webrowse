@@ -970,7 +970,7 @@ onMessageFromContentScript(MessageLocation.Background, {
 
   // remoteUsers 状态更新
   [EVENTS.UPDATE_REMOTE_USERS]: (request, sender) => {
-    const {remoteUsers = ''} = request;
+    const {remoteUsers = []} = request;
     const { windowId } = sender.tab;
     const datahub = DATA_HUB[windowId];
     if (!datahub) return;
