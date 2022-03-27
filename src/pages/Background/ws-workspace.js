@@ -208,6 +208,8 @@ const initWorkspace = async ({
     createTabs: [],
     users: [],
     socketId: "",
+    voiceStatus: 'disconnected',
+    remoteUsers: [], // agora 远端用户
   };
   currWorkspace.addEventHandler(async ({ event, rawParams }) => {
     const currUser = DATA_HUB[finalWindowId].users.find(
@@ -462,6 +464,8 @@ const notifyActiveTab = ({
               socketId,
               title,
               fav,
+              voiceStatus,
+              remoteUsers,
             } = DATA_HUB[windowId];
             sendMessageToContentScript(
               tab?.id,
@@ -472,6 +476,8 @@ const notifyActiveTab = ({
                 userId: socketId,
                 title,
                 fav,
+                voiceStatus,
+                remoteUsers,
               },
               MessageLocation.Background,
               EVENTS.UPDATE_FLOATER
@@ -950,6 +956,50 @@ onMessageFromContentScript(MessageLocation.Background, {
     const { windowId } = sender.tab;
     const currSocket = DATA_HUB[windowId].socket;
     currSocket.send({ cmd: EVENTS.UPDATE_WIN_TITLE, payload: { title } });
+  },
+
+  // voice 接连状态更新
+  [EVENTS.UPDATE_VOICE_STATUS]: (request, sender) => {
+    const {status = ''} = request;
+    const { windowId } = sender.tab;
+    const datahub = DATA_HUB[windowId];
+    if (!datahub) return;
+    DATA_HUB[windowId].voiceStatus = status;
+    notifyActiveTab({ windowId, action: EVENTS.UPDATE_FLOATER });
+  },
+
+  // remoteUsers 状态更新
+  [EVENTS.UPDATE_REMOTE_USERS]: (request, sender) => {
+    const {remoteUsers = []} = request;
+    const { windowId } = sender.tab;
+    const datahub = DATA_HUB[windowId];
+    if (!datahub) return;
+    DATA_HUB[windowId].remoteUsers = remoteUsers;
+    notifyActiveTab({ windowId, action: EVENTS.UPDATE_FLOATER });
+  },
+
+
+  // voice 房间的加入、离开事件
+  [EVENTS.VOICE_ACTION]: (request, sender) => {
+    const {action = '', type = ''} = request;
+    const { windowId } = sender.tab;
+    const datahub = DATA_HUB[windowId];
+    if (!datahub) return;
+
+    // 向当前窗口的所有 tabs 发送加入、离开等事件
+    chrome.tabs.query({ windowId }, (tabs) => {
+      tabs.map(async item => {
+        await sendMessageToContentScript(
+          item.id,
+          {
+            action,
+            payload: {tabs, type},
+          },
+          MessageLocation.Background,
+          EVENTS.FIRE_VOICE_ACTION
+        );
+      })
+    });
   },
 });
 // 关闭窗口

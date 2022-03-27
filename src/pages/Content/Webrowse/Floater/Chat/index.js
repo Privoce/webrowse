@@ -43,7 +43,7 @@ const StyledWrapper = styled(StyledBlock)`
   }
 `;
 
-const client = StreamChat.getInstance("c4vxfxpdzwfm");
+const client = StreamChat.getInstance("z6mkz7px6h32");
 
 const ChatPage = (
   {

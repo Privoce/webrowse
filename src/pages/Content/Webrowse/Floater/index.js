@@ -15,6 +15,7 @@ import StyledWidget from "./styled";
 import Tabs from "./Tabs";
 import Dots from "./Dots";
 import Chat from "./Chat";
+import Audio from "./Audio";
 
 import config from '../../../../config';
 
@@ -50,9 +51,11 @@ export default function Floater({
     audio: false,
     chat: false,
   });
+  const [voiceStatus, setVoiceStatus] = useState('disconnected');
   const [popup, setPopup] = useState(false);
   const [badged, setBadged] = useState(false);
   const { copied, copy } = useCopy();
+  const [remoteUsers, setRemoteUsers] = useState([]);
   const toggleVisible = ({ target }) => {
     const { type } = target.dataset;
     // setVisible({tab:false,follow:false})
@@ -91,11 +94,17 @@ export default function Floater({
         users,
         tabs,
         userId,
+        voiceStatus,
+        remoteUsers,
       }) => {
         console.log({ floaterTabVisible, users, tabs, userId });
         setVisible(floaterTabVisible);
         setUsers(users);
         setTabs(tabs);
+        setVoiceStatus(voiceStatus);
+        setRemoteUsers(remoteUsers);
+
+
         let tmp = users.find((u) => u.id == userId);
         let tmp2 = users.find((u) => u.host);
         setCurrUser(tmp);
@@ -220,7 +229,31 @@ export default function Floater({
     }
   }, [link, winId, title, tabs]);
 
-  const { tab, chat } = visible;
+  useEffect(() => {
+    const meetingUri = `${config.MESSAGE_TARGET_ORIGIN}/voice`
+
+    // 是否已经打开了 meeting tab
+    const tab = !!tabs.find(tab => tab?.url?.indexOf(meetingUri) > -1);
+
+    // 没有找到 meeting tab 并且已经在线时，重置连接状态和用户列表
+    if (!tab && voiceStatus === 'connected') {
+      (async () => {
+        await sendMessageToBackground({
+          status: '',
+        }, MessageLocation.Content, EVENTS.UPDATE_VOICE_STATUS);
+
+        await sendMessageToBackground({
+          remoteUsers: [],
+        }, MessageLocation.Content, EVENTS.UPDATE_REMOTE_USERS);
+      })();
+    }
+
+    return () => {
+    };
+  }, [tabs, remoteUsers, voiceStatus]);
+
+
+  const { tab, chat, audio } = visible;
   console.log({ users, host, currUser });
   const dragControls = useDragControls();
   return (
@@ -308,10 +341,11 @@ export default function Floater({
                 />
               </button>
               <button
-                data-tooltip={chrome.i18n.getMessage("voice_coming_soon")}
-                className={`btn audio tooltip`}
+                disabled={!currUser}
+                data-tooltip={currUser ? "Voice Channel" : "Please Login"}
+                className={`btn audio tooltip ${audio ? "curr" : ""}`}
                 data-type="audio"
-                onClick={null}
+                onClick={toggleVisible}
               />
             </div>
             {link && (
@@ -349,6 +383,17 @@ export default function Floater({
               onUpdateMessage={handleUpdateMessage}
             />
           )}
+          {
+            currUser && <Audio
+              visible={audio}
+              users={users}
+              remoteUsers={remoteUsers}
+              closeBlock={closeBlock}
+              voiceStatus={voiceStatus}
+              tabs={tabs}
+              winId={winId}
+            />
+          }
           {popup && (
             <div className="leave_pop">
               {currUser?.creator && (

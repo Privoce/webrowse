@@ -129,10 +129,10 @@ export default function Webrowse() {
   const initUser = async () => {
     let curr = await getUser();
     if (curr) {
-      let { id = "", username, photo = "" } = curr;
+      let { id = "", username, photo = "", intUid } = curr;
       // 初始化数据库中的user
       initialUser(id)
-      setCurrUser({ aid: id, username, photo });
+      setCurrUser({ aid: id, username, photo, intUid });
     }
   };
   useEffect(() => {

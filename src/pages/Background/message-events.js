@@ -61,6 +61,14 @@ onMessageFromContentScript(MessageLocation.Background, {
     console.log('get current tab info', sender.tab);
     return sender.tab;
   },
+
+  // 设置 tab pinned
+  [EVENTS.SET_PINNED]: (request = {}) => {
+    const { tabId = '' } = request;
+    if (tabId) {
+      chrome.tabs.update(Number(tabId), { pinned: true });
+    }
+  }
 });
 onMessageFromPopup(MessageLocation.Background, {
   [EVENTS.COPY_SOMETHING]: (request) => {
