@@ -79,6 +79,10 @@ const StyledVoice = styled(StyledBlock)`
       border: none;
       align-items: center;
       justify-content: center;
+      color: var(--icon-btn-color);
+      &[disabled] {
+        opacity: 0.3;
+      }
     }
     .mic {
 
@@ -98,17 +102,30 @@ const StyledVoice = styled(StyledBlock)`
       border-radius: 20px;
       width: 60px;
       height: 26px;
-      background: rgba(228, 34, 34, 1);
       color: #fff;
       border: none;
+      font-weight: bold;
+      font-size: 12px;
+      background-color: transparent;
     }
     .join {
-      background: rgba(82, 233, 251, 1);
+      background: var(--main-btn-bg-color);
+      color:var(--main-btn-txt-color);
+      &:hover{
+        background: var(--main-btn-hover-bg-color);
+      }
       &:disabled {
         background-color: #A0A2A5;
+        &:hover {
+          background-color: transparent;
+        }
       }
     }
     .leave {
+      background: rgba(228, 34, 34, 1);
+      &:hover {
+        background-color: #ba1b1b;
+      }
     }
   }
 `;
