@@ -10,10 +10,28 @@ import React, {useEffect, useState} from 'react';
 import StyledVoice from "./styles";
 import {AudioClose, Audio as Mic, Video, VideoClose} from './Icons';
 import config from "../../../../../config";
-import useLocalUser from "../../../../Options/useLocalUser";
 import {MessageLocation, sendMessageToBackground, onMessageFromBackground} from "@wbet/message-api";
 import EVENTS from "../../../../common/events";
+import styled from "styled-components";
+import {stringToHexColor} from "../../../../common/utils";
 
+const StyledLetterHead = styled.div`
+  //border: 1px solid #EBEBEC;
+  border-radius: 50%;
+  width:20px;
+  height: 20px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color:#fff;
+  background: ${({ color }) => color};
+  font-size: 12px;
+  font-weight: 800;
+  &[data-border='none']{
+    border:none
+  }
+`;
 // 会议连接状文案
 const statusMap = new Map([
   ['connecting', 'Connecting...'],
@@ -21,9 +39,12 @@ const statusMap = new Map([
 ])
 
 const Audio = (props) => {
-  const {visible = true, closeBlock, users = [], winId, voiceStatus, remoteUsers: _remoteUsers, tabs} = props;
+  const {
+    visible = true, closeBlock, users = [], winId, voiceStatus, remoteUsers: _remoteUsers, tabs,
+    currUser: localUser = {},
+  } = props;
+
   const [status, setStatus] = useState(undefined);
-  const {user: localUser} = useLocalUser();
   const [remoteUsers, setRemoteUsers] = useState([]);
   const uri = new URL(config.MESSAGE_TARGET_ORIGIN);
   const meetingUri = `${config.MESSAGE_TARGET_ORIGIN}/voice`
@@ -174,12 +195,21 @@ const Audio = (props) => {
 
   const renderUser = (user = {}) => {
     const _user = user?.intUid ? user : users.find(item => item.intUid === user?.uid);
+    const username = _user?.username || 'Guest';
+
+    const color = stringToHexColor(username);
+    const letter = username[0];
 
     return (
       <li key={user?.uid} className={`voiceItem ${user?.current ? "current" : ""}`}>
         <div className="main">
           <div className="avatarBox">
-            <img src={_user?.photo} className="avatar"/>
+            {
+              _user?.photo ?
+                <img src={_user?.photo} className="avatar"/>
+                :
+                <StyledLetterHead color={color} className="head letter">{letter}</StyledLetterHead>
+            }
           </div>
           <div className="name">{_user?.username}</div>
         </div>

@@ -377,6 +377,7 @@ export default function Floater({
           {tab && <Tabs tabs={tabs} users={users} closeBlock={closeBlock} />}
           {currUser && (
             <Chat
+              currUser={currUser}
               visible={chat}
               closeBlock={closeBlock}
               winId={winId}
@@ -388,6 +389,7 @@ export default function Floater({
               visible={audio}
               users={users}
               remoteUsers={remoteUsers}
+              currUser={currUser}
               closeBlock={closeBlock}
               voiceStatus={voiceStatus}
               tabs={tabs}

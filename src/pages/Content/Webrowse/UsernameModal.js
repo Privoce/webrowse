@@ -91,6 +91,23 @@ const StyledModal = styled.section`
 `;
 const fetcher = (...args) => fetch(...args).then(res => res.json());
 const prefix = SOCKET_SERVER_DOMAIN.indexOf('localhost') > -1 ? 'http:' : 'https:'
+
+/**
+ * 随机生成9位数的 intUid
+ * @returns {number}
+ */
+const genUid = () => {
+  const soup = "123456789"
+  const length = 9
+  const soupLength = soup.length
+  const id = []
+  for (let i = 0; i < length; i++) {
+    id[i] = soup.charAt(Math.random() * soupLength)
+  }
+
+  return +id.join("")
+}
+
 export default function UsernameModal({ roomId, startCoBrowse, closeModal }) {
   const { data, error } = useSWR(`${prefix}//${SOCKET_SERVER_DOMAIN}/webrowse/user/active/${roomId}`, fetcher)
   const [input, setInput] = useState('')
@@ -98,11 +115,13 @@ export default function UsernameModal({ roomId, startCoBrowse, closeModal }) {
     const currInput = evt.target.value;
     setInput(currInput)
   }
+
   const handleStart = () => {
-    chrome.storage.sync.set({ fakename: input }, () => {
+    chrome.storage.sync.set({ fakename: input, intUid: genUid() }, () => {
       startCoBrowse(input)
     })
   }
+
   return (
     <StyledModal>
       <div className="modal">

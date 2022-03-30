@@ -1,9 +1,9 @@
 function getUser() {
   return new Promise((resolve) => {
-    let arr = ['user', 'fakename'];
+    let arr = ['user', 'fakename', 'intUid'];
     chrome.storage.sync.get(arr, (result) => {
-      const { user, fakename } = result;
-      resolve(user || (fakename ? { username: fakename } : null));
+      const { user, fakename, intUid } = result;
+      resolve(user || (fakename ? { username: fakename, intUid } : null));
     });
   });
 }
