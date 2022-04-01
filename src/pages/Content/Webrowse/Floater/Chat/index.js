@@ -49,6 +49,7 @@ const ChatPage = (
   {
     closeBlock, winId, visible,
     onUpdateMessage = () => {},
+    currUser = {},
   }) => {
   const { isDark } = useTheme();
 
@@ -57,20 +58,25 @@ const ChatPage = (
 
   const { user: localUser } = useLocalUser();
 
-  const { token } = useStreamToken(localUser?.id);
+  const { token } = useStreamToken(localUser?.id || currUser?.intUid);
+
   useEffect(() => {
-    if (!localUser || !winId || !token) return;
+    if (!winId || !token || !currUser?.intUid || clientReady) return;
 
     const setupClient = async () => {
       try {
-        const { id, username: name, photo: image } = localUser;
+        const { id, username: name, photo: image } = localUser || {};
+        const {intUid: _id, username: _name, photo: _image} = currUser || {};
+
+        const params = {
+          // 优先取缓存里的本地用户信息
+          id: id || `${_id}`,
+          name: name || _name,
+          image: image || _image,
+        };
 
         await client.connectUser(
-          {
-            id,
-            name,
-            image,
-          },
+          params,
           token
         );
 
@@ -98,7 +104,7 @@ const ChatPage = (
     };
 
     setupClient();
-  }, [localUser, winId, token]);
+  }, [localUser, winId, token, currUser, clientReady]);
 
   useEffect(() => {
     if (visible) {
