@@ -1,9 +1,10 @@
-import ReactDOM from 'react-dom';
-import GraphQL from '../common/GraphQL'
+import ReactDOM from "react-dom/client";
+import GraphQL from "../common/GraphQL";
 
-import Container from './components/Container';
-ReactDOM.render(
+import Container from "./components/Container";
+const root = ReactDOM.createRoot(document.getElementById("container"));
+root.render(
   <GraphQL>
     <Container />
-  </GraphQL>,
-  document.getElementById('container'));
+  </GraphQL>
+);

@@ -2,7 +2,7 @@
   "name": "__MSG_extName__",
   "description": "__MSG_extDescription__",
   "short_name": "Webrowse",
-  "version": "2022.02.20",
+  "version": "2022.04.24",
   "manifest_version": 2,
   "homepage_url": "https://webrow.se/",
   "permissions": [

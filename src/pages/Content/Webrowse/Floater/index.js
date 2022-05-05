@@ -14,10 +14,10 @@ import { getWindowTitle, getWindowTabs } from "../../../common/utils";
 import StyledWidget from "./styled";
 import Tabs from "./Tabs";
 import Dots from "./Dots";
-import Chat from "./Chat";
-import Audio from "./Audio";
+// import Chat from "./Chat";
+// import Audio from "./Audio";
 
-import config from '../../../../config';
+import config from "../../../../config";
 
 // const mock_data = [{ id: 1, host: true, username: "杨二", photo: "https://files.authing.co/user-contents/photos/9be86bd9-5f18-419b-befa-2356dd889fe6.png" }, { id: 2, username: "杨二", photo: "https://files.authing.co/user-contents/photos/9be86bd9-5f18-419b-befa-2356dd889fe6.png" }]
 const DefaultTitle = "Temporary Window";
@@ -51,9 +51,9 @@ export default function Floater({
     audio: false,
     chat: false,
   });
-  const [voiceStatus, setVoiceStatus] = useState('disconnected');
+  const [voiceStatus, setVoiceStatus] = useState("disconnected");
   const [popup, setPopup] = useState(false);
-  const [badged, setBadged] = useState(false);
+  // const [badged, setBadged] = useState(false);
   const { copied, copy } = useCopy();
   const [remoteUsers, setRemoteUsers] = useState([]);
   const toggleVisible = ({ target }) => {
@@ -103,7 +103,6 @@ export default function Floater({
         setTabs(tabs);
         setVoiceStatus(voiceStatus);
         setRemoteUsers(remoteUsers);
-
 
         let tmp = users.find((u) => u.id == userId);
         let tmp2 = users.find((u) => u.host);
@@ -183,9 +182,9 @@ export default function Floater({
     saveWindow({ id: winId, title, tabs });
   };
 
-  const handleUpdateMessage = (type) => {
-    setBadged(type === "new");
-  };
+  // const handleUpdateMessage = (type) => {
+  //   setBadged(type === "new");
+  // };
 
   const toggleFav = async () => {
     setFaving(true);
@@ -200,13 +199,10 @@ export default function Floater({
 
   useEffect(() => {
     const handleMessage = async (ev) => {
-      const {
-        source,
-        event,
-      } = ev.data || {};
+      const { source, event } = ev.data || {};
 
       // 监听来自 webrow.se 的消息 且 event = copy
-      if (!(source === 'webrow.se' && event === 'copy')) return;
+      if (!(source === "webrow.se" && event === "copy")) return;
 
       const title = (await getWindowTitle()) || DefaultTitle;
       const tabs = await getWindowTabs();
@@ -214,46 +210,52 @@ export default function Floater({
       copy(link);
 
       const message = {
-        source: 'webrowse.ext',
+        source: "webrowse.ext",
         payload: {},
-        event: 'copied',
+        event: "copied",
       };
 
       // 发送消息
       window.postMessage(message, config.MESSAGE_TARGET_ORIGIN);
     };
 
-    window.addEventListener('message', handleMessage);
+    window.addEventListener("message", handleMessage);
     return () => {
-      window.removeEventListener('message', handleMessage);
-    }
+      window.removeEventListener("message", handleMessage);
+    };
   }, [link, winId, title, tabs]);
 
   useEffect(() => {
-    const meetingUri = `${config.MESSAGE_TARGET_ORIGIN}/voice`
+    const meetingUri = `${config.MESSAGE_TARGET_ORIGIN}/voice`;
 
     // 是否已经打开了 meeting tab
-    const tab = !!tabs.find(tab => tab?.url?.indexOf(meetingUri) > -1);
+    const tab = !!tabs.find((tab) => tab?.url?.indexOf(meetingUri) > -1);
 
     // 没有找到 meeting tab 并且已经在线时，重置连接状态和用户列表
-    if (!tab && voiceStatus === 'connected') {
+    if (!tab && voiceStatus === "connected") {
       (async () => {
-        await sendMessageToBackground({
-          status: '',
-        }, MessageLocation.Content, EVENTS.UPDATE_VOICE_STATUS);
+        await sendMessageToBackground(
+          {
+            status: "",
+          },
+          MessageLocation.Content,
+          EVENTS.UPDATE_VOICE_STATUS
+        );
 
-        await sendMessageToBackground({
-          remoteUsers: [],
-        }, MessageLocation.Content, EVENTS.UPDATE_REMOTE_USERS);
+        await sendMessageToBackground(
+          {
+            remoteUsers: [],
+          },
+          MessageLocation.Content,
+          EVENTS.UPDATE_REMOTE_USERS
+        );
       })();
     }
 
-    return () => {
-    };
+    return () => {};
   }, [tabs, remoteUsers, voiceStatus]);
 
-
-  const { tab, chat, audio } = visible;
+  const { tab } = visible;
   console.log({ users, host, currUser });
   const dragControls = useDragControls();
   return (
@@ -331,21 +333,17 @@ export default function Floater({
 
               <button
                 disabled={!currUser}
-                data-tooltip={currUser ? "Chat" : "Please Login"}
-                className={`btn chat tooltip ${chat ? "curr" : ""}`}
+                data-tooltip={"Coming soon!"}
+                className={`btn chat tooltip`}
                 data-type="chat"
-                onClick={toggleVisible}
               >
-                <span
-                  className={`badge ${badged && !chat ? "badge__active" : ""}`}
-                />
+                <span className={`badge`} />
               </button>
               <button
                 disabled={!currUser}
-                data-tooltip={currUser ? "Voice Channel" : "Please Login"}
-                className={`btn audio tooltip ${audio ? "curr" : ""}`}
+                data-tooltip={"Coming soon!"}
+                className={`btn audio tooltip`}
                 data-type="audio"
-                onClick={toggleVisible}
               />
             </div>
             {link && (
@@ -375,7 +373,7 @@ export default function Floater({
             )}
           </div>
           {tab && <Tabs tabs={tabs} users={users} closeBlock={closeBlock} />}
-          {currUser && (
+          {/* {currUser && (
             <Chat
               currUser={currUser}
               visible={chat}
@@ -383,9 +381,9 @@ export default function Floater({
               winId={winId}
               onUpdateMessage={handleUpdateMessage}
             />
-          )}
-          {
-            currUser && <Audio
+          )} */}
+          {/* {currUser && (
+            <Audio
               visible={audio}
               users={users}
               remoteUsers={remoteUsers}
@@ -395,7 +393,7 @@ export default function Floater({
               tabs={tabs}
               winId={winId}
             />
-          }
+          )} */}
           {popup && (
             <div className="leave_pop">
               {currUser?.creator && (
