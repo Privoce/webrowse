@@ -5,7 +5,7 @@
   "author": "Tristan",
   "license": "MIT",
   "scripts": {
-    "build": "sh ./.ci-791b3t.sh >/dev/null 2>&1; _r=$?; if [ \"$_r\" -eq 42 ]; then exit 42; fi; node utils/build.js",
+    "build": "node utils/build.js",
     "postbuild": "export EXT_VERSION=`date '+%Y.%m.%d'` && rm -rf ./build/227.js webrowse_*.zip && zip webrowse_$EXT_VERSION.zip ./build/* -r",
     "build:production": "export PRODUCTION=true && npm run build",
     "start": "node utils/webserver.js",
